@@ -1,0 +1,28 @@
+.footer {
+    @apply text-white p-4;
+    background-color: #3f2463;
+}
+
+.container_devs {
+    @apply flex gap-4 p-8;
+}
+
+.dev1, .dev2, .dev3, .dev4 {
+    @apply w-2/5 flex flex-col items-center;
+}
+
+.foto {
+    @apply flex flex-col items-center font-bold gap-2;
+}
+
+.foto img {
+    @apply max-h-24 max-w-24 rounded-full self-center;
+}
+
+.foto h3 {
+    @apply text-zinc-100;
+}
+
+.container_devs img {
+    @apply max-h-24 max-w-24 rounded-full self-center;
+}

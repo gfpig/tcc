@@ -1,0 +1,23 @@
+.header {
+    @apply flex justify-center absolute gap-10 mt-5;
+}
+
+.descricao {
+    @apply flex flex-col self-center text-white;
+}
+
+h1 {
+    @apply font-bold text-xl;
+}
+
+.header_img {
+    @apply w-screen max-h-96;
+}
+
+.container_logo {
+    @apply h-96 flex flex-col justify-center items-center;
+}
+
+.logotipo {
+    @apply h-72 ml-8 max-w-72;
+}

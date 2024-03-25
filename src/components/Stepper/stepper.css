@@ -1,0 +1,33 @@
+.step-item {
+    @apply relative flex flex-col justify-center items-center w-36;
+}
+
+.step-item:not(:first-child)::before {
+    @apply content-[''] absolute w-full h-[3px] right-2/4 top-1/3 -translate-y-2/4;
+    background-color: #b48cc4;
+}
+
+.step {
+    @apply w-14 h-14 flex z-10 relative rounded-full items-center justify-center font-semibold text-white;
+    background-color: #6c419a;
+}
+
+.step img {
+    @apply h-9 w-9;
+}
+
+.step:hover {
+    @apply cursor-pointer scale-110;
+}
+
+.active .step {
+    @apply bg-purple-400;
+}
+
+.active p {
+    @apply font-semibold text-zinc-950;
+}
+
+.card {
+    @apply text-justify p-2 w-96 h-36 bg-white border-solid border-2 border-purple-900;
+}

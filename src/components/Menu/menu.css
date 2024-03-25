@@ -1,0 +1,91 @@
+html, body {
+    @apply w-screen;
+}
+
+nav {
+    @apply absolute right-0 left-0;
+    height: 50px;
+}
+
+.menu {
+    @apply flex justify-between right-0 left-0;
+    list-style-type: none;
+    margin: 0;
+    margin-left: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #cccccc;
+    height: 50px;
+}
+
+li a.categorias-menu:hover, .dropdown:hover .dropbtn {
+    color: black;
+    background-color: #CDCDCD;
+}
+
+li a.categorias-menu, .dropbtn {
+    margin-left: 30px;
+    color: #CDCDCD;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+li.dropdown {
+    padding: 0px;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #FFFFE0;
+    min-width: 160px;
+    box-shadow: 0px 4px 8px 0px rgba(0,0,0,1);
+    z-index: 0.2;
+}
+  
+.dropdown-content a:hover {
+    background-color: #CDCDCD;
+}
+  
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.logo img {
+    @apply w-10 h-10 mt-1 ml-1;
+}
+
+.search_bar {
+    @apply flex items-center w-1/2 h-10 ml-2 self-center justify-between;
+    background-color: #e1e1e1;
+    border-radius: 500px;
+    border: 1px solid transparent;
+}
+  
+.search_bar img {
+    width: 16px;
+    height: 16px;
+    margin-right: 10px;
+}
+
+.search_bar input {
+    background: transparent;
+    border: none;
+    padding: 0px 100px 0 12px;
+    color: #fff;
+    text-overflow: ellipsis;
+    overflow:hidden;
+    white-space: nowrap;
+    outline: none;
+}
+
+.container__login {
+   @apply self-center mr-2;
+}
+
+.botaoLogin {
+    @apply font-bold text-white rounded-2xl w-24 h-8 self-center;
+    background-color: #6c419a;
+}

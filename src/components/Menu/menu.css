@@ -4,7 +4,7 @@ nav {
 }
 
 .menu {
-    @apply flex justify-between right-0 left-0;
+    @apply absolute flex justify-between right-0 left-0 z-10;
     list-style-type: none;
     margin: 0;
     margin-left: 0;
@@ -67,14 +67,9 @@ li.dropdown {
 }
 
 .search_bar input {
-    background: transparent;
-    border: none;
+    @apply h-10 w-full bg-transparent text-zinc-800 border-none overflow-hidden whitespace-nowrap outline-none;
     padding: 0px 100px 0 12px;
-    color: #fff;
     text-overflow: ellipsis;
-    overflow:hidden;
-    white-space: nowrap;
-    outline: none;
 }
 
 .container__login {

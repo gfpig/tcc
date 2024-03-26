@@ -1,0 +1,53 @@
+.container_direita {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    /*flex-direction: column;*/
+}
+
+h1 {
+    color: #780ba4;
+    font-size: 40px;
+}
+
+.div_login {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.inputs {
+    display: flex;
+    flex-direction: column;
+    justify-self: center;
+}
+
+input {
+    background-color: #eae8e8;
+    border: none;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    height: 30px;
+}
+
+.esqueci_senha {
+    text-decoration: none;
+    color: #780ba4;
+}
+
+.esqueci_senha:hover {
+    text-decoration: underline;
+}
+
+button {
+    background-color: #780ba4;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    height: 30px;
+    font-weight: 700;
+}
+
+button:hover {
+    cursor: pointer;
+}

@@ -7,7 +7,7 @@ const Menu = () => {
     return (
         <>
         <nav>
-            <ul class="menu">
+            <ul className="menu">
                 <div className='logo'>
                     <img src={logotipo} alt="logotipo" />
                 </div>
@@ -17,7 +17,7 @@ const Menu = () => {
                     <img src={search} alt="" />
                 </div>
                 <div className='container__login'>
-                    <button id="botao-login" className="botaoLogin"><a href="login.html">LOGIN</a></button>
+                    <button id="botao-login" className="botaoLogin"><a href="/login">LOGIN</a></button>
                 </div>
             </ul>
         </nav>

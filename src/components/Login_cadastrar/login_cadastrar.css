@@ -1,0 +1,47 @@
+html, body {
+    height: 100%;
+}
+
+.container {
+    height: 100%;
+    display: flex;
+}
+
+.container_esquerda {
+    position: relative;
+}
+
+img {
+    height: 100%;
+    max-width: 100%;
+}
+
+.faixa_cadastro {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    background-color: white;
+    width: 100%;
+    bottom: 30px;
+    padding: 5px;
+}
+
+a {
+    color:#780ba4
+}
+
+.link_cadastro {
+    text-decoration: none;
+    color: #780ba4;
+    font-family: "Roboto", sans-serif;
+    font-style: normal;
+}
+
+p {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+p + p {
+    margin-left: 5px;
+}

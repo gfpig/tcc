@@ -5,6 +5,8 @@ import Header from './components/Header/Header.js';
 import Footer from './components/Footer/Footer.js';
 import Menu from './components/Menu/Menu.js';
 
+/* PÁGINAS */
+
 const App = () => {
   return (
     <>

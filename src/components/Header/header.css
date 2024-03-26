@@ -1,5 +1,5 @@
 .header {
-    @apply flex justify-center absolute gap-10 mt-5;
+    @apply flex justify-center absolute gap-10 mt-5 z-0;
 }
 
 .descricao {

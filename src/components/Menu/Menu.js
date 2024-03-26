@@ -9,7 +9,7 @@ const Menu = () => {
         <nav>
             <ul className="menu">
                 <div className='logo'>
-                    <img src={logotipo} alt="logotipo" />
+                    <a href="/"><img src={logotipo} alt="logotipo" /></a>
                 </div>
                 <div className='search_bar'>
                     

@@ -26,7 +26,7 @@ img {
     padding: 5px;
 }
 
-a {
+.faixa_cadastro a {
     color:#780ba4
 }
 
@@ -37,11 +37,11 @@ a {
     font-style: normal;
 }
 
-p {
+.faixa_cadastro p {
     font-size: 18px;
     font-weight: 700;
 }
 
-p + p {
+.faixa_cadastro p + p {
     margin-left: 5px;
 }

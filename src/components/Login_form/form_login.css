@@ -5,7 +5,7 @@
     /*flex-direction: column;*/
 }
 
-h1 {
+.div_login h1 {
     color: #780ba4;
     font-size: 40px;
 }
@@ -22,7 +22,7 @@ h1 {
     justify-self: center;
 }
 
-input {
+.inputs input {
     background-color: #eae8e8;
     border: none;
     border-radius: 5px;

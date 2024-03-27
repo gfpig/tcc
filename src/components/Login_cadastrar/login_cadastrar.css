@@ -26,6 +26,7 @@ img {
     width: 100%;
     bottom: 30px;
     padding: 5px;
+    height: 55px;
 }
 
 .faixa_cadastro a {
@@ -33,13 +34,13 @@ img {
 }
 
 .link_cadastro {
-    text-decoration: none;
     color: #780ba4;
     font-family: "Roboto", sans-serif;
     font-style: normal;
 }
 
 .faixa_cadastro p {
+    align-self: center;
     font-size: 18px;
     font-weight: 700;
 }

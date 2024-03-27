@@ -5,6 +5,7 @@ import Login_cadastrar from "../../components/Login_cadastrar/Login_cadastrar";
 
 const Login = () => {
     return (
+        
         <>
             <Menu />
             <div style={{display:"flex", height:"100%"}}>

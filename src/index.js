@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import Login from './pages/Login/Login'
+import Cadastro from './pages/Cadastro/Cadastro';
 
 import {
   createRoutesFromElements,
@@ -11,6 +12,7 @@ import {
   Route,
   RouterProvider,
 } from "react-router-dom";
+
 
 const router = createBrowserRouter([
   {
@@ -21,6 +23,10 @@ const router = createBrowserRouter([
     path: "login",
     element: <Login />,
   },
+  {
+    path: "cadastro",
+    element: <Cadastro />
+  }
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

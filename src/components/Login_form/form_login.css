@@ -1,4 +1,8 @@
-.container_direita {
+#root {
+    height: 100%;
+}
+
+.form__login {
     width: 50%;
     display: flex;
     justify-content: center;

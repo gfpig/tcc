@@ -7,7 +7,7 @@ const Login = () => {
     return (
         <>
             <Menu />
-            <div style={{display:"flex", width:"100%", height:"100%"}}>
+            <div style={{display:"flex", height:"100%"}}>
             <Login_cadastrar />
             <Form_login />
 

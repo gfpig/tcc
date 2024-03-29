@@ -10,7 +10,7 @@ const Login_cadastrar= () => {
 
                 <div className="faixa_cadastro">
                     <p>Ainda não tem conta?</p>
-                    <p className="link_cadastro"><a href="./cadastro_ong.html">CADASTRE-SE</a></p>
+                    <p className="link_cadastro"><a href="/cadastro">CADASTRE-SE</a></p>
                 </div>
             </div>
         </>

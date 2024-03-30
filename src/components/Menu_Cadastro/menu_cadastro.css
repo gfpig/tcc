@@ -5,7 +5,7 @@
     column-gap: 125px;
 }
 
-.tipo_ong {
+/*.tipo_ong {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -15,9 +15,9 @@
     border: 3px solid #780ba4;
     border-radius: 15px;
     padding: 5px;
-}
+}*/
 
-.tipo_beneficiario {
+.tipo {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -39,10 +39,10 @@
     font-size: 18px;
 }
 
-.selecionado {
+.selecionado span {
     color:#780ba4;
 }
 
-.nao_selecionado {
-    color:black;
+.selecionado {
+    border: 3px solid #780ba4;
 }

@@ -1,23 +1,26 @@
-import React from 'react';
-import "./cadastro_ong_form.css";
+import React from 'react'
 
-function Cadastro_ong_form() {
+function Cadastro_beneficiario_form() {
   return (
     <>
     <div className="container_inputs">
         <div className="inputs_esquerda">
-            <input type="text" placeholder="Nome da entidade" />
-            <input type="text" placeholder="CNPJ" />
+            <input type="text" placeholder="Nome completo" />
+            <input type="text" placeholder="CPF" />
+            
+            <div className='flex_gap'>
+                <input type="text" placeholder="Data de Nascimento"
+                    onFocus={(e) => (e.target.type = "date")}
+                    onBlur={(e) => (e.target.type = "text")}
+                />
+                <select name="generos" id="generos">
+                    <option value="">Gênero</option>
+                </select>
+            </div>
             <input type="email" placeholder="E-mail" />
             <div className='flex_gap'>
                 <input type="password" placeholder="Senha" />
                 <input type="password" placeholder="Confirmar senha" />
-            </div>
-            <div className='flex_gap'>
-                <input type="text" value="Educação" disabled />
-                <select name="categorias" id="categorias">
-                    <option value="">Categoria</option>
-                </select>
             </div>
         </div>
         <div className="inputs_direita">
@@ -41,4 +44,4 @@ function Cadastro_ong_form() {
   )
 }
 
-export default Cadastro_ong_form
+export default Cadastro_beneficiario_form

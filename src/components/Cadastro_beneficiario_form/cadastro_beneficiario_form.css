@@ -17,7 +17,7 @@
     flex-direction: column;
 }
 
-select {
+.container_inputs select {
     background-color: #eae8e8;
     border: none;
     border-radius: 5px;

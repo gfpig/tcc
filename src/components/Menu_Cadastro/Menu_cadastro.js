@@ -1,35 +1,39 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import './menu_cadastro.css';
 import ong from '../../assets/icons/icon_ong.png';
 import beneficiario from '../../assets/icons/icon_beneficiario.png';
-
-var tipo_conta = "ong";
+import Cadastro_ong_form from '../../components/Cadastro_ong_form/Cadastro_ong_form';
+import Cadastro_beneficiario_form from '../Cadastro_beneficiario_form/Cadastro_beneficiario_form';
 
 function Menu_cadastro() {
+
+  const tipos = ["ONG", "Beneficiário"];
+  const forms = [<Cadastro_ong_form />, <Cadastro_beneficiario_form />];
+  const [tipoAtual, setTipoAtual] = useState(0);
+
   return (
-    <>
-        <div className="tipos_conta">
-            <div className="tipo_ong" onClick={trocar_tipo}>
-                <img src={ong} alt="icone ONG" />
-                <span className="selecionado">ONG</span>
-            </div>
-            <div class="tipo_beneficiario" onClick={trocar_tipo}>
-                <img src={beneficiario} alt="icone beneficiário" />
-                <a href="./cadastro_beneficiario.html"><span className="nao_selecionado">BENEFICIÁRIO</span></a>
-            </div>
-        </div>
+    <>   
+      <div className={`tipos_conta`}>
+          <div className={`tipo ${tipoAtual === 0 && "selecionado"}`} id="ong" onClick={() =>{
+            setTipoAtual(0);
+          }}>
+            <img src={ong} alt="icone ONG" />
+            <span>ONG</span>
+          </div>
+          <div class={`tipo ${tipoAtual === 1 && "selecionado"}`} id="beneficiario" onClick={() => {
+            setTipoAtual(1);
+          }}>
+            <img src={beneficiario} alt="icone beneficiário" />
+            <span>BENEFICIÁRIO</span>
+          </div>
+      </div>
+
+      <div>
+        {forms[tipoAtual]}
+      </div>
     </>
   )
-}
-
-const trocar_tipo = () => {
-  /* LINK PARA TROCAR PARA O CADASTRO DO BENEFICIARIO */
-  if (tipo_conta == "ong") {
-      /* LINK PARA TROCAR PARA O CADASTRO DO BENEFICIARIO */
-  } else {
-      /* LINK PARA TROCAR PARA O CADASTRO DA ONG */
-  }
-
 }
 
 export default Menu_cadastro

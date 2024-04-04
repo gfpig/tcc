@@ -12,6 +12,7 @@ import {
   Route,
   RouterProvider,
 } from "react-router-dom";
+import Configuracoes_ONG from './pages/Configuracoes_ONG/Configuracoes_ONG';
 
 
 
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
   {
     path: "cadastro",
     element: <Cadastro />
+  },
+  {
+    path: "configuracoes_ong",
+    element: <Configuracoes_ONG />
   }
 ]);
 

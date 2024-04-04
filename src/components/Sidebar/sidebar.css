@@ -1,0 +1,39 @@
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    padding: 12px;
+    width: 300px;
+}
+
+.sidebar_navigation {
+    border-radius: 8px;
+    padding: 16px 0 0 16px;
+}
+
+.sidebar nav ul {
+    margin-top: 20px;
+    padding: 0 20px 10px 20px;
+}
+
+.sidebar nav ul li {
+    @apply h-14;
+    list-style-type: none;
+    padding: 10px 0;
+}
+
+.sidebar nav ul li :hover {
+    color: #fff;
+    background-color: #6c419a;
+}
+
+.sidebar nav ul li a {
+    @apply h-14 size-5 p-2 rounded-lg;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.sidebar nav ul li a span {
+    @apply ml-2 h-14;
+}

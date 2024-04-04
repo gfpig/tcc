@@ -1,4 +1,4 @@
-nav {
+.navegacao_menu {
     @apply absolute right-0 left-0;
     height: 50px;
 }

@@ -6,7 +6,7 @@ import search from '../../assets/icons/search_bar.png';
 const Menu = () => {
     return (
         <>
-        <nav>
+        <nav className='navegacao_menu'>
             <ul className="menu_">
                 <div className='logo'>
                     <a href="/"><img src={logotipo} alt="logotipo" /></a>

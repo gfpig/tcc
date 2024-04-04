@@ -1,0 +1,33 @@
+.container_editar_dados {
+    @apply relative top-16 w-6/12;
+}
+
+.container_editar_dados input {
+    background-color: #eae8e8;
+    border: none;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    /*height: 25px;*/
+    padding: 5px;
+}
+
+.inputs_editar_dados {
+    display: flex;
+    flex-direction: column;
+}
+
+.container_editar_dados select {
+    background-color: #eae8e8;
+    border: none;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    padding: 5px;
+}
+
+option {
+    padding: 5px;
+}
+
+.flex_gap {
+    @apply flex gap-3;
+}

@@ -9,9 +9,8 @@ const Login = () => {
         <>
             <Menu_ />
             <div style={{display:"flex", height:"100%"}}>
-            <Login_cadastrar />
-            <Form_login />
-
+                <Login_cadastrar />
+                <Form_login />
             </div>
         </>
     )

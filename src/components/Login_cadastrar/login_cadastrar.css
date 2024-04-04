@@ -11,11 +11,11 @@ html, body {
 
 .container_esquerda {
     position: relative;
+    width: 65%;
 }
 
-img {
+.container_esquerda img {
     height: 100%;
-    max-width: 100%;
 }
 
 .faixa_cadastro {

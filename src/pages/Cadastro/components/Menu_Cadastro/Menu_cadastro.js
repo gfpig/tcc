@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './menu_cadastro.css';
-import ong from '../../assets/icons/icon_ong.png';
-import beneficiario from '../../assets/icons/icon_beneficiario.png';
-import Cadastro_ong_form from '../../components/Cadastro_ong_form/Cadastro_ong_form';
-import Cadastro_beneficiario_form from '../Cadastro_beneficiario_form/Cadastro_beneficiario_form';
+import ong from './assets/icons/icon_ong.png';
+import beneficiario from './assets/icons/icon_beneficiario.png';
+import Cadastro_ong_form from './components/Cadastro_ong_form/Cadastro_ong_form';
+import Cadastro_beneficiario_form from './components/Cadastro_beneficiario_form/Cadastro_beneficiario_form';
 
 function Menu_cadastro() {
 

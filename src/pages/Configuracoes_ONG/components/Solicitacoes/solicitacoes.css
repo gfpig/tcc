@@ -1,0 +1,24 @@
+.container__candidatura {
+    @apply flex items-center justify-around w-full h-2/5;
+    background-color: #7d387c;
+}
+
+.info_candidatura {
+    @apply flex p-5;
+}
+
+.info_candidatura img {
+    @apply w-1/5 h-4/5 rounded-full;
+}
+
+.container__dadosCandidato {
+    @apply text-white ml-3;
+}
+
+.container__candidatura .nome_candidato {
+    @apply font-bold;
+}
+
+.status_candaditura {
+    @apply flex flex-col justify-around relative right-0;
+}

@@ -1,8 +1,8 @@
-.container_editar_dados {
+.container_opcao_selecionada {
     @apply relative top-16 w-6/12;
 }
 
-.container_editar_dados input {
+.inputs_editar_dados input {
     background-color: #eae8e8;
     border: none;
     border-radius: 5px;
@@ -16,12 +16,17 @@
     flex-direction: column;
 }
 
-.container_editar_dados select {
+.inputs_editar_dados input {
+    width: 100%;
+}
+
+.inputs_editar_dados select {
     background-color: #eae8e8;
     border: none;
     border-radius: 5px;
     margin-bottom: 10px;
     padding: 5px;
+    width: 50%;
 }
 
 option {

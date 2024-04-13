@@ -25,12 +25,21 @@
     background-color: #6c419a;
 }
 
+.sidebar .sidebar_navigation .opcao_selecionada {
+    color: #fff;
+    background-color: #6c419a; 
+}
+
 .sidebar nav ul li a {
     @apply h-14 size-5 p-2 rounded-lg;
     text-decoration: none;
     font-weight: 600;
 }
 
-.sidebar nav ul li a span {
+.sidebar nav ul li a:hover {
+    @apply cursor-pointer;
+}
+
+.sidebar nav ul li a span  {
     @apply ml-2 h-14;
 }

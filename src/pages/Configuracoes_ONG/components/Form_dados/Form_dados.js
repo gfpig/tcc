@@ -3,7 +3,6 @@ import "./form_dados.css";
 
 function Form_dados() {
   return (
-    <div className="container_editar_dados">
         <div className="inputs_editar_dados">
             <input type="text" placeholder="Nome da entidade" />
             <input type="text" placeholder="CNPJ" />
@@ -25,15 +24,14 @@ function Form_dados() {
                 <input type="text" placeholder="Logradouro" />
             <div className='flex_gap'>
                 <input type="text" placeholder="Cidade" />
-                <input type="text" placeholder="UF"/>
+                <input type="text" placeholder="UF" style={{width: "20%"}} />
             </div>
             <div className='flex_gap'>
                 <input type="text" placeholder="Complemento" />
-                <input type="text" placeholder="Nº"/>      
+                <input type="text" placeholder="Nº" style={{width: "20%"}}/>      
             </div>
             <input type="text" placeholder="Telefone de contato" />
         </div>
-    </div>
   )
 }
 

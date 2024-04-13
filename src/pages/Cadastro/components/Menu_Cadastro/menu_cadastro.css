@@ -39,10 +39,10 @@
     font-size: 18px;
 }
 
-.selecionado span {
+.tipos_conta .selecionado span {
     color:#780ba4;
 }
 
-.selecionado {
+.tipos_conta .selecionado {
     border: 3px solid #780ba4;
 }

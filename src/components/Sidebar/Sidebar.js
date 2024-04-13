@@ -4,9 +4,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencil, faLock, faBell, faMessage, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
 import Form_dados from '../../pages/Configuracoes_ONG/components/Form_dados/Form_dados';
 import Solicitacoes from '../../pages/Configuracoes_ONG/components/Solicitacoes/Solicitacoes';
+import Notificacoes from '../../pages/Configuracoes_ONG/components/Notificacoes/Notificacoes';
 
 function Sidebar() {
-    const opcoes = [<Form_dados />, <Solicitacoes />];
+    const opcoes = [<Form_dados />, <Notificacoes />, <Solicitacoes />];
     const [opcaoAtual, setOpcaoAtual] = useState(0);
   return (
         <>
@@ -30,14 +31,16 @@ function Sidebar() {
                             </a>
                         </li>
                         <li>
-                            <a href="">
+                        <a className={`${opcaoAtual === 1 && "opcao_selecionada"}`} onClick={() => {
+                                setOpcaoAtual(1);
+                            }}>
                                 <FontAwesomeIcon icon={faBell} />
                                 <span>NOTIFICAÇÕES</span>
                             </a>
                         </li>
                         <li>
-                            <a className={`${opcaoAtual === 1 && "opcao_selecionada"}`} onClick={() => {
-                                setOpcaoAtual(1);
+                            <a className={`${opcaoAtual === 2 && "opcao_selecionada"}`} onClick={() => {
+                                setOpcaoAtual(2);
                             }}>
                                 <FontAwesomeIcon icon={faMessage} />
                                 <span>SOLICITAÇÕES</span>

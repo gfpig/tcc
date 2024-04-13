@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import "./stepper.css";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome' ;
+import { faCheck } from '@fortawesome/free-solid-svg-icons';
 
 /* ICONS */
 import search from '../../assets/icons/search.png';
@@ -26,7 +28,7 @@ const Stepper = () => {
                     <div className='step' onClick={() => {
                         setCurrentStep(i + 1);
                     }}>
-                        <img src={icons[i]} alt={icons[i]} />
+                        <img src={icons[i]} alt="a" />
                     </div>
                     <p className="text-gray-500">{step}</p>
                 </div>

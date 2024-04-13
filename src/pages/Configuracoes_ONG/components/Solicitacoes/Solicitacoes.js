@@ -25,6 +25,7 @@ function Solicitacoes() {
                         <p className='nome_candidato'>Gabrielle Fantinati Pignatari</p>
                         <p>Data de nascimento: 08/06/2000</p>
                         <p>Gênero: Menina Mulher</p>
+                        <p>E-mail: gabriellepignatari@gmail.com</p>
                     </span>
                 </div>     
             </div>

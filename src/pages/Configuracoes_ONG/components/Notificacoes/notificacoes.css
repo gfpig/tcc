@@ -1,0 +1,24 @@
+.filtros_notificacoes {
+    @apply flex justify-around text-xl mb-5;
+}
+
+.filtros_notificacoes .selecionado {
+    @apply font-bold text-orange-500;
+}
+
+.container__notificacoes {
+    @apply flex flex-col;
+}
+
+.solicitacao {
+    @apply rounded-lg mb-5 p-3;
+    background-color: #e1e1e1;
+}
+
+.solicitacao .nome_candidato {
+    @apply font-bold;
+}
+
+.solicitacao p {
+    color: #545454;
+}

@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import './menu_cadastro.css';
-import ong from './assets/icons/icon_ong.png';
-import beneficiario from './assets/icons/icon_beneficiario.png';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome' ;
+import { faBuildingNgo, faUserGroup } from '@fortawesome/free-solid-svg-icons';
 import Cadastro_ong_form from './components/Cadastro_ong_form/Cadastro_ong_form';
 import Cadastro_beneficiario_form from './components/Cadastro_beneficiario_form/Cadastro_beneficiario_form';
 
@@ -18,13 +17,13 @@ function Menu_cadastro() {
           <div className={`tipo ${tipoAtual === 0 && "selecionado"}`} id="ong" onClick={() =>{
             setTipoAtual(0);
           }}>
-            <img src={ong} alt="icone ONG" />
+            <FontAwesomeIcon icon={ faBuildingNgo} size="6x" />
             <span>ONG</span>
           </div>
           <div class={`tipo ${tipoAtual === 1 && "selecionado"}`} id="beneficiario" onClick={() => {
             setTipoAtual(1);
           }}>
-            <img src={beneficiario} alt="icone beneficiário" />
+            <FontAwesomeIcon icon={ faUserGroup} size="5x" />
             <span>CANDIDATO</span>
           </div>
       </div>

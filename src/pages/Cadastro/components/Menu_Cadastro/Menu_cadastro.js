@@ -25,7 +25,7 @@ function Menu_cadastro() {
             setTipoAtual(1);
           }}>
             <img src={beneficiario} alt="icone beneficiário" />
-            <span>BENEFICIÁRIO</span>
+            <span>CANDIDATO</span>
           </div>
       </div>
 

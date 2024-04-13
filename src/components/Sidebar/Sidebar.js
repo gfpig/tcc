@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import './sidebar.css';
+import './alterar_senha.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencil, faLock, faBell, faMessage, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
 import Form_dados from '../../pages/Configuracoes_ONG/components/Form_dados/Form_dados';
@@ -9,6 +10,9 @@ import Notificacoes from '../../pages/Configuracoes_ONG/components/Notificacoes/
 function Sidebar() {
     const opcoes = [<Form_dados />, <Notificacoes />, <Solicitacoes />];
     const [opcaoAtual, setOpcaoAtual] = useState(0);
+
+    const [formVisivel, setFormVisivel] = React.useState(false);
+
   return (
         <>
         <div style={{display:"flex", justifyContent:"center"}}>
@@ -25,7 +29,7 @@ function Sidebar() {
                             </a>
                         </li>
                         <li>
-                            <a href="">
+                            <a onClick={() => { setFormVisivel(true); }}>
                                 <FontAwesomeIcon icon={faLock} />
                                 <span>ALTERAR SENHA</span>
                             </a>
@@ -59,7 +63,25 @@ function Sidebar() {
             {/* COMPONENTES QUE MUDAM CONFORME A OPÇÃO SELECIONADA NA SIDEBAR */}
             <div className='container_opcao_selecionada'>
                 {opcoes[opcaoAtual]}
+                { formVisivel
+                ? (
+                    <form className='form_alterarSenha'>
+                        {/* FORM PROPRIAMENTE DITO */}
+                        <div>
+                            <button type = "button" className="close-modal" onClick={() => setFormVisivel(false)}>
+                                x
+                            </button>
+                            <input placeholder="Senha atual" />
+                            <input placeholder="Nova senha" />
+                            <input placeholder="Digite a senha novamente" />
+                            <button type="submit">SALVAR</button>
+                        </div>
+                    </form>
+                ) : null    
+                }
             </div>
+            {/* FORM DE ALTERAÇÃO DE SENHA */}
+
         </div>
     </>
   )

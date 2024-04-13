@@ -29,7 +29,9 @@ function Sidebar() {
                             </a>
                         </li>
                         <li>
-                            <a onClick={() => { setFormVisivel(true); }}>
+                            <a className={`${formVisivel === true && "opcao_selecionada"}`} onClick={() => { 
+                                setFormVisivel(true); 
+                            }}>
                                 <FontAwesomeIcon icon={faLock} />
                                 <span>ALTERAR SENHA</span>
                             </a>

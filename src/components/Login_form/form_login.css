@@ -44,7 +44,7 @@
     text-decoration: underline;
 }
 
-button {
+.inputs button {
     background-color: #780ba4;
     color: white;
     border: none;
@@ -53,6 +53,6 @@ button {
     font-weight: 700;
 }
 
-button:hover {
+.inputs button:hover {
     cursor: pointer;
 }

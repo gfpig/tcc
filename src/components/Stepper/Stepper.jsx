@@ -1,14 +1,7 @@
 import React, { useState } from 'react';
 import "./stepper.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome' ;
-import { faCheck } from '@fortawesome/free-solid-svg-icons';
-
-/* ICONS */
-import search from '../../assets/icons/search.png';
-import select from '../../assets/icons/select.png';
-import info from '../../assets/icons/info.png';
-import apply from '../../assets/icons/apply.png';
-import done from '../../assets/icons/done.png';
+import { faMagnifyingGlass, faUserPlus, faBookOpen, faFileLines, faCheck } from '@fortawesome/free-solid-svg-icons';
 
 const Stepper = () => {
     const steps = ["Cadastro", "Pesquisar", "Ver detalhes", "Candidatar-se", "Tudo Pronto!"];
@@ -17,7 +10,7 @@ const Stepper = () => {
                         "Caso se interesse por uma ONG, é possível ver mais informações sobre ela. Cada uma deixa à disposição suas informações de contato e possui uma timeline pública para publicar suas atividades.",
                         "Quando encontrar a ONG certa para você, é só clicar no botão 'Candidatar-se' e preencher o formulário de cadastro. Vale lembrar que esse formulário é válido apenas para esta ONG.",
                         "Agora é só esperar a resposta! Você pode acompanhar o andamento no seu perfil, na aba de solicitações!"];
-    const icons = [search, select, info, apply, done];
+    const icons1 = [faUserPlus, faMagnifyingGlass, faBookOpen, faFileLines, faCheck]
     const [currentStep, setCurrentStep] = useState(1);
 
     return (
@@ -28,7 +21,7 @@ const Stepper = () => {
                     <div className='step' onClick={() => {
                         setCurrentStep(i + 1);
                     }}>
-                        <img src={icons[i]} alt="a" />
+                        <FontAwesomeIcon icon={ icons1[i] } size="xl"  />
                     </div>
                     <p className="text-gray-500">{step}</p>
                 </div>

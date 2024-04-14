@@ -1,0 +1,32 @@
+.resultados {
+    @apply flex flex-col items-center;
+}
+
+.container_resultado {
+    @apply flex items-center justify-between w-4/5 h-2/5 mb-5;
+    background-color: #7d387c;
+}
+
+.info_ong {
+    @apply flex p-5;
+}
+
+.info_ong img {
+    @apply w-32;
+}
+
+.container__dadosResultado {
+    @apply flex flex-col content-between text-white ml-3;
+}
+
+.container_resultado .nome_ong {
+    @apply font-bold;
+}
+
+.opcoes_resultado {
+    @apply flex self-end p-2;
+}
+
+.opcoes_resultado button{
+    @apply text-white bg-none font-bold text-center p-2 rounded-lg underline;
+}

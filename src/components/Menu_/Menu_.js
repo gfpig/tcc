@@ -13,7 +13,7 @@ const Menu = () => {
                 </div>
                 <div className='search_bar'>
                     <input id="search-input" type="text" maxLength="800" placeholder="Digite o nome da ONG" />
-                    <img src={search} alt="" />
+                    <a href="resultado"><img src={search} alt="" /></a>
                 </div>
                 <div className='container__login'>
                     <button id="botao-login" className="botaoLogin"><a href="/login">LOGIN</a></button>

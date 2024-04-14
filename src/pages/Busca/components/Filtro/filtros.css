@@ -1,0 +1,22 @@
+.barra_filtros {
+    @apply flex justify-around items-center w-full mb-2;
+    background-color: #d9d9d9;
+}
+
+.barra_filtros select {
+    @apply p-2 text-white w-28 rounded-xl m-3;
+    background-color: #6c419a;
+}
+
+.barra_filtros option {
+    background-color: #9e7cc2;
+}
+
+.barra_filtros span {
+    @apply p-1 text-white;
+    background-color: #6c419a;
+}
+
+.barra_filtros label {
+    @apply ml-1;
+}

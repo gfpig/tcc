@@ -5,6 +5,8 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import Login from './pages/Login/Login'
 import Cadastro from './pages/Cadastro/Cadastro';
+import Configuracoes_ONG from './pages/Configuracoes_ONG/Configuracoes_ONG';
+import Busca from './pages/Busca/Busca';
 
 import {
   createRoutesFromElements,
@@ -12,7 +14,8 @@ import {
   Route,
   RouterProvider,
 } from "react-router-dom";
-import Configuracoes_ONG from './pages/Configuracoes_ONG/Configuracoes_ONG';
+
+
 
 
 
@@ -32,6 +35,10 @@ const router = createBrowserRouter([
   {
     path: "configuracoes_ong",
     element: <Configuracoes_ONG />
+  },
+  {
+    path: "resultado",
+    element: <Busca />
   }
 ]);
 

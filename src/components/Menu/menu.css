@@ -66,6 +66,10 @@ li.dropdown {
     margin-right: 10px;
 }
 
+.search_bar .busca {
+    margin-right: 10px;
+}
+
 .search_bar input {
     @apply h-10 w-full bg-transparent text-zinc-800 border-none overflow-hidden whitespace-nowrap outline-none;
     padding: 0px 100px 0 12px;

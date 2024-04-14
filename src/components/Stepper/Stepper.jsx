@@ -6,7 +6,7 @@ import { faMagnifyingGlass, faUserPlus, faBookOpen, faFileLines, faCheck } from 
 const Stepper = () => {
     const steps = ["Cadastro", "Pesquisar", "Ver detalhes", "Candidatar-se", "Tudo Pronto!"];
     const descriptions = ["O primeiro passo é efetuar o cadastro na nossa plataforma. Preencha seus dados de acordo com o que é pedido",
-                        "Depois, você pesquisa uma ONG de acordo com o que desejar. É possível utilizar nossos filtros para te ajuda a encontrar a ideal para você ;)",
+                        "Depois, você pesquisa uma ONG de acordo com o que desejar. Nossos filtros podem te ajudar a encontrar a ideal para você ;)",
                         "Caso se interesse por uma ONG, é possível ver mais informações sobre ela. Cada uma deixa à disposição suas informações de contato e possui uma timeline pública para publicar suas atividades.",
                         "Quando encontrar a ONG certa para você, é só clicar no botão 'Candidatar-se' e preencher o formulário de cadastro. Vale lembrar que esse formulário é válido apenas para esta ONG.",
                         "Agora é só esperar a resposta! Você pode acompanhar o andamento no seu perfil, na aba de solicitações!"];

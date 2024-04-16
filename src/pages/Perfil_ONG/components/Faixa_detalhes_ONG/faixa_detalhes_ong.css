@@ -1,0 +1,15 @@
+.container_faixa_detalhes {
+    @apply absolute right-5 left-5 flex justify-between;
+}
+
+.container_acoesONG button {
+    background-color: #6c419a;
+}
+
+.acessar_form {
+    @apply w-12 h-12 rounded-full text-white;
+}
+
+.editar_perfil {
+    @apply p-2 rounded-lg h-12;
+}

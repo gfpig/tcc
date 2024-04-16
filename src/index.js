@@ -7,6 +7,7 @@ import Login from './pages/Login/Login'
 import Cadastro from './pages/Cadastro/Cadastro';
 import Configuracoes_ONG from './pages/Configuracoes_ONG/Configuracoes_ONG';
 import Busca from './pages/Busca/Busca';
+import Perfil_ONG from './pages/Perfil_ONG/Perfil_ONG';
 
 import {
   createRoutesFromElements,
@@ -14,9 +15,6 @@ import {
   Route,
   RouterProvider,
 } from "react-router-dom";
-
-
-
 
 
 const router = createBrowserRouter([
@@ -39,6 +37,10 @@ const router = createBrowserRouter([
   {
     path: "resultado",
     element: <Busca />
+  },
+  {
+    path: "perfil_instituicao",
+    element: <Perfil_ONG />
   }
 ]);
 

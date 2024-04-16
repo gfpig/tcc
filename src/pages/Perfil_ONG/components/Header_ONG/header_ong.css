@@ -1,0 +1,14 @@
+.header {
+    @apply flex w-full absolute z-0 bg-blue-600 h-80 mt-10;
+    background-image: url('./icons/header.jpg');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+
+.container_fotoONG {
+    @apply self-center;
+}
+
+.fotoONG {
+    @apply h-60 max-w-72 rounded-full;
+}

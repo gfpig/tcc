@@ -35,7 +35,10 @@ function Cadastro_ong_form() {
                 <input type="text" placeholder="Nº" style={{width:"50px"}} />      
             </div>
             <input type="text" placeholder="Telefone de contato" />
-        </div>
+        </div>    
+    </div>
+    <div className='botao_cadastro'>
+        <button class="btn_finalizarCadastro">Finalizar Cadastro</button>
     </div>
     </>
   )

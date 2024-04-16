@@ -40,6 +40,9 @@ function Cadastro_beneficiario_form() {
             <input type="text" placeholder="Telefone de contato" />
         </div>
     </div>
+    <div className='botao_cadastro'>
+        <button class="btn_finalizarCadastro">Finalizar Cadastro</button>
+    </div>
     </>
   )
 }

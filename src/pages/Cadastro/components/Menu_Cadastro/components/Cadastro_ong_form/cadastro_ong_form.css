@@ -38,3 +38,12 @@ option {
 .flex_gap {
     @apply flex gap-3;
 }
+
+.botao_cadastro {
+    @apply w-full flex justify-center;
+}
+
+.btn_finalizarCadastro {
+    @apply p-2 rounded-lg w-80 mt-7 font-bold text-white;
+    background-color: #6c419a;
+}

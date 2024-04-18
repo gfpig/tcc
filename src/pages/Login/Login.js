@@ -4,8 +4,7 @@ import Form_login from "./components/Login_form/Form_login";
 import Login_cadastrar from "./components/Login_cadastrar/Login_cadastrar";
 
 const Login = () => {
-    return (
-        
+    return (    
         <>
             <Menu_ />
             <div style={{display:"flex", height:"100%"}}>

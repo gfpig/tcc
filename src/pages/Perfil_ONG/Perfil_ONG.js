@@ -6,11 +6,12 @@ import Faixa_detalhes_ONG from './components/Faixa_detalhes_ONG/Faixa_detalhes_O
 function Perfil_ONG() {
   return (
     <>
-        <Menu_ />
+      <Menu_ />
+      <div style={{position:"relative", top:"50px", marginLeft:"200px", marginRight:"200px"}}>    
         <Header_ONG />
-        <div style={{position:"relative", top:"384px"}}>    
-            <Faixa_detalhes_ONG />
-        </div>
+        <Faixa_detalhes_ONG />
+        <hr style={{borderColor: "gray", marginTop:"1rem"}} />
+      </div>
     </>
   )
 }

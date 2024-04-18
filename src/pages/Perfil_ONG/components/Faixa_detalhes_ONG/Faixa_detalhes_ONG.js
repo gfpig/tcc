@@ -5,6 +5,7 @@ import { faClipboardList, faPencil } from '@fortawesome/free-solid-svg-icons';
 
 function Faixa_detalhes_ONG() {
   return (
+    <>
     <div className='container_faixa_detalhes'>
         <div className='container_nomeONG'>
             <h2>GREENPEACE</h2>
@@ -13,8 +14,9 @@ function Faixa_detalhes_ONG() {
             <button className='acessar_form'><FontAwesomeIcon icon={ faClipboardList } size='2x' /></button>
             <button className='editar_perfil'><FontAwesomeIcon icon={ faPencil } /> Editar Perfil</button>
         </div>
-        <hl />
     </div>
+    
+    </>
   )
 }
 

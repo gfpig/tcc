@@ -1,7 +1,7 @@
 import React from 'react'
 import './faixa_detalhes_ong.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome' ;
-import { faClipboardList, faClipboard } from '@fortawesome/free-solid-svg-icons';
+import { faClipboardList, faPencil } from '@fortawesome/free-solid-svg-icons';
 
 function Faixa_detalhes_ONG() {
   return (
@@ -11,8 +11,9 @@ function Faixa_detalhes_ONG() {
         </div>
         <div className='container_acoesONG'>
             <button className='acessar_form'><FontAwesomeIcon icon={ faClipboardList } size='2x' /></button>
-            <button className='editar_perfil'>Editar Perfil</button>
+            <button className='editar_perfil'><FontAwesomeIcon icon={ faPencil } /> Editar Perfil</button>
         </div>
+        <hl />
     </div>
   )
 }

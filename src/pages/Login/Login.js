@@ -1,7 +1,7 @@
 import React from "react";
 import Menu_ from '../../components/Menu_/Menu_'
-import Form_login from "../../components/Login_form/Form_login";
-import Login_cadastrar from "../../components/Login_cadastrar/Login_cadastrar";
+import Form_login from "./components/Login_form/Form_login";
+import Login_cadastrar from "./components/Login_cadastrar/Login_cadastrar";
 
 const Login = () => {
     return (

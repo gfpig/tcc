@@ -1,15 +1,24 @@
 .container_faixa_detalhes {
-    @apply absolute right-5 left-5 flex justify-between;
+    @apply absolute right-20 left-20 flex justify-between items-center;
+}
+
+.container_faixa_detalhes .container_nomeONG h2 {
+    @apply font-bold text-3xl;
+}
+
+.container_acoesONG {
+    @apply flex justify-between w-56;
 }
 
 .container_acoesONG button {
+    @apply text-white font-bold;
     background-color: #6c419a;
 }
 
-.acessar_form {
-    @apply w-12 h-12 rounded-full text-white;
+.container_acoesONG .editar_perfil {
+    @apply w-40 p-2 rounded-lg h-12;
 }
 
-.editar_perfil {
-    @apply p-2 rounded-lg h-12;
+.acessar_form {
+    @apply w-12 h-12 rounded-full;
 }

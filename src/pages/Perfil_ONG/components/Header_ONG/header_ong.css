@@ -1,5 +1,5 @@
-.header {
-    @apply flex w-full absolute z-0 bg-blue-600 h-80 mt-10;
+.header_instituicao {
+    @apply flex w-full absolute z-0 justify-center h-80 mt-10;
     background-image: url('./icons/header.jpg');
     background-repeat: no-repeat;
     background-size: 100% 100%;

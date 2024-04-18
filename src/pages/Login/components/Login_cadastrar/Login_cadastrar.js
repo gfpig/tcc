@@ -1,6 +1,6 @@
 import React from "react";
 import './login_cadastrar.css';
-import capa from './../../assets/other/diversidade.png';
+import capa from '../assets/images/diversidade.png';
 
 const Login_cadastrar= () => {
     return (

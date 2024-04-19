@@ -1,0 +1,16 @@
+.post {
+    @apply w-2/3 p-4 rounded-lg mb-5;
+    background-color: #e1e1e1;
+}
+
+.cabecalho_post {
+    @apply flex mb-3;
+}
+
+.cabecalho_post .foto_cabecalho img {
+    @apply h-12 w-12 rounded-full;
+}
+
+.cabecalho_post .detalhes_cabecalho {
+    @apply ml-3;
+}

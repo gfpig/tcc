@@ -1,5 +1,5 @@
 .container_faixa_detalhes {
-    @apply mr-20 ml-20 mt-7 flex justify-between items-center;
+    @apply mt-7 flex justify-between items-center;
 }
 
 .container_faixa_detalhes .container_nomeONG h2 {

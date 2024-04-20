@@ -3,9 +3,9 @@ import './sidebar.css';
 import './alterar_senha.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencil, faLock, faBell, faMessage, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
-import Form_dados from '../../pages/Configuracoes_ONG/components/Sidebar/components/Form_dados/Form_dados';
-import Solicitacoes from '../../pages/Configuracoes_ONG/components/Sidebar/components/Solicitacoes/Solicitacoes';
-import Notificacoes from '../../pages/Configuracoes_ONG/components/Sidebar/components/Notificacoes/Notificacoes';
+import Form_dados from '../../pages/Configuracoes_ONG/components/Form_dados/Form_dados';
+import Solicitacoes from '../../pages/Configuracoes_ONG/components/Solicitacoes/Solicitacoes';
+import Notificacoes from '../../pages/Configuracoes_ONG/components/Notificacoes/Notificacoes';
 
 function Sidebar() {
     const opcoes = [<Form_dados />, <Notificacoes />, <Solicitacoes />];

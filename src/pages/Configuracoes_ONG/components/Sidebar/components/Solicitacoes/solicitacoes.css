@@ -1,0 +1,70 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&display=swap");
+
+.cabecalho__candidatura {
+    @apply flex justify-between;
+}
+
+.cabecalho__candidatura p {
+    @apply text-4xl font-bold;
+    font-family: "Roboto Slab", serif;
+    color: #6c419a;
+}
+
+.cabecalho__candidatura select {
+    @apply text-white rounded-lg p-2;
+    background-color: #6c419a;
+}
+
+.hr_solicitacoes {
+    @apply mb-3 mt-2 border-black;
+}
+
+.candidaturas {
+    @apply flex flex-col;
+}
+
+.container__candidato {
+    @apply flex items-center justify-between w-full h-2/5 mb-5;
+    background-color: #7d387c;
+}
+
+.info_candidatura {
+    @apply flex p-5;
+}
+
+.info_candidatura img {
+    @apply w-32 rounded-full;
+}
+
+.container__dadosCandidato {
+    @apply text-white ml-3;
+}
+
+.container__candidato .nome_candidato {
+    @apply font-bold;
+}
+
+.status_candaditura {
+    @apply flex flex-col justify-between h-full p-2;
+}
+
+.status_candaditura .status {
+    @apply self-end font-bold;
+}
+
+.status_candaditura .status span {
+    @apply ml-1;
+}
+
+.status_candaditura button{
+    @apply text-white font-bold text-center p-2 rounded-lg;
+    background-color: #6c419a;
+}
+
+.status_candaditura .aprovado {
+    color: #8fcd82;
+}
+
+.status_candaditura .analise {
+    color: #e87f45;
+}

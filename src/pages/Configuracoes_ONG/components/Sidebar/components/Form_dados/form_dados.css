@@ -11,21 +11,25 @@
 }
 
 .inputs_editar_dados {
-    display: flex;
-    flex-direction: column;
+    @apply flex flex-col;
 }
 
 .inputs_editar_dados input {
-    width: 100%;
+    @apply w-full;
 }
 
 .inputs_editar_dados select {
+    max-height: 44px;
     background-color: #eae8e8;
     border: none;
     border-radius: 5px;
     margin-bottom: 10px;
     padding: 10px;
     width: 50%;
+}
+
+.inputs_editar_dados .botao_deletarConta {
+    @apply self-end p-2 bg-red-600 text-white;
 }
 
 option {

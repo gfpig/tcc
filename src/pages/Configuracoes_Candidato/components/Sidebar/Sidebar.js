@@ -82,8 +82,6 @@ function Sidebar() {
                 ) : null    
                 }
             </div>
-            {/* FORM DE ALTERAÇÃO DE SENHA */}
-
         </div>
     </>
   )

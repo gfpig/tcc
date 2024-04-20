@@ -31,6 +31,7 @@ function Form_dados() {
                 <input type="text" placeholder="Nº" style={{width: "20%"}}/>      
             </div>
             <input type="text" placeholder="Telefone de contato" />
+            <button className='botao_deletarConta'>DELETAR CONTA</button>
         </div>
   )
 }

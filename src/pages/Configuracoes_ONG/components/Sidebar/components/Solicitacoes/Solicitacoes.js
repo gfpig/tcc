@@ -1,7 +1,7 @@
 import React from 'react';
 import './solicitacoes.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome' ;
-import { faCircle } from '@fortawesome/free-solid-svg-icons';
+import { faUserCircle, faCircle } from '@fortawesome/free-solid-svg-icons';
 import foto_perfil from './icons/user_female.webp';
 
 
@@ -19,7 +19,7 @@ function Solicitacoes() {
         <hr className='hr_solicitacoes' />
         <div className='container__candidato'>
             <div className='info_candidatura'>
-                <img src={foto_perfil} alt="icon_candidato"/>
+                <FontAwesomeIcon icon={ faUserCircle } size='8x' color='#e87f45' />
                 <div className='container__dadosCandidato'>
                     <span>
                         <p className='nome_candidato'>Gabrielle Fantinati Pignatari</p>
@@ -38,7 +38,7 @@ function Solicitacoes() {
         </div>
         <div className='container__candidato'>
             <div className='info_candidatura'>
-                <img src={foto_perfil} alt="icon_candidato"/>
+                <FontAwesomeIcon icon={ faUserCircle } size='8x' color='#e87f45' />
                 <div className='container__dadosCandidato'>
                     <span>
                         <p className='nome_candidato'>Antonio Victor Lopes Silva</p>

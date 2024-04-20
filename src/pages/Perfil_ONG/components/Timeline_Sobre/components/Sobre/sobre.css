@@ -1,0 +1,24 @@
+.container_sobre {
+    @apply flex self-center mt-8 w-2/3 p-4 rounded-lg mb-5;
+    background-color: #e1e1e1;
+}
+
+.container_sobre img {
+    @apply w-3/5 h-3/5;
+}
+
+.informacoes_instituicao {
+    @apply ml-3;
+}
+
+.container_sobre .informacoes_instituicao li {
+    @apply list-none;
+}
+
+.container_sobre .informacoes_instituicao span {
+    @apply mb-3 ml-1;
+}
+
+.container_sobre .informacoes_instituicao .titulo {
+    @apply font-bold;
+}

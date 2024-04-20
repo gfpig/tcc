@@ -14,3 +14,19 @@
 .cabecalho_post .detalhes_cabecalho {
     @apply ml-3;
 }
+
+.detalhes_cabecalho .nome_instituicao {
+    @apply font-bold;
+}
+
+.corpo_post {
+    @apply flex flex-col;
+}
+
+.corpo_post p {
+    @apply mb-3;
+}
+
+.corpo_post .img_post {
+    @apply self-center w-3/5;
+}

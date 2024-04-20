@@ -1,6 +1,7 @@
 import React from 'react'
 import './posts.css'
 import foto_perfil from './assets/greenpiece.jpg';
+import imagem_post from './assets/fatec.png';
 
 function Posts() {
   return (
@@ -10,7 +11,7 @@ function Posts() {
                 <img src={foto_perfil} alt="foto de perfil da instituição" />
             </div>
             <div className='detalhes_cabecalho'>
-                <p>Greenpeace</p>
+                <p className='nome_instituicao'>Greenpeace</p>
                 <p>8 de setembro de 2023</p>
             </div>
         </div>
@@ -21,6 +22,7 @@ function Posts() {
                 Se você tem entre 17 e 21 anos, não deixe de se inscrever em nosso site (www.abcaprendiz.org.br).
                 Fique atento(a)! As inscrições vão até o dia 15 de setembro.
             </p>
+            <img className='img_post' src={imagem_post} alt="imagem" />
         </div>
     </div>
   )

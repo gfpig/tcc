@@ -1,11 +1,10 @@
 import React, {useState} from 'react';
 import {useForm} from 'react-hook-form';
 import "./cadastro_ong_form.css";
-import { clear } from '@testing-library/user-event/dist/clear';
 
 function Cadastro_ong_form() {
 
-    const {register, setValue, setError, clearErrors, reset, formState} = useForm();
+    const {register, setValue, setError, clearErrors, formState} = useForm();
     const { errors, isSubmitting } = formState;
     //const [erro, setErro] = useState(null);
 
@@ -16,24 +15,16 @@ function Cadastro_ong_form() {
         fetch(`https://viacep.com.br/ws/${cep}/json/`)
         .then(res => {
             return res.json();
-            //reset()
-            //clearErrors('errors.apiError')
-            //console.log(res)
-            //setError('apiError', null);
         })
         .then(data => {
-            //console.log(data);
-            //setError(null);
             clearErrors('apiError');
-            document.getElementById("alerta_cep").style.display = "none" 
-            //console.log(errors.apiError?.message, '- vindo do data');
+            document.getElementById("alerta_cep").style.display = "none"
             setValue('logradouro', data.logradouro);
             setValue('bairro', data.bairro);
             setValue('cidade', data.localidade);
             setValue('uf', data.uf);
         })
         .catch(() => { //caso o CEP informado não exista, cria um erro e apaga os valores dos outros campos
-            //console.log(errors.apiError?.message, '- vindo do erro');
             setError('apiError', { message: "Não foi possível encontrar o CEP informado" });
             document.getElementById("alerta_cep").style.display = 'block'
             setValue('logradouro', '');
@@ -68,10 +59,8 @@ function Cadastro_ong_form() {
             </div>
 
             {/*MENSAGEM DE ERRO CASO O CEP NÃO SEJA ENCONTRADO / SEJA INSERIDA UMA INFORMAÇÃO QUALQUER */}
-            {errors && <div className="text-red-600 mt-0 mb-2" id="alerta_cep">{errors.apiError?.message}</div>}
+            {errors && <div className="text-red-600 mt-0 mb-2" id="alerta_cep" style={{display: "none"}}>{errors.apiError?.message}</div>}
             
-
-
             <input type="text" {...register("logradouro")} placeholder="Logradouro" disabled />
             <div className='flex_gap'>
                 <input type="text" {...register("cidade")} placeholder="Cidade" style={{width:"100%"}} disabled />
@@ -87,18 +76,6 @@ function Cadastro_ong_form() {
     <div className='botao_cadastro'>
         <button className="btn_finalizarCadastro">Finalizar Cadastro</button>
     </div>
-
-    {/*errors.apiError ?
-        (
-            //document.getElementById("alerta_cep").style.display = 'block'
-            console.log(errors.apiError?.message)
-        ) 
-        : (
-            //document.getElementById("alerta_cep").style.display = "none" 
-            console.log("sem erros")
-        )
-        //09572470
-    */}
     </>    
   )
 }

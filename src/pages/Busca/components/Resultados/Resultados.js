@@ -12,13 +12,13 @@ function Resultados() {
                 <img src={greenpiece} alt="logo_ong"/>
                 <div className='container__dadosResultado'>
                     <span>
-                        <p className='nome_ong'>GREENPIECE</p>
+                        <p className='nome_ong'>GREENPEACE</p>
                         <p>Organização sem fins lucrativos, fundada em 1962 e administrada pelo Rotary Club de Santo André, que atende gratuitamente jovens e adolescentes da região do grande ABCDM...</p>
                     </span>
 
                     <div className='opcoes_resultado'>
                         <button>SITE</button>
-                        <button>MAIS INFORMAÇÕES</button>
+                        <button><a href='/perfil_instituicao'>MAIS INFORMAÇÕES</a></button>
                     </div> 
                 </div>       
             </div>

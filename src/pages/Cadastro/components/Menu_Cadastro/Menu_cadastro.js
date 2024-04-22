@@ -20,7 +20,7 @@ function Menu_cadastro() {
             <FontAwesomeIcon icon={ faBuildingNgo} size="6x" />
             <span>INSTITUIÇÃO</span>
           </div>
-          <div class={`tipo ${tipoAtual === 1 && "selecionado"}`} id="beneficiario" onClick={() => {
+          <div className={`tipo ${tipoAtual === 1 && "selecionado"}`} id="beneficiario" onClick={() => {
             setTipoAtual(1);
           }}>
             <FontAwesomeIcon icon={ faUserGroup} size="5x" />

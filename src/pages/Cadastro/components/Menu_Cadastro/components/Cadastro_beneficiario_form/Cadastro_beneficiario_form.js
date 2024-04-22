@@ -41,7 +41,7 @@ function Cadastro_beneficiario_form() {
         </div>
     </div>
     <div className='botao_cadastro'>
-        <button class="btn_finalizarCadastro">Finalizar Cadastro</button>
+        <button className="btn_finalizarCadastro">Finalizar Cadastro</button>
     </div>
     </>
   )

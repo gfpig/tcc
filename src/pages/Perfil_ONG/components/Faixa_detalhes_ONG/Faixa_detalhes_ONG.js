@@ -12,7 +12,7 @@ function Faixa_detalhes_ONG() {
         </div>
         <div className='container_acoesONG'>
             <button className='acessar_form'><FontAwesomeIcon icon={ faClipboardList } size='2x' /></button>
-            <button className='editar_perfil'><FontAwesomeIcon icon={ faPencil } /> Editar Perfil</button>
+            <button className='editar_perfil'><a href='/configuracoes_ong'><FontAwesomeIcon icon={ faPencil } /> Editar Perfil</a></button>
         </div>
     </div>
     

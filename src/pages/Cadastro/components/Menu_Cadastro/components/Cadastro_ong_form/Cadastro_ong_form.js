@@ -9,7 +9,7 @@ function Cadastro_ong_form() {
     //const [erro, setErro] = useState(null);
 
     const pesquisaCEP = (e) => {
-        if (e.target.value == '') { return; }
+        //if (e.target.value == '') { return; }
         const cep = e.target.value.replace(/\D/g, ''); //substitui todos os caracteres que não são números por nulo
         console.log(cep);
         fetch(`https://viacep.com.br/ws/${cep}/json/`)
@@ -31,8 +31,16 @@ function Cadastro_ong_form() {
             setValue('bairro', '');
             setValue('cidade', '');
             setValue('uf', '');
+            //limpaCampos;
         });
     }
+
+    /*const limpaCampos = () => {
+        setValue('logradouro', '');
+        setValue('bairro', '');
+        setValue('cidade', '');
+        setValue('uf', '');
+    }*/
 
   return (
     <>

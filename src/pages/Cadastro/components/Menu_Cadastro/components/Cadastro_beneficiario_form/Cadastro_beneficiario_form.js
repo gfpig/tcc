@@ -8,7 +8,7 @@ function Cadastro_beneficiario_form() {
     //const [erro, setErro] = useState(null);
 
     const pesquisaCEP = (e) => {
-        if (e.target.value == '') { return; }
+        //if (e.target.value == '') { return; }
         const cep = e.target.value.replace(/\D/g, ''); //substitui todos os caracteres que não são números por nulo
         console.log(cep);
         fetch(`https://viacep.com.br/ws/${cep}/json/`)

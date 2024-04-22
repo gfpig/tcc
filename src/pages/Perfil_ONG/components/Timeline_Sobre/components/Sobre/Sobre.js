@@ -14,13 +14,13 @@ function Sobre() {
             <br />
             <li><FontAwesomeIcon icon={ faLocationDot } /><span className='titulo'>ENDEREÇO:</span><span>Avenida Dom Jorge Marcos de Oliveira nº 120 - Vila Guiomar, Santo André, SP, Brazil</span></li>
             <br />
-            <li><FontAwesomeIcon icon={ faPhone } /><span className='titulo'>Tel: </span><span> (11) 4438-7733</span><span className='titulo'>Tel: </span><span> (11) 4438-7575</span></li>
+            <li><FontAwesomeIcon icon={ faPhone } /><span className='titulo'>TEL: </span><span> (11) 4438-7733</span><span className='titulo'>Tel: </span><span> (11) 4438-7575</span></li>
             <br />
             <li><FontAwesomeIcon icon={faWhatsapp} /><span className='titulo'>WHATSAPP: </span><span>(11) 94209-1914 </span></li>
             <br />
             <li><FontAwesomeIcon icon={faEnvelope} /><span className='titulo'>E-MAIL: </span><span> coordenacao@abcaprendiz.org.br</span></li>
             <br />
-            <li><FontAwesomeIcon icon={faGlobe} /><span className='titulo'>Site: </span><span> www.abcaprendiz.org.br</span></li>
+            <li><FontAwesomeIcon icon={faGlobe} /><span className='titulo'>SITE: </span><span> www.abcaprendiz.org.br</span></li>
         </div>
     </div>
   )

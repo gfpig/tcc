@@ -1,5 +1,9 @@
+.funcoes_postar {
+    @apply flex flex-col w-2/3 mb-6;
+}
+
 .digitar_post {
-    @apply h-36 p-2 resize-none mt-5 rounded-lg;
+    @apply  h-44 p-2 resize-none mt-5 rounded-lg;
     background-color: #e1e1e1;
 }
 
@@ -16,4 +20,3 @@
     @apply flex-shrink-0  text-white p-2 rounded-lg mt-3;
     background-color: #545454;
 }
-

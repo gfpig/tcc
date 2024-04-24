@@ -11,6 +11,7 @@ function Form_dados() {
                 <input type="password" placeholder="Senha" />
                 <input type="password" placeholder="Confirmar senha" />
             </div>
+            <input type='text' placeholder='Site da instituição' />
             <div className='flex_gap'>
                 <input type="text" value="Educação" disabled />
                 <select name="categorias" id="categorias">
@@ -30,7 +31,10 @@ function Form_dados() {
                 <input type="text" placeholder="Complemento" />
                 <input type="text" placeholder="Nº" style={{width: "20%"}}/>      
             </div>
-            <input type="text" placeholder="Telefone de contato" />
+            <div className='flex_gap'>
+                <input type="text" placeholder="Telefone de contato" />
+                <input type="text" placeholder='WhatsApp' />
+            </div>
             <button className='botao_deletarConta'>DELETAR CONTA</button>
         </div>
   )

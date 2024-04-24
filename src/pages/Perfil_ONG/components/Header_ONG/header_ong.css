@@ -1,12 +1,12 @@
 .header_instituicao {
-    @apply flex w-full z-0 justify-center h-80;
-    background-image: url('./icons/paisagem.jpg');
+    @apply flex w-full z-0 justify-center h-80 bg-purple-400;
+    /*background-image: url('./icons/paisagem.jpg');
     background-repeat: no-repeat;
-    background-size: 100% 100%;
+    background-size: 100% 100%;*/
 }
 
 .container_fotoONG {
-    @apply self-center;
+    @apply self-center ;
 }
 
 .fotoONG {

@@ -1,6 +1,6 @@
 import React from 'react'
 import './posts.css'
-import foto_perfil from './assets/icon.jpg';
+import foto_perfil from './assets/cats.png';
 import imagem_post from './assets/fatec.png';
 
 function Posts() {

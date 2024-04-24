@@ -1,6 +1,6 @@
 import React from 'react'
 import './posts.css'
-import foto_perfil from './assets/greenpiece.jpg';
+import foto_perfil from './assets/icon.jpg';
 import imagem_post from './assets/fatec.png';
 
 function Posts() {
@@ -11,16 +11,15 @@ function Posts() {
                 <img src={foto_perfil} alt="foto de perfil da instituição" />
             </div>
             <div className='detalhes_cabecalho'>
-                <p className='nome_instituicao'>Greenpeace</p>
+                <p className='nome_instituicao'>Lorem Ipsum</p>
                 <p>8 de setembro de 2023</p>
             </div>
         </div>
         <div className='corpo_post'>
             <p>
-                Inscrições abertas para o Programa de Qualificação Profissional!
-
-                Se você tem entre 17 e 21 anos, não deixe de se inscrever em nosso site (www.abcaprendiz.org.br).
-                Fique atento(a)! As inscrições vão até o dia 15 de setembro.
+                As inscrições para o vestibular da FATEC já estão abertas! Fique atento às datas para não perder nenhum etapa do processo:
+                <br /><br />
+                Inscrições apenas no site: www.vestibularfatec.com.br
             </p>
             <img className='img_post' src={imagem_post} alt="imagem" />
         </div>

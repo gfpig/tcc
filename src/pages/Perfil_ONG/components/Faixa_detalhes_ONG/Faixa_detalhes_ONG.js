@@ -8,7 +8,7 @@ function Faixa_detalhes_ONG() {
     <>
     <div className='container_faixa_detalhes'>
         <div className='container_nomeONG'>
-            <h2>GREENPEACE</h2>
+            <h2>LOREM IPSUM</h2>
         </div>
         <div className='container_acoesONG'>
             <button className='acessar_form'><FontAwesomeIcon icon={ faClipboardList } size='2x' /></button>

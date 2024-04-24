@@ -13,6 +13,9 @@ function Solicitacoes() {
             <div>
                 <select>
                     <option>FILTRAR</option>
+                    <option>Aprovado</option>
+                    <option>Em análise</option>
+                    <option>Não aprovado</option>
                 </select>
             </div>
         </div>

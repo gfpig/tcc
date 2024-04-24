@@ -1,7 +1,7 @@
 import React from 'react'
 import './header_ong.css';
-import foto from './icons/greenpiece.jpg'
-import header from './icons/header.jpg'
+import foto from './icons/icon.jpg'
+import header from './icons/paisagem.jpg'
 
 function Header_ONG() {
   return (

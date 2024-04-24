@@ -1,7 +1,9 @@
 import React from 'react'
 import './resultados.css';
-import greenpiece from './icons/greenpiece.jpg'
-import abcaprendiz from './icons/LOGO.png'
+//import greenpiece from './icons/greenpiece.jpg'
+//import abcaprendiz from './icons/LOGO.png'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHandHoldingHeart } from '@fortawesome/free-solid-svg-icons';
 
 
 function Resultados() {
@@ -9,11 +11,11 @@ function Resultados() {
     <div className='resultados'>
         <div className='container_resultado'>
             <div className='info_ong'>
-                <img src={greenpiece} alt="logo_ong"/>
+                <FontAwesomeIcon icon={ faHandHoldingHeart } size='8x' color='white' />
                 <div className='container__dadosResultado'>
                     <span>
-                        <p className='nome_ong'>GREENPEACE</p>
-                        <p>Organização sem fins lucrativos, fundada em 1962 e administrada pelo Rotary Club de Santo André, que atende gratuitamente jovens e adolescentes da região do grande ABCDM...</p>
+                        <p className='nome_ong'>LOREM IPSUM</p>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eget ligula eu lectus lobortis condimentum. Aliquam nonummy auctor massa. Pellentesque habitant morbi tristique senectus et netus...</p>
                     </span>
 
                     <div className='opcoes_resultado'>
@@ -27,11 +29,11 @@ function Resultados() {
 
         <div className='container_resultado'>
             <div className='info_ong'>
-                <img src={abcaprendiz} alt="logo_ong"/>
+                <FontAwesomeIcon icon={ faHandHoldingHeart } size='8x' color='white' />
                 <div className='container__dadosResultado'>
                     <span>
-                        <p className='nome_ong'>ABC APRENDIZ</p>
-                        <p>Organização sem fins lucrativos, fundada em 1962 e administrada pelo Rotary Club de Santo André, que atende gratuitamente jovens e adolescentes da região do grande ABCDM...</p>
+                        <p className='nome_ong'>LOREM IPSUM</p>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eget ligula eu lectus lobortis condimentum. Aliquam nonummy auctor massa. Pellentesque habitant morbi tristique senectus et netus...</p>
                     </span>
 
                     <div className='opcoes_resultado'>

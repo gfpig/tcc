@@ -1,14 +1,14 @@
 .footer {
-    @apply text-white p-4;
+    @apply text-white p-2 w-full;
     background-color: #3f2463;
 }
 
 .container_devs {
-    @apply flex gap-4 p-8;
+    @apply flex flex-col justify-center items-center md:flex-row gap-4 p-8;
 }
 
 .dev1, .dev2, .dev3, .dev4 {
-    @apply w-2/5 flex flex-col items-center;
+    @apply ml-4 mr-4 md:ml-0 md:mr-0 md:w-2/5 flex flex-col items-center mt-8 ;
 }
 
 .foto {

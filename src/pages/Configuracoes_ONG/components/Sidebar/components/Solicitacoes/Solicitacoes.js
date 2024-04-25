@@ -12,7 +12,13 @@ function Solicitacoes() {
             <div><p>CANDIDATOS</p></div>
             <div>
                 <select>
-                    <option>FILTRAR</option>
+                    <option>Cidade</option>
+                    <option>São Bernardo do Campo</option>
+                    <option>São Caetano do Sul</option>
+                    <option>Mauá</option>
+                </select>
+                <select>
+                    <option>Status</option>
                     <option>Aprovado</option>
                     <option>Em análise</option>
                     <option>Não aprovado</option>
@@ -26,8 +32,9 @@ function Solicitacoes() {
                 <div className='container__dadosCandidato'>
                     <span>
                         <p className='nome_candidato'>Gabrielle Fantinati Pignatari</p>
-                        <p>Data de nascimento: 08/06/2000</p>
-                        <p>Gênero: Menina Mulher</p>
+                        <p>Cidade: São Caetano do Sul</p>
+                        <p>Idade: 23</p>
+                        <p>Gênero: Feminino</p>
                     </span>
                 </div>     
             </div>
@@ -45,7 +52,8 @@ function Solicitacoes() {
                 <div className='container__dadosCandidato'>
                     <span>
                         <p className='nome_candidato'>Antonio Victor Lopes Silva</p>
-                        <p>Data de nascimento: 19/03/2001</p>
+                        <p>Cidade: São Bernardo do Campo</p>
+                        <p>Idade: 23</p>
                         <p>Gênero: Masculino</p>
                     </span>
                 </div>

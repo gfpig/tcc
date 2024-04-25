@@ -18,7 +18,7 @@ const Header = () => {
             </div>
             
         </div>
-        <img className='header_img' src={header_image} alt="header" />
+        {/*<img className='header_img' src={header_image} alt="header" />*/}
     </>
     );
 }

@@ -15,7 +15,7 @@ const Stepper = () => {
 
     return (
         <>
-        <div className="flex justify-between">
+        <div className="flex flex-col mt-0 mb-4 md:mb-0 md:flex-row justify-between">
             {steps?.map((step, i) => (
                 <div key={i} className={`step-item ${currentStep === i + 1 && "active"}`}>
                     <div className='step' onClick={() => {

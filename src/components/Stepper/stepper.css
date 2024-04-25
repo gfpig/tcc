@@ -3,12 +3,12 @@
 }
 
 .step-item:not(:first-child)::before {
-    @apply content-[''] absolute w-full h-[3px] right-2/4 top-1/3 -translate-y-2/4;
+    @apply content-[''] absolute w-full h-[3px] right-2/4 top-1/3 -translate-y-2/4 hidden md:block;
     background-color: #b48cc4;
 }
 
 .step {
-    @apply w-14 h-14 flex z-10 relative rounded-full items-center justify-center font-semibold text-white;
+    @apply w-14 h-14 mt-4 md:mt-0 flex z-10 relative rounded-full items-center justify-center font-semibold text-white;
     background-color: #6c419a;
 }
 

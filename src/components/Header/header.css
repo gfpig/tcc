@@ -1,9 +1,12 @@
 .header {
-    @apply flex justify-center absolute gap-10 mt-5 z-0;
+    @apply flex flex-col justify-center items-center xl:gap-10 xl:flex-row;
+    background-image: url('../../assets/other/header_temporario.png');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;    
 }
 
 .descricao {
-    @apply flex flex-col self-center text-white;
+    @apply flex flex-col self-center text-white xl:mt-8 mr-8 ml-8 mb-8 xl:mb-0;
 }
 
 h1 {
@@ -19,5 +22,5 @@ h1 {
 }
 
 .logotipo {
-    @apply h-72 ml-8 max-w-72;
+    @apply h-60 max-w-60 xl:h-72 xl:max-w-72 md:h-64 md:max-w-64 xl:ml-8 mt-8;
 }

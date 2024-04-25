@@ -29,5 +29,5 @@
 }
 
 .card {
-    @apply text-justify p-2 w-96 h-36 bg-white border-solid border-2 border-purple-900;
+    @apply text-justify p-2 w-96 md:h-36 mr-2 bg-white border-solid border-2 border-purple-900;
 }

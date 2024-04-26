@@ -28,6 +28,11 @@
     width: 50%;
 }
 
+.inputs_editar_dados .digitar_descricao {
+    @apply h-44 p-2 resize-none mb-4 rounded-lg;
+    background-color: #e1e1e1;
+}
+
 .inputs_editar_dados .botao_deletarConta {
     @apply self-end p-2 bg-red-600 text-white;
 }

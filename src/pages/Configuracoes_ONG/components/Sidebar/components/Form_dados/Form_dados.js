@@ -35,6 +35,7 @@ function Form_dados() {
                 <input type="text" placeholder="Telefone de contato" />
                 <input type="text" placeholder='WhatsApp' />
             </div>
+            <textarea className='digitar_descricao' placeholder="Digite seu post" />
             <button className='botao_deletarConta'>DELETAR CONTA</button>
         </div>
   )

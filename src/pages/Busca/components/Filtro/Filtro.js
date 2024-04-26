@@ -1,20 +1,26 @@
 import React, {useState} from 'react'; 
-import {Multiselect} from 'multiselect-react-dropdown'; 
+//import Select from "react-select";
+//import {Multiselect} from 'multiselect-react-dropdown'; 
 import './filtros.css'
 
 function Filtro() {
     const estados = [
-        {Estado: 'São Paulo', id: 1},
-        {Estado: 'Rio de Janeiro', id: 2},
-        {Estado: 'Minas Gerais', id: 3},
-        {Estado: 'Espírito Santo', id: 4}
+        {value: 'São Paulo', label: 'São Paulo'},
+        {value: 'Rio de Janeiro', label: 'Rio de Janeiro'},
+        {value: 'Minas Gerais', label: 'Minas Gerais'},
+        {value: 'Espírito Santo', label: 'Espírito Santo'}
     ]
+
+    {/*const handleChange = (selectedOption) => {
+        console.log("handleChange", selectedOption);
+    }*/}
 
     const [opcoes] = useState(estados);
   return (
     <div className='barra_filtros'>
-        <Multiselect options={opcoes} displayValue={"Estado"} className="w-full md:w-20rem" />
-        {/*<select>
+        {/*
+        <Multiselect options={opcoes} displayValue={"Estado"} className="multiselect" />
+        <select>
             <option>Estado</option>
             <option>
                 <span>
@@ -29,6 +35,13 @@ function Filtro() {
                 </span>
             </option>
         </select>*/}
+        <select>
+            <option>Estado</option>
+            <option>Espírito Santo</option>
+            <option>Minas Gerais</option>
+            <option>Rio de Janeiro</option>
+            <option>São Paulo</option>  
+        </select>
         <select>
             <option>Cidade</option>
         </select>

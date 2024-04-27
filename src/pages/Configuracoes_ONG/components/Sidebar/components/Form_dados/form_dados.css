@@ -15,7 +15,7 @@
 }
 
 .inputs_editar_dados .escolher_img {
-    @apply flex flex-col mb-3 ;
+    @apply flex flex-col items-center mb-3;
 }
 
 .escolher_img .editar_fotoPerfil {
@@ -51,7 +51,7 @@
 }
 
 .inputs_editar_dados .botao_deletarConta {
-    @apply self-end p-2 bg-red-600 text-white;
+    @apply self-end p-2 bg-red-600 text-white mb-2;
 }
 
 option {

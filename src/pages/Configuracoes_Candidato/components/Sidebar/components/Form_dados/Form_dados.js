@@ -1,18 +1,27 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome' ;
 import { faUserCircle, faCamera } from '@fortawesome/free-solid-svg-icons';
 //import "./form_dados.css";
 
 function Form_dados() {
-  return (
+    const [img, setImg] = useState();
+
+    const onImageChange = (e) => {
+        const [file] = e.target.files;
+        setImg(URL.createObjectURL(file));
+    };
+
+    return (
         <div className="inputs_editar_dados">
             
             <label id="lbl_img" className="escolher_img">
-                <FontAwesomeIcon icon={ faUserCircle } size='4x' color='#e87f45' />
+                {img == null && <FontAwesomeIcon icon={ faUserCircle } size='4x' color='#e87f45' id='img_none' />}
+                {img != null && <img id="img_perfilONG" src={img} alt="foto de perfil" className='rounded-full h-16 w-16' />}
+
                 <div className='editar_fotoPerfil'>
                     <FontAwesomeIcon icon={ faCamera } color='white' />
                     <p>Escolha uma foto</p>
-                    <input type="file" id="input_img" name="input" />
+                    <input type="file" id="input" name="input" />
                 </div>
             </label>
 

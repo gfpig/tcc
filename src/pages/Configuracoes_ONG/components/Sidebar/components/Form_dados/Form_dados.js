@@ -1,20 +1,27 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome' ;
 import { faHandHoldingHeart, faCamera } from '@fortawesome/free-solid-svg-icons';
 import "./form_dados.css";
 import foto from './images/ffff.jpg'
 
 function Form_dados() {
-  return (
+    const [img, setImg] = useState();
+
+    const onImageChange = (e) => {
+        const [file] = e.target.files;
+        setImg(URL.createObjectURL(file));
+    };
+
+    return (
         <div className="inputs_editar_dados">
 
             <label id="lbl_img" className="escolher_img">
-                <FontAwesomeIcon icon={ faHandHoldingHeart } size='4x' color='#e87f45' />
+                {img == null && <FontAwesomeIcon icon={ faHandHoldingHeart } size='4x' color='#e87f45' id='img_none' />}
+                {img != null && <img id="img_perfilONG" src={img} alt="foto de perfil" className='rounded-full h-16 w-16' />}
                 <div className='editar_fotoPerfil'>
                     <FontAwesomeIcon icon={ faCamera } color='white' />
-                    <img id="img_ponto" src={foto} alt="foto de perfil" />
                     <p>Escolha uma foto</p>
-                    <input type="file" id="input" name="input_imagem" />
+                    <input type="file" id="input" name="input_imagem" onChange={onImageChange} />
                 </div>
             </label>
 
@@ -51,37 +58,8 @@ function Form_dados() {
             </div>
             <textarea className='digitar_descricao' placeholder="Digite seu post" />
             <button className='botao_deletarConta'>DELETAR CONTA</button>
-
-            {/*<script>
-            {
-                if (window.FileList && window.File && window.FileReader) {
-                    const output = document.getElementById('img_ponto');
-                    document.getElementById('input').addEventListener('change', event => {
-                        output.src = '';
-                        const file = event.target.files[0];
-                        if (!file.type) {
-                            return;
-                        }
-                        if (!file.type.match('image.*')) {
-                            return;
-                        }
-                        const reader = new FileReader();
-                        reader.addEventListener('load', event => {
-                            output.src = event.target.result;
-                        });
-                        reader.readAsDataURL(file);
-                    }); 
-                }
-            }
-            </script>*/}
         </div>
-  )  
-}
-
-function getSrc() {
-    var img = document.getElementById('img_ponto'); 
-    img.getAttribute("src");
-    return img;
+    )   
 }
 
 export default Form_dados

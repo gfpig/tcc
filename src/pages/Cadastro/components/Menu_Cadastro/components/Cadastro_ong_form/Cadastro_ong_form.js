@@ -35,34 +35,27 @@ function Cadastro_ong_form() {
         });
     }
 
-    /*const limpaCampos = () => {
-        setValue('logradouro', '');
-        setValue('bairro', '');
-        setValue('cidade', '');
-        setValue('uf', '');
-    }*/
-
   return (
     <>
     <div className="container_inputs">
         <div className="inputs_esquerda">
-            <input type="text"  placeholder="Nome da entidade" />
-            <input type="text" placeholder="CNPJ" />
-            <input type="email" placeholder="E-mail" />
+            <input type="text"  placeholder="Nome da entidade" required />
+            <input type="text" placeholder="CNPJ" required />
+            <input type="email" placeholder="E-mail" required />
             <div className='flex_gap'>
-                <input type="password" placeholder="Senha" />
-                <input type="password" placeholder="Confirmar senha" />
+                <input type="password" placeholder="Senha" required />
+                <input type="password" placeholder="Confirmar senha" required />
             </div>
             <div className='flex_gap'>
                 <input type="text" value="Educação" disabled />
-                <select name="categorias" id="categorias">
+                <select name="categorias" id="categorias" required>
                     <option value="">Categoria</option>
                 </select>
             </div>
         </div>
         <div className="inputs_direita">
             <div className='flex_gap'>
-                <input type="text" placeholder="CEP" onBlur={pesquisaCEP} />
+                <input type="text" placeholder="CEP" onBlur={pesquisaCEP} required />
                 <input type="text" {...register("bairro")} placeholder="Bairro" disabled />
             </div>
 
@@ -76,9 +69,9 @@ function Cadastro_ong_form() {
             </div>
             <div className='flex_gap'>
                 <input type="text" placeholder="Complemento" style={{width:"100%"}} />
-                <input type="text" placeholder="Nº" style={{width:"50px"}} />      
+                <input type="text" placeholder="Nº" style={{width:"50px"}} required />      
             </div>
-            <input type="text" placeholder="Telefone de contato" />
+            <input type="text" placeholder="Telefone de contato" required />
         </div>    
     </div>
     <div className='botao_cadastro'>

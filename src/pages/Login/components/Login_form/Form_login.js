@@ -10,8 +10,8 @@ const Form_login = () => {
                     <h1>BEM-VINDO!</h1>
 
                     <div className="inputs">
-                        <input type="email" placeholder="E-mail" />
-                        <input type="password" placeholder="Senha" />
+                        <input type="email" placeholder="E-mail" required />
+                        <input type="password" placeholder="Senha" required />
                         <p style={{fontStyle: "italic", alignSelf: "end"}}><a href="" className="esqueci_senha">Esqueci a senha</a></p>
                         <button>ENTRAR</button>
                     </div>

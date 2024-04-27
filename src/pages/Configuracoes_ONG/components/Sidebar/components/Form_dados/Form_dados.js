@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome' ;
 import { faHandHoldingHeart, faCamera } from '@fortawesome/free-solid-svg-icons';
 import "./form_dados.css";
-import foto from './images/ffff.jpg'
 
 function Form_dados() {
     const [img, setImg] = useState();
@@ -25,22 +24,18 @@ function Form_dados() {
                 </div>
             </label>
 
-            <input type="text" placeholder="Nome da entidade" />
-            <input type="text" placeholder="CNPJ" />
-            <input type="email" placeholder="E-mail" />
-            <div className='flex_gap'>
-                <input type="password" placeholder="Senha" />
-                <input type="password" placeholder="Confirmar senha" />
-            </div>
-            <input type='text' placeholder='Site da instituição' />
+            <input type="text" placeholder="Nome da entidade" required />
+            <input type="text" placeholder="CNPJ" required />
+            <input type="email" placeholder="E-mail" required />
+            <input type='text' placeholder='Site da instituição' required />
             <div className='flex_gap'>
                 <input type="text" value="Educação" disabled />
-                <select name="categorias" id="categorias">
+                <select name="categorias" id="categorias" required>
                     <option value="">Categoria</option>
                 </select>
             </div>
             <div className='flex_gap'>
-                <input type="text" placeholder="CEP" />
+                <input type="text" placeholder="CEP" required />
                 <input type="text" placeholder="Bairro" />
             </div>
                 <input type="text" placeholder="Logradouro" />
@@ -50,13 +45,13 @@ function Form_dados() {
             </div>
             <div className='flex_gap'>
                 <input type="text" placeholder="Complemento" />
-                <input type="text" placeholder="Nº" style={{width: "20%"}}/>      
+                <input type="text" placeholder="Nº" style={{width: "20%"}} required />      
             </div>
             <div className='flex_gap'>
-                <input type="text" placeholder="Telefone de contato" />
+                <input type="text" placeholder="Telefone de contato" required />
                 <input type="text" placeholder='WhatsApp' />
             </div>
-            <textarea className='digitar_descricao' placeholder="Digite seu post" />
+            <textarea className='digitar_descricao' placeholder="Descrição sobre a instituição" />
             <button className='botao_deletarConta'>DELETAR CONTA</button>
         </div>
     )   

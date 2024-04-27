@@ -25,19 +25,19 @@ function Form_dados() {
                 </div>
             </label>
 
-            <input type="text" placeholder="Nome completo" />
+            <input type="text" placeholder="Nome completo" required />
             <div className='flex_gap'>
-                <input type="text" placeholder="CPF" />
+                <input type="text" placeholder="CPF" required />
                 <input type="text" placeholder="08/06/2000" disabled />
             </div><div className='flex_gap'>
-                <select>
+                <select required>
                     <option value="">Gênero</option>
                     <option>Masculino</option>
                     <option>Feminino</option>
                     <option>Não-binário</option>
                     <option>Outro</option>
                 </select>
-                <select>
+                <select required>
                     <option value="">Escolaridade</option>
                     <option>Ensino fundamental incompleto</option>
                     <option>Ensino fundamental completo</option>
@@ -49,7 +49,7 @@ function Form_dados() {
             </div>
             <input type="text" placeholder="E-mail" />
             <div className='flex_gap'>
-                <input type="text" placeholder="CEP" />
+                <input type="text" placeholder="CEP" required />
                 <input type="text" placeholder="Bairro" />
             </div><div className='flex_gap'>
                 <input type="text" placeholder="Nome completo da mãe" />
@@ -62,9 +62,9 @@ function Form_dados() {
             </div>
             <div className='flex_gap'>
                 <input type="text" placeholder="Complemento" />
-                <input type="text" placeholder="Nº" style={{width: "20%"}}/>      
+                <input type="text" placeholder="Nº" style={{width: "20%"}} required />      
             </div>
-            <input type="text" placeholder="Telefone de contato" />
+            <input type="text" placeholder="Telefone de contato" required />
             <button className='botao_deletarConta'>DELETAR CONTA</button>
         </div>
   )

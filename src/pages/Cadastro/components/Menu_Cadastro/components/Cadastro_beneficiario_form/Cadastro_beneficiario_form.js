@@ -37,27 +37,27 @@ function Cadastro_beneficiario_form() {
     <>
     <div className="container_inputs">
         <div className="inputs_esquerda">
-            <input type="text" placeholder="Nome completo" />
-            <input type="text" placeholder="CPF" />
+            <input type="text" placeholder="Nome completo" required />
+            <input type="text" placeholder="CPF" required />
             
             <div className='flex_gap'>
                 <input type="text" placeholder="Data de Nascimento"
                     onFocus={(e) => (e.target.type = "date")}
                     onBlur={(e) => (e.target.type = "text")}
                 />
-                <select name="generos" id="generos">
+                <select name="generos" id="generos" required >
                     <option value="">Gênero</option>
                 </select>
             </div>
-            <input type="email" placeholder="E-mail" />
+            <input type="email" placeholder="E-mail" required />
             <div className='flex_gap'>
-                <input type="password" placeholder="Senha" />
-                <input type="password" placeholder="Confirmar senha" />
+                <input type="password" placeholder="Senha" required />
+                <input type="password" placeholder="Confirmar senha" required />
             </div>
         </div>
         <div className="inputs_direita">
             <div className='flex_gap'>
-                <input type="text" placeholder="CEP" onBlur={pesquisaCEP} />
+                <input type="text" placeholder="CEP" onBlur={pesquisaCEP} required />
                 <input type="text" {...register("bairro")} placeholder="Bairro" disabled />
             </div>
 
@@ -71,9 +71,9 @@ function Cadastro_beneficiario_form() {
             </div>
             <div className='flex_gap'>
                 <input type="text" placeholder="Complemento" style={{width:"100%"}} />
-                <input type="text" placeholder="Nº" style={{width:"50px"}} />      
+                <input type="text" placeholder="Nº" style={{width:"50px"}} required />      
             </div>
-            <input type="text" placeholder="Telefone de contato" />
+            <input type="text" placeholder="Telefone de contato" required />
         </div> 
     </div>
     <div className='botao_cadastro'>

@@ -32,7 +32,8 @@
     border: none;
     border-radius: 5px;
     margin-bottom: 10px;
-    height: 30px;
+    /*height: 30px;*/
+    padding: 5px;
 }
 
 .esqueci_senha {

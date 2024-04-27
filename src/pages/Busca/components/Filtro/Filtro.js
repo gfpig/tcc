@@ -11,30 +11,9 @@ function Filtro() {
         {value: 'Espírito Santo', label: 'Espírito Santo'}
     ]
 
-    {/*const handleChange = (selectedOption) => {
-        console.log("handleChange", selectedOption);
-    }*/}
-
     const [opcoes] = useState(estados);
   return (
     <div className='barra_filtros'>
-        {/*
-        <Multiselect options={opcoes} displayValue={"Estado"} className="multiselect" />
-        <select>
-            <option>Estado</option>
-            <option>
-                <span>
-                    <input type="checkbox" id="vagas" />
-                    <label for="vagas">São Paulo</label>
-                </span>
-            </option>
-            <option>
-                <span>
-                    <input type="checkbox" id="vagas" />
-                    <label for="vagas">Rio de Janeiro</label>
-                </span>
-            </option>
-        </select>*/}
         <select>
             <option>Estado</option>
             <option>Espírito Santo</option>

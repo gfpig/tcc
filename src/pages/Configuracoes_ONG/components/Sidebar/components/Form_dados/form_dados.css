@@ -14,6 +14,23 @@
     @apply flex flex-col;
 }
 
+.inputs_editar_dados .escolher_img {
+    @apply flex flex-col mb-3 ;
+}
+
+.escolher_img .editar_fotoPerfil {
+    @apply flex self-center mt-2 items-center p-1 text-white font-bold rounded-lg;
+    background-color: #6c419a;
+}
+
+.editar_fotoPerfil p {
+    @apply ml-1;
+}
+
+#input {
+    display: none;
+}
+
 .inputs_editar_dados input {
     @apply w-full;
 }

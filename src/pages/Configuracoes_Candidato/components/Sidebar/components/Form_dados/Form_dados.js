@@ -1,9 +1,21 @@
 import React from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome' ;
+import { faUserCircle, faCamera } from '@fortawesome/free-solid-svg-icons';
 //import "./form_dados.css";
 
 function Form_dados() {
   return (
         <div className="inputs_editar_dados">
+            
+            <label id="lbl_img" className="escolher_img">
+                <FontAwesomeIcon icon={ faUserCircle } size='4x' color='#e87f45' />
+                <div className='editar_fotoPerfil'>
+                    <FontAwesomeIcon icon={ faCamera } color='white' />
+                    <p>Escolha uma foto</p>
+                    <input type="file" id="input_img" name="input" />
+                </div>
+            </label>
+
             <input type="text" placeholder="Nome completo" />
             <div className='flex_gap'>
                 <input type="text" placeholder="CPF" />

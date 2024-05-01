@@ -15,7 +15,7 @@ function Sidebar() {
 
   return (
         <>
-        <div style={{display:"flex", justifyContent:"center"}}>
+        <div className='flex justify-center flex-row'>
             {/* SIDEBAR */}
             <div className="sidebar">
                 <nav className="sidebar_navigation">

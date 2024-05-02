@@ -10,7 +10,7 @@ const supabase = createClient(PROJECT_URL, PUBLIC_KEY);
 
 function CreateUser (valoresDoForm) {
     const [values, setValues] = React.useState(valoresDoForm.initialValues);
-
+    //console.log(values)
     return {
         values, 
         handleChange: (evento) => {
@@ -23,16 +23,35 @@ function CreateUser (valoresDoForm) {
         },
 
         clearForm () {
-            setValues({});
+            setValues({
+                cpf: '',
+                nomeCandidato: '',
+                nomeMae: '',
+                dataNasc: '',
+                generos: '',
+                email: '',
+                senha: '',
+                confirmar_senha: '',
+                cep: '',
+                bairro: '',
+                logradouro: '',
+                cidade: '',
+                uf: '',
+                complemento: '',
+                numero: '',
+                telefone: '',
+            });
         }
     };
 }
+
+
 
 function Cadastro_beneficiario_form() {
 
     //Colocando valores nulos para o form quando a página abrir
     const formCadastroBeneficiario = CreateUser({
-        initialValues: { cpf: "" , nomeCandidato: "", dataNasc: "", generos: "", email: "", senha: "", cep: "", bairro: "", cidade: "",
+        initialValues: { cpf: "" , nomeCandidato: "", nomeMae: "", dataNasc: "", generos: "", email: "", senha: "", confirmar_senha: "", cep: "", bairro: "", cidade: "",
         logradouro: "", uf: "", complemento: "", numero: "", telefone: ""}
     });
 
@@ -50,6 +69,9 @@ function Cadastro_beneficiario_form() {
         })
         .then(data => {
             clearErrors('apiError');
+            if(data.erro == true) {
+                setError('apiError', { message: "Não foi possível encontrar o CEP informado" });
+            }
             document.getElementById("alerta_cep").style.display = "none"
             /*setValue('logradouro', data.logradouro);
             setValue('bairro', data.bairro);
@@ -111,11 +133,8 @@ function Cadastro_beneficiario_form() {
         })
         .then ((oqueveio) => {
             console.log(oqueveio);
-            formCadastroBeneficiario.values.logradouro = '';
-            formCadastroBeneficiario.values.bairro = '';
-            formCadastroBeneficiario.values.cidade = '';
-            formCadastroBeneficiario.values.uf = '';
         })
+        formCadastroBeneficiario.clearForm();
     }}>
         <div className="container_inputs">
             <div className="inputs_esquerda">
@@ -142,7 +161,7 @@ function Cadastro_beneficiario_form() {
                 <input type="email" name="email" value={ formCadastroBeneficiario.values.email } placeholder="E-mail" onChange={ formCadastroBeneficiario.handleChange } required />
                 <div className='flex_gap'>
                     <input type="password" name="senha" value={ formCadastroBeneficiario.values.senha } placeholder="Senha" onChange={ formCadastroBeneficiario.handleChange } required />
-                    <input type="password" placeholder="Confirmar senha" required />
+                    <input type="password" name="confirmar_senha" value={ formCadastroBeneficiario.values.confirmar_senha } placeholder="Confirmar senha" onChange={ formCadastroBeneficiario.handleChange } required />
                 </div>
             </div>
             <div className="inputs_direita">
@@ -163,7 +182,7 @@ function Cadastro_beneficiario_form() {
                     <input type="text" name="complemento" value={ formCadastroBeneficiario.values.complemento } placeholder="Complemento" style={{width:"100%"}} onChange={ formCadastroBeneficiario.handleChange } />
                     <input type="text" name="numero" value={ formCadastroBeneficiario.values.numero } placeholder="Nº" style={{width:"50px"}} onChange={ formCadastroBeneficiario.handleChange } required />      
                 </div>
-                <input type="text" name="telefone" placeholder="Telefone de contato" onChange={ formCadastroBeneficiario.handleChange } required />
+                <input type="text" name="telefone" value={ formCadastroBeneficiario.values.telefone } placeholder="Telefone de contato" onChange={ formCadastroBeneficiario.handleChange } required />
             </div> 
         </div>
         <div className='botao_cadastro'>

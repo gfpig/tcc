@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {useForm} from 'react-hook-form';
 import "./cadastro_ong_form.css";
 import * as yup from "yup";
+import { cnpj } from 'cpf-cnpj-validator'; 
 import { createClient } from "@supabase/supabase-js";
 import Swal from 'sweetalert2';
 
@@ -45,7 +46,7 @@ function CreateInstituicao (valoresDoForm) {
 
 function Cadastro_ong_form() {
 
-    const {register, handleSubmit, setValue, setError, clearErrors, formState} = useForm();
+    const {register, setError, clearErrors, formState} = useForm();
     const { errors } = formState;
     //const onSubmit = (data, e) => console.log(data, e)
     //const onError = (errors, e) => console.log(errors, e)
@@ -72,6 +73,20 @@ function Cadastro_ong_form() {
         telefone: yup.string().required("É necessário informar seu telefone")
     })
 
+    const validaCNPJ = (e) => {
+        const valor = e.target.value.replace(/\D/g, ''); //substitui todos os caracteres que não são números por nulo
+        console.log(valor)
+
+        if(cnpj.isValid(valor)) {
+            clearErrors('cnpjInvalido');
+            document.getElementById("alerta_cnpj").style.display = 'none'
+        } else {     
+            setError('cnpjInvalido', { message: "Informe um CNPJ válido"});
+            document.getElementById("alerta_cnpj").style.display = 'block'
+            ;;console.log(errors.cnpjInvalido?.message)
+        }
+    }
+
     const formCadastroInstituicao = CreateInstituicao({
         initialValues: {
             cnpj: '',
@@ -90,16 +105,17 @@ function Cadastro_ong_form() {
         }
     });
 
+    //Procura os dados do CEP de acordo com o que foi informado no input
     const pesquisaCEP = (e) => {
         const cep = e.target.value.replace(/\D/g, ''); //substitui todos os caracteres que não são números por nulo
-        console.log(cep);
+        //console.log(cep);
         fetch(`https://viacep.com.br/ws/${cep}/json/`)
         .then(res => {
             //console.log(res);
             return res.json();
         })
         .then(data => {
-            clearErrors('apiError');
+            clearErrors('apiError'); //limpa todos os erros (para não aparecer nenhuma mensagem indesejada)
 
             document.getElementById("alerta_cep").style.display = "none"
             if (data.erro === true) {
@@ -136,10 +152,11 @@ function Cadastro_ong_form() {
         e.preventDefault();
 
         try { //validar se todos os campos estão preenchidos
-            console.log("try");
+            //console.log("try");
+            //cnpj.isValid(formCadastroInstituicao.cnpj);
             await validationSchema.validate(formCadastroInstituicao.values, {abortEarly: false});
         } catch (erro) { //se não estão, cria um novo erro para ser exibido ao usuário
-            console.log("catch");
+            //console.log("catch");
             const novoErro = {}
 
             erro.inner.forEach(err => {
@@ -150,6 +167,7 @@ function Cadastro_ong_form() {
             return;
         }
 
+        //Colocando todos os dados na tabela instituicao
         supabase.from('instituicao').insert({
             cnpj: formCadastroInstituicao.values.cnpj,
             nomeinstituicao: formCadastroInstituicao.values.nomeinstituicao,
@@ -165,7 +183,7 @@ function Cadastro_ong_form() {
             telefone: formCadastroInstituicao.values.telefone
         })
         .then ((oqueveio) => {
-            if(oqueveio.error == null) { //Se o cadastro for feito com sucesso, mostrar esse popup
+            if(oqueveio.error == null) { //Se o cadastro não retornar erros, mostrar esse popup
                 Swal.fire({
                     icon: "success",
                     title: "Cadastro efetuado com sucesso"
@@ -182,7 +200,7 @@ function Cadastro_ong_form() {
                     title: mensagem
                 })
             }
-            console.log(oqueveio);
+            //console.log(oqueveio);
         })
     }}>
     <div className="container_inputs">
@@ -190,7 +208,10 @@ function Cadastro_ong_form() {
             <input type="text" name='nomeinstituicao' value={ formCadastroInstituicao.values.nomeinstituicao } placeholder="Nome da instituição" onChange={formCadastroInstituicao.handleChange} />
             {erros.nomeinstituicao && <div className='text-red-600 mt-0 mb-2'>{erros.nomeinstituicao}</div>}
 
-            <input type="text" name='cnpj' placeholder="CNPJ" value={ formCadastroInstituicao.values.cnpj }  onChange={formCadastroInstituicao.handleChange} />
+            <input type="text" name='cnpj' placeholder="CNPJ" value={ formCadastroInstituicao.values.cnpj }
+            onChange={formCadastroInstituicao.handleChange}
+            onBlur={validaCNPJ} />
+            {errors && <div className="text-red-600 mt-0 mb-2" id="alerta_cnpj" style={{display: "none"}}>{errors.cnpjInvalido?.message}</div>}
             {erros.cnpj && <div className='text-red-600 mt-0 mb-2'>{erros.cnpj}</div>}
 
             <input type="email" name='emailinstituicao' value={ formCadastroInstituicao.values.emailinstituicao } placeholder="E-mail" onChange={formCadastroInstituicao.handleChange} />

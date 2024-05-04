@@ -56,8 +56,8 @@ function Cadastro_beneficiario_form() {
         logradouro: "", uf: "", complemento: "", numero: "", telefone: ""}
     });
 
-    const {register, setValue, setError, clearErrors, formState} = useForm();
-    const { errors, isSubmitting } = formState;
+    const {register, setError, clearErrors, formState} = useForm();
+    const { errors } = formState;
     const [erros, setErros] = useState({});
 
     //FUNÇÃO DE VALIDAÇÃO DOS CAMPOS DO FORMULÁRIO
@@ -83,6 +83,7 @@ function Cadastro_beneficiario_form() {
         telefone: yup.string().required("É necessário informar seu telefone")
     })
 
+    //Procura os dados do CEP de acordo com o que foi informado no input
     const pesquisaCEP = (e) => {
         const cep = e.target.value.replace(/\D/g, ''); //substitui todos os caracteres que não são números por nulo
         //console.log(cep);
@@ -93,7 +94,7 @@ function Cadastro_beneficiario_form() {
         })
         .then(data => {
             //console.log(data);
-            clearErrors('apiError');
+            clearErrors('apiError'); //limpa todos os erros (para não aparecer nenhuma mensagem indesejada)
             document.getElementById("alerta_cep").style.display = "none"
             if(data.erro === true) { //Caso o CEP informado tenha o número certo de caracteres, porém não exista
                 //console.log("erro = true");
@@ -143,6 +144,7 @@ function Cadastro_beneficiario_form() {
             return;
         }
 
+        //Colocando todos os dados na tabela candidato
         supabase.from("candidato").insert({
             cpf: formCadastroBeneficiario.values.cpf,
             nomecandidato: formCadastroBeneficiario.values.nomeCandidato,

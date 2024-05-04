@@ -2,7 +2,6 @@ import React, {useState} from 'react'
 import {useForm} from 'react-hook-form';
 //import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
-import { userSchema } from '../../../../../../Validations/UserValidation';
 import { createClient } from "@supabase/supabase-js";
 import Swal from 'sweetalert2';
 
@@ -12,27 +11,8 @@ const supabase = createClient(PROJECT_URL, PUBLIC_KEY);
 
 function CreateUser (valoresDoForm) {
     const [values, setValues] = React.useState(valoresDoForm.initialValues);
-    const [erros, setErros] = useState({});
+    //const [erros, setErros] = useState({});
     //console.log(values)
-
-    /*const validationSchema= yup.object({
-        nomeCandidato: yup.string().required("É necessário preencher este campo"),
-        nomeMae: yup.string().required("É necessário preencher este campo"),
-        email: yup.string().email().required("É necessário preencher este campo"),
-        senha: yup.string()
-                    .min(8, "A senha deve ter no mínimo 8 caracteres")
-                    .uppercase("A senha deve conter pelo menos uma letra maiúscula")
-                    .required("É necessário preencher este campo"),
-        confirmar_senha: yup.string().oneOf([yup.ref("senha")], "As senhas devem coincidir").required("É necessário preencher este campo"),
-        CEP: yup.string().required("É necessário preencher este campo"),
-        bairro: yup.string().required("É necessário preencher este campo"),
-        logradouro: yup.string().required("É necessário preencher este campo"),
-        cidade: yup.string().required("É necessário preencher este campo"),
-        uf: yup.string().required("É necessário preencher este campo"),
-        complemento: yup.string().required("É necessário preencher este campo"),
-        numero: yup.string().required("É necessário preencher este campo"),
-        telefone: yup.string().required("É necessário preencher este campo")
-    })*/
 
     return {
         values, 
@@ -44,22 +24,6 @@ function CreateUser (valoresDoForm) {
                 [name]: value,
             });    
         },
-
-        /*handleSubmit: async () => {
-
-            //FUNÇÃO DE VALIDAÇÃO DOS CAMPOS
-            try { //validar se todos os campos estão preenchidos
-                await validationSchema.validate(valoresDoForm, {abortEarly: false});
-            } catch (erro) { //se não estão, cria um novo erro para ser exibido ao usuário
-                const novoErro = {}
-
-                erro.inner.forEach(err => {
-                    novoErro[err.path] = err.message
-                });
-                setErros(novoErro);
-                //console.log(erro.inner)
-            }
-        },*/
 
         clearForm () {
             setValues({
@@ -131,8 +95,8 @@ function Cadastro_beneficiario_form() {
             //console.log(data);
             clearErrors('apiError');
             document.getElementById("alerta_cep").style.display = "none"
-            if(data.erro == true) { //Caso o CEP informado tenha o número certo de caracteres, porém não exista
-                console.log("erro = true");
+            if(data.erro === true) { //Caso o CEP informado tenha o número certo de caracteres, porém não exista
+                //console.log("erro = true");
                 setError('apiError', { message: "Não foi possível encontrar o CEP informado" });
                 document.getElementById("alerta_cep").style.display = "block"
                 formCadastroBeneficiario.values.logradouro = '';
@@ -150,6 +114,7 @@ function Cadastro_beneficiario_form() {
         .catch(() => { //caso o CEP informado não exista, cria um erro e apaga os valores dos outros campos
             setError('apiError', { message: "Não foi possível encontrar o CEP informado" });
             document.getElementById("alerta_cep").style.display = 'block'
+            //Limpando os campos
             formCadastroBeneficiario.values.logradouro = '';
             formCadastroBeneficiario.values.bairro = '';
             formCadastroBeneficiario.values.cidade = '';
@@ -161,8 +126,8 @@ function Cadastro_beneficiario_form() {
     <>
     <form onSubmit={async (evento) => {
         evento.preventDefault();
-        console.log(formCadastroBeneficiario.values);
-        //FUNÇÃO DE VALIDAÇÃO DOS CAMPOS
+        //console.log(formCadastroBeneficiario.values);
+
         try { //validar se todos os campos estão preenchidos
             console.log("try");
             await validationSchema.validate(formCadastroBeneficiario.values, {abortEarly: false});
@@ -176,7 +141,6 @@ function Cadastro_beneficiario_form() {
             setErros(novoErro);
             console.log(erros);
             return;
-            //console.log(erro.inner)
         }
 
         supabase.from("candidato").insert({
@@ -202,12 +166,12 @@ function Cadastro_beneficiario_form() {
                     icon: "success",
                     title: "Cadastro efetuado com sucesso"
                 })
-                formCadastroBeneficiario.clearForm();
+                formCadastroBeneficiario.clearForm(); //limpa o formulário
             }
             if (oqueveio.error != null) { //Se der algum problema, mostrar esse.
                 var mensagem = "Um erro inesperado ocorreu :(";
                 
-                if (oqueveio.error.code == "23505") { mensagem = "CPF e/ou e-mail já cadastrados" }
+                if (oqueveio.error.code === "23505") { mensagem = "CPF e/ou e-mail já cadastrados" }
 
                 Swal.fire({
                     icon: "error",
@@ -219,7 +183,6 @@ function Cadastro_beneficiario_form() {
         .catch ((err) => {
             console.log(err);
         })
-        //formCadastroBeneficiario.clearForm();
     }}>
         <div className="container_inputs">
             <div className="inputs_esquerda">
@@ -261,8 +224,8 @@ function Cadastro_beneficiario_form() {
                     <input type="text" value={ formCadastroBeneficiario.values.cep } placeholder="CEP" name="cep" onBlur={pesquisaCEP} onChange={ formCadastroBeneficiario.handleChange } />
                     <input type="text" name="bairro" value={ formCadastroBeneficiario.values.bairro } {...register("bairro")} placeholder="Bairro" onChange={ formCadastroBeneficiario.handleChange } disabled />
                 </div>
+
                 {erros.cep && <div className='text-red-600 mt-0 mb-2'>{erros.cep}</div>}
-                {/*MENSAGEM DE ERRO CASO O CEP NÃO SEJA ENCONTRADO / SEJA INSERIDA UMA INFORMAÇÃO QUALQUER */}
                 {errors && <div className="text-red-600 mt-0 mb-2" id="alerta_cep" style={{display: "none"}}>{errors.apiError?.message}</div>}
                 
                 <input type="text" name="logradouro" value={ formCadastroBeneficiario.values.logradouro } {...register("logradouro")} placeholder="Logradouro" onChange={ formCadastroBeneficiario.handleChange } disabled />

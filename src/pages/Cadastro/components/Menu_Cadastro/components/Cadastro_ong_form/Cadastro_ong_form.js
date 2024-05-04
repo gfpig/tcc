@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {useForm} from 'react-hook-form';
 import "./cadastro_ong_form.css";
 import { createClient } from "@supabase/supabase-js";
+import Swal from 'sweetalert2';
 
 const PROJECT_URL = "https://xljeosvrbsygpekwclan.supabase.co";
 const PUBLIC_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhsamVvc3ZyYnN5Z3Bla3djbGFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTQ1MTY1NzAsImV4cCI6MjAzMDA5MjU3MH0.InFDrSOcPxRe4LXMBJ4dT59bBb3LSpKw063S90E3uPo"
@@ -9,7 +10,7 @@ const supabase = createClient(PROJECT_URL, PUBLIC_KEY);
 
 function CreateInstituicao (valoresDoForm) {
     const [values, setValues] = React.useState(valoresDoForm.initialValues);
-    console.log(values)
+    //console.log(values)
     return {
         values, 
         handleChange: (evento) => {
@@ -73,10 +74,12 @@ function Cadastro_ong_form() {
         console.log(cep);
         fetch(`https://viacep.com.br/ws/${cep}/json/`)
         .then(res => {
+            //console.log(res);
             return res.json();
         })
         .then(data => {
             clearErrors('apiError');
+            console.log(data);
             document.getElementById("alerta_cep").style.display = "none"
             /*setValue('logradouro', data.logradouro);
             setValue('bairro', data.bairro);
@@ -117,9 +120,26 @@ function Cadastro_ong_form() {
             telefone: formCadastroInstituicao.values.telefone
         })
         .then ((oqueveio) => {
+            if(oqueveio.error == null) { //Se o cadastro for feito com sucesso, mostrar esse popup
+                Swal.fire({
+                    icon: "success",
+                    title: "Cadastro efetuado com sucesso"
+                })
+                formCadastroInstituicao.clearForm();
+            }
+            if (oqueveio.error != null) { //Se der algum problema, mostrar esse.
+                var mensagem = "Um erro inesperado ocorreu :(";
+                
+                if (oqueveio.error.code == "23505") { mensagem = "CNPJ e/ou e-mail já cadastrados" }
+
+                Swal.fire({
+                    icon: "error",
+                    title: mensagem
+                })
+            }
             console.log(oqueveio);
         })
-        formCadastroInstituicao.clearForm();
+        //formCadastroInstituicao.clearForm();
     }}>
     <div className="container_inputs">
         <div className="inputs_esquerda">

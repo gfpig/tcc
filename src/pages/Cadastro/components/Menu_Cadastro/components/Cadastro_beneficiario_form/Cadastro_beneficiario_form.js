@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import {useForm} from 'react-hook-form';
-//import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
+import { cpf } from 'cpf-cnpj-validator'; 
 import { createClient } from "@supabase/supabase-js";
 import Swal from 'sweetalert2';
 
@@ -78,10 +78,24 @@ function Cadastro_beneficiario_form() {
         logradouro: yup.string().required("É necessário preencher este campo"),
         cidade: yup.string().required("É necessário preencher este campo"),
         uf: yup.string().required("É necessário preencher este campo"),
-        complemento: yup.string().required("É necessário informar o complemento"),
+        //complemento: yup.string().required("É necessário informar o complemento"),
         numero: yup.string().required("É necessário informar o número do logradouro"),
         telefone: yup.string().required("É necessário informar seu telefone")
     })
+
+    const validaCPF = (e) => {
+        const valor = e.target.value.replace(/\D/g, ''); //substitui todos os caracteres que não são números por nulo
+        console.log('valor:', valor)
+
+        if(cpf.isValid(valor)) {
+            clearErrors('cpfInvalido');
+            document.getElementById("alerta_cpf").style.display = 'none'
+        } else {     
+            setError('cnpjInvalido', { message: "Informe um CPF válido"});
+            document.getElementById("alerta_cpf").style.display = 'block'
+            //console.log(errors.cnpjInvalido?.message)
+        }
+    }
 
     //Procura os dados do CEP de acordo com o que foi informado no input
     const pesquisaCEP = (e) => {
@@ -127,13 +141,12 @@ function Cadastro_beneficiario_form() {
     <>
     <form onSubmit={async (evento) => {
         evento.preventDefault();
-        //console.log(formCadastroBeneficiario.values);
 
         try { //validar se todos os campos estão preenchidos
-            console.log("try");
+            //console.log("try");
             await validationSchema.validate(formCadastroBeneficiario.values, {abortEarly: false});
         } catch (erro) { //se não estão, cria um novo erro para ser exibido ao usuário
-            console.log("catch");
+            //console.log("catch");
             const novoErro = {}
 
             erro.inner.forEach(err => {
@@ -144,29 +157,46 @@ function Cadastro_beneficiario_form() {
             return;
         }
 
+        if(errors.cpfInvalido) { //verificando se o CPF informado é válido
+            console.log("oi")
+            return;
+        }
+
         //Colocando todos os dados na tabela candidato
-        supabase.from("candidato").insert({
-            cpf: formCadastroBeneficiario.values.cpf,
-            nomecandidato: formCadastroBeneficiario.values.nomeCandidato,
-            nomemae: formCadastroBeneficiario.values.nomeMae,
-            datanascimento: formCadastroBeneficiario.values.dataNasc,
-            genero: formCadastroBeneficiario.values.generos,
-            emailcandidato: formCadastroBeneficiario.values.email,
-            senhacandidato: formCadastroBeneficiario.values.senha,
-            cep: formCadastroBeneficiario.values.cep,
-            bairro: formCadastroBeneficiario.values.bairro,
-            logradouro: formCadastroBeneficiario.values.logradouro,
-            cidade: formCadastroBeneficiario.values.cidade,
-            uf: formCadastroBeneficiario.values.uf,
-            complemento: formCadastroBeneficiario.values.complemento,
-            numero: formCadastroBeneficiario.values.numero,
-            telefone: formCadastroBeneficiario.values.telefone,
-        })
-        .then ((oqueveio) => {
-            if(oqueveio.error == null) { //Se o cadastro for feito com sucesso, mostrar esse popup e limpar campos
+        const { data, error } = await supabase.auth.signUp({
+            email: formCadastroBeneficiario.values.email,
+            password: formCadastroBeneficiario.values.senha,
+            options: {
+              data: {
+                cpf: formCadastroBeneficiario.values.cpf,
+                nomecandidato: formCadastroBeneficiario.values.nomeCandidato,
+                nomemae: formCadastroBeneficiario.values.nomeMae,
+                datanascimento: formCadastroBeneficiario.values.dataNasc,
+                genero: formCadastroBeneficiario.values.generos,
+                cep: formCadastroBeneficiario.values.cep,
+                bairro: formCadastroBeneficiario.values.bairro,
+                logradouro: formCadastroBeneficiario.values.logradouro,
+                cidade: formCadastroBeneficiario.values.cidade,
+                uf: formCadastroBeneficiario.values.uf,
+                complemento: formCadastroBeneficiario.values.complemento,
+                numero: formCadastroBeneficiario.values.numero,
+                telefone: formCadastroBeneficiario.values.telefone,
+              },
+            },
+          })
+        /*.then ((oqueveio) => {
+
+            if (oqueveio === undefined) {
+                console.error("Response is undefined");
+                return;
+            }
+
+            console.log(oqueveio);
+            if(oqueveio.error == null) { //Se o cadastro for feito com sucesso
+                //Mostra um pop-up na tela
                 Swal.fire({
                     icon: "success",
-                    title: "Cadastro efetuado com sucesso"
+                    title: "Cadastro efetuado com sucesso. Verique seu email na caixa de entrada"
                 })
                 formCadastroBeneficiario.clearForm(); //limpa o formulário
             }
@@ -183,15 +213,40 @@ function Cadastro_beneficiario_form() {
             console.log(oqueveio);
         })
         .catch ((err) => {
-            console.log(err);
-        })
+            console.log("Erro no cadastro: ", err);
+        })*/
+        //console.log(data);
+        
+        if (error == null) { //Se o cadastro for feito com sucesso
+            //Mostra um pop-up na tela
+            Swal.fire({
+              icon: "success",
+              title: "Cadastro efetuado com sucesso. Verique seu email na caixa de entrada"
+            })
+            formCadastroBeneficiario.clearForm(); //limpa o formulário
+        }
+
+        if (error != null) { //Se der algum problema, mostrar esse.
+            var mensagem = "Um erro inesperado ocorreu :(";
+                        
+            if (error.code === "23505") { mensagem = "CPF e/ou e-mail já cadastrados" }
+        
+            Swal.fire({
+              icon: "error",
+              title: mensagem
+            })
+        }
+        //ENVIANDO EMAIL???
     }}>
         <div className="container_inputs">
             <div className="inputs_esquerda">
                 <div className='flex_gap'>
-                    <input type="text" name="cpf" value={ formCadastroBeneficiario.values.cpf } placeholder="CPF" onChange={ formCadastroBeneficiario.handleChange } />
+                    <input type="text" name="cpf" value={ formCadastroBeneficiario.values.cpf } placeholder="CPF"
+                    onChange={ formCadastroBeneficiario.handleChange }
+                    onBlur={validaCPF} />
                     <input type="text" name="nomeCandidato" value={ formCadastroBeneficiario.values.nomeCandidato } placeholder="Nome completo" onChange={ formCadastroBeneficiario.handleChange } />
                 </div>
+                {errors && <div className="text-red-600 mt-0 mb-2" id="alerta_cpf" style={{display: "none"}}>{errors.cnpjInvalido?.message}</div>}
                 {erros.cpf && <div className='text-red-600 mt-0 mb-2'>{erros.cpf}</div>}
                 {erros.nomeCandidato && <div className='text-red-600 mt-0 mb-2'>{erros.nomeCandidato}</div>}
                 <input type="text" name="nomeMae" value={ formCadastroBeneficiario.values.nomeMae } placeholder="Nome completo da mãe" onChange={ formCadastroBeneficiario.handleChange } />

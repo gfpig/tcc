@@ -162,7 +162,7 @@ function Cadastro_beneficiario_form() {
             return;
         }
 
-        //Colocando todos os dados na tabela candidato
+        //Colocando todos os dados no user
         const { data, error } = await supabase.auth.signUp({
             email: formCadastroBeneficiario.values.email,
             password: formCadastroBeneficiario.values.senha,
@@ -183,38 +183,7 @@ function Cadastro_beneficiario_form() {
                 telefone: formCadastroBeneficiario.values.telefone,
               },
             },
-          })
-        /*.then ((oqueveio) => {
-
-            if (oqueveio === undefined) {
-                console.error("Response is undefined");
-                return;
-            }
-
-            console.log(oqueveio);
-            if(oqueveio.error == null) { //Se o cadastro for feito com sucesso
-                //Mostra um pop-up na tela
-                Swal.fire({
-                    icon: "success",
-                    title: "Cadastro efetuado com sucesso. Verique seu email na caixa de entrada"
-                })
-                formCadastroBeneficiario.clearForm(); //limpa o formulário
-            }
-            if (oqueveio.error != null) { //Se der algum problema, mostrar esse.
-                var mensagem = "Um erro inesperado ocorreu :(";
-                
-                if (oqueveio.error.code === "23505") { mensagem = "CPF e/ou e-mail já cadastrados" }
-
-                Swal.fire({
-                    icon: "error",
-                    title: mensagem
-                })
-            }
-            console.log(oqueveio);
         })
-        .catch ((err) => {
-            console.log("Erro no cadastro: ", err);
-        })*/
         //console.log(data);
         
         if (error == null) { //Se o cadastro for feito com sucesso
@@ -236,7 +205,6 @@ function Cadastro_beneficiario_form() {
               title: mensagem
             })
         }
-        //ENVIANDO EMAIL???
     }}>
         <div className="container_inputs">
             <div className="inputs_esquerda">

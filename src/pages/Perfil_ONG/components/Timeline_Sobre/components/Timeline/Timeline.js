@@ -6,10 +6,11 @@ import Posts from './Posts/Posts';
 
 function Timeline() {
   return (
-    <div style={{display: "flex", flexDirection:"column", alignItems:'center', alignSelf:'center'}}>
+    <div class="flex flex-col ml-3 mr-3 md:ml-0 md:mr-0 items-center self-center">
 
       <div className='funcoes_postar'>
         <textarea className='digitar_post' placeholder="Digite seu post" />
+
         <div className='acoes_postar'>
             <button className='selecionar_imagem'><FontAwesomeIcon icon={ faCamera } size="2xl" /></button>
             <button className='publicar'>PUBLICAR</button>
@@ -17,7 +18,6 @@ function Timeline() {
       </div>
 
       <Posts />
-
     </div>
   )
 }

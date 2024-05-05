@@ -8,7 +8,7 @@ function Perfil_ONG() {
   return (
     <>
       <Menu_ />
-      <div style={{position:"relative", top:"50px", marginLeft:"200px", marginRight:"200px"}}>    
+      <div class="relative top-12 flex flex-col ml-0 mr-0 md:ml-24 md:mr-24 lg:ml-40 lg:mr-40"> 
         <Header_ONG />
         <Faixa_detalhes_ONG />
         <hr style={{borderColor: "gray", marginTop:"1rem", marginBottom:"1rem"}} />

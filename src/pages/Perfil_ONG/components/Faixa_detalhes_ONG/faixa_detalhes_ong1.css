@@ -20,5 +20,5 @@
 }
 
 .acessar_form {
-    @apply mt-1 w-10 h-10 md:w-12 md:h-12 rounded-full ml-10 md:ml-0 self-center;
+    @apply mt-1 w-10 h-10 md:w-12 md:h-12 rounded-full ml-10 md:ml-0;
 }

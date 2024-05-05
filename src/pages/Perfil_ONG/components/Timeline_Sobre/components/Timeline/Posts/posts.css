@@ -1,5 +1,5 @@
 .post {
-    @apply w-2/3 p-4 rounded-lg mb-5;
+    @apply flex justify-center flex-col mt-5 p-4 rounded-lg mb-5 xl:w-2/3;
     background-color: #e1e1e1;
 }
 
@@ -24,9 +24,9 @@
 }
 
 .corpo_post p {
-    @apply mb-3;
+    @apply mb-3 mt-3 md:mt-5;
 }
 
 .corpo_post .img_post {
-    @apply self-center w-3/5;
+    @apply self-center w-3/5 mt-5 md:mt-8 mb-5;
 }

@@ -83,7 +83,6 @@ function Cadastro_ong_form() {
         } else {     
             setError('cnpjInvalido', { message: "Informe um CNPJ válido"});
             document.getElementById("alerta_cnpj").style.display = 'block'
-            //console.log(errors.cnpjInvalido?.message)
         }
     }
 
@@ -111,7 +110,6 @@ function Cadastro_ong_form() {
         //console.log(cep);
         fetch(`https://viacep.com.br/ws/${cep}/json/`)
         .then(res => {
-            //console.log(res);
             return res.json();
         })
         .then(data => {
@@ -170,21 +168,7 @@ function Cadastro_ong_form() {
             return;
         }
 
-        //Colocando todos os dados na tabela instituicao
-        /*supabase.from('instituicao').insert({
-            cnpj: formCadastroInstituicao.values.cnpj,
-            nomeinstituicao: formCadastroInstituicao.values.nomeinstituicao,
-            emailinstituicao: formCadastroInstituicao.values.emailinstituicao,
-            senhainstituicao: formCadastroInstituicao.values.senhainstituicao,
-            cep: formCadastroInstituicao.values.cep,
-            bairro: formCadastroInstituicao.values.bairro,
-            logradouro: formCadastroInstituicao.values.logradouro,
-            cidade: formCadastroInstituicao.values.cidade,
-            uf: formCadastroInstituicao.values.uf,
-            complemento: formCadastroInstituicao.values.complemento,
-            numero: formCadastroInstituicao.values.numero,
-            telefone: formCadastroInstituicao.values.telefone
-        })*/
+        //Colocando todos os dados no user
         const { data, error } = await supabase.auth.signUp({
             email: formCadastroInstituicao.values.emailinstituicao,
             password: formCadastroInstituicao.values.senhainstituicao,
@@ -202,29 +186,8 @@ function Cadastro_ong_form() {
                 telefone: formCadastroInstituicao.values.telefone
               },
             },
-          })
-        /*.then ((oqueveio) => {
-            //console.log(formCadastroInstituicao.values.email);
-            console.log(oqueveio);
-            if(oqueveio.error == null) { //Se o cadastro não retornar erros, mostrar esse popup
-                Swal.fire({
-                    icon: "success",
-                    title: "Cadastro efetuado com sucesso"
-                })
-                formCadastroInstituicao.clearForm();
-            }
-            if (oqueveio.error != null) { //Se der algum problema, mostrar esse.
-                var mensagem = "Um erro inesperado ocorreu :(";
-                
-                if (oqueveio.error.code === "23505") { mensagem = "CNPJ e/ou e-mail já cadastrados" }
+        })
 
-                Swal.fire({
-                    icon: "error",
-                    title: mensagem
-                })
-            }
-            //console.log(oqueveio);
-        })*/
         //console.log(data);
         if (error == null) { //Se o cadastro for feito com sucesso
             //Mostra um pop-up na tela

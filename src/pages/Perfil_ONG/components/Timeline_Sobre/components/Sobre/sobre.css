@@ -1,14 +1,14 @@
 .container_sobre {
-    @apply flex self-center mt-8 w-2/3 p-4 rounded-lg mb-5;
+    @apply flex flex-col justify-center items-center ml-3 mr-3 md:ml-0 md:mr-0 md:flex-row mt-8 w-full p-4 rounded-lg mb-5;
     background-color: #e1e1e1;
 }
 
 .container_sobre img {
-    @apply w-3/5 h-3/5;
+    @apply mt-5 w-2/5 h-2/5 lg:h-3/5 md:mb-16 lg:mb-12;
 }
 
 .informacoes_instituicao {
-    @apply ml-3;
+    @apply justify-center items-center mt-5 ml-3 mr-3 md:ml-5 md:mr-5;
 }
 
 .container_sobre .informacoes_instituicao li {

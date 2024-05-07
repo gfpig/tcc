@@ -137,7 +137,7 @@ function Cadastro_beneficiario_form() {
         });
     }
 
-    const validarCampos = async () => {
+    /*const validarCampos = async () => {
         try { //validar se todos os campos estão preenchidos
             await validationSchema.validate(formCadastroBeneficiario.values, {abortEarly: false});
         } catch (erro) { //se não estão, cria um novo erro para ser exibido ao usuário
@@ -151,7 +151,7 @@ function Cadastro_beneficiario_form() {
             return;
             //process.exit();
         }
-    }
+    }*/
 
     async function checarCPFExistente(ValorCPF) {
             const { data, error } = await supabase
@@ -180,7 +180,7 @@ function Cadastro_beneficiario_form() {
     
         //se for devolvido um valor, o dado existe
         return data.length > 0;
-}
+    }
 
   return (
     <>
@@ -209,8 +209,10 @@ function Cadastro_beneficiario_form() {
         const cpfExists = await checarCPFExistente(formCadastroBeneficiario.values.cpf);
         const emailExists = await checarEmailExistente(formCadastroBeneficiario.values.email);
 
+        var mensagem; //variável para possível mensagem de erro
+
         if(cpfExists || emailExists ) { //se estiverem, mostra um erro para o usuário
-            var mensagem = "CPF ou e-mail já cadastrados";
+            mensagem = "CPF ou e-mail já cadastrados";
             Swal.fire({
                 icon: "error",
                 title: mensagem
@@ -241,11 +243,10 @@ function Cadastro_beneficiario_form() {
             },
         })
         //console.log(data);
-        
-        
+
         if (error == null || data?.user?.identities?.length !== 0) { //Se o cadastro for feito com sucesso
             if(data?.user == null) {
-                var mensagem = "Um erro inesperado ocorreu :(";
+                mensagem = "Um erro inesperado ocorreu :(";
                 Swal.fire({
                     icon: "error",
                     title: mensagem
@@ -258,14 +259,12 @@ function Cadastro_beneficiario_form() {
               icon: "success",
               title: "Cadastro efetuado com sucesso. Verique seu email na caixa de entrada"
             })
-            //formCadastroBeneficiario.clearForm(); //limpa o formulário
+
+            formCadastroBeneficiario.clearForm(); //limpa o formulário
+
         } else { //Se der algum problema, mostrar esse.
             console.log(error.message);
-            var mensagem = "Um erro inesperado ocorreu :(";
-                        
-            //if (error.code === "23505") { mensagem = "CPF e/ou e-mail já cadastrados" }
-            //if (error?.message === "User already registered") { mensagem = "E-mail já cadastrado"}
-            //if (data?.user?.identities?.length === 0) { mensagem = "E-mail já cadastrado"}
+            mensagem = "Um erro inesperado ocorreu :(";
 
             Swal.fire({
               icon: "error",

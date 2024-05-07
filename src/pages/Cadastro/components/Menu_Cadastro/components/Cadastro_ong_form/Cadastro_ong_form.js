@@ -144,6 +144,35 @@ function Cadastro_ong_form() {
         });
     }
 
+    async function checarCNPJExistente(ValorCNPJ) {
+        const { data, error } = await supabase
+        .from('instituicao')
+        .select('*')
+        .eq('cnpj', ValorCNPJ);
+    
+        if (error) { //Se houver um erro, retorna falso
+            console.error('Error fetching data:', error.message);
+            return false;
+        }
+        //se for devolvido um valor, o dado existe
+        return data.length > 0;
+    }
+
+    async function checarEmailExistente(ValorEmail) {
+        const { data, error } = await supabase
+        .from('instituicao')
+        .select('*')
+        .eq('emailinstituicao', ValorEmail);
+
+        if (error) {
+            console.error('Error fetching data:', error.message);
+            return false; //Se houver um erro, retorna falso
+        }
+
+        //se for devolvido um valor, o dado existe
+        return data.length > 0;
+    }
+
   return (
     <>
     <form onSubmit={async (e) => {
@@ -165,6 +194,21 @@ function Cadastro_ong_form() {
 
         if(errors.cnpjInvalido) { //verificando se o CNPJ informado é válido
             //console.log("oi")
+            return;
+        }
+
+        //Verificando se o CNPJ ou e-mail informados já estão cadastrados
+        const cnpjExists = await checarCNPJExistente(formCadastroInstituicao.values.cnpj);
+        const emailExists = await checarEmailExistente(formCadastroInstituicao.values.email);
+
+        var mensagem; //variável para possível mensagem de erro
+
+        if(cnpjExists || emailExists ) { //se estiverem, mostra um erro para o usuário
+            mensagem = "CPF ou e-mail já cadastrados"
+            Swal.fire({
+                icon: "error",
+                title: mensagem
+            })
             return;
         }
 
@@ -199,9 +243,10 @@ function Cadastro_ong_form() {
         }
 
         if (error != null) { //Se der algum problema, mostrar esse.
-            var mensagem = "Um erro inesperado ocorreu :(";
+            console.log(error);
+            mensagem = "Um erro inesperado ocorreu :(";
                         
-            if (error.code === "23505") { mensagem = "CPF e/ou e-mail já cadastrados" }
+            //if (error.code === "23505") { mensagem = "CPF e/ou e-mail já cadastrados" }
         
             Swal.fire({
                 icon: "error",

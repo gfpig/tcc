@@ -10,8 +10,8 @@ html, body {
 }
 
 .container_esquerda {
+    @apply flex w-full md:w-2/3;
     position: relative;
-    width: 65%;
 }
 
 .container_esquerda img {

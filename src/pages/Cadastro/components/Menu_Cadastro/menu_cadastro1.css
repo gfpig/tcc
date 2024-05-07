@@ -1,5 +1,6 @@
 .tipos_conta {
     @apply flex justify-between right-0 left-0 z-10;
+    display: flex;
     justify-content: center;
     column-gap: 125px;
 }

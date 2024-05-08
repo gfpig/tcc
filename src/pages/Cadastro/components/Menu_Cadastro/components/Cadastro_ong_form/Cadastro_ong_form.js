@@ -23,7 +23,7 @@ function CreateInstituicao (valoresDoForm) {
                 ...values,
                 [name]: value,
             });
-            console.log("value: ", value, "\nNome:", name);
+            //console.log("value: ", value, "\nNome:", name);
         },
 
         clearForm () {
@@ -88,7 +88,7 @@ function Cadastro_ong_form() {
         emailinstituicao: yup.string().email().required("É necessário informar o e-mail"),
         senhainstituicao: yup.string()
                     .min(8, "A senha deve ter no mínimo 8 caracteres")
-                    .uppercase("A senha deve conter pelo menos uma letra maiúscula")
+                    .matches(/^(?=.*[a-z])(?=.*[A-Z])/, "A senha deve conter pelo menos uma letra maiúscula e uma letra minúscula")
                     .required("É necessário informar uma senha"),
         confirmar_senha: yup.string().oneOf([yup.ref("senhainstituicao")], "As senhas devem coincidir").required("É necessário confirmar sua senha"),
         categorias: yup.string().required("É necessário selecionar uma categoria"),

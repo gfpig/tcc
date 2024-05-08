@@ -6,6 +6,7 @@ import logotipo from '../../assets/other/logotipo_temporario.png';
 import search from '../../assets/icons/search_bar.png';
 
 const Menu = () => {
+    
     return (
         <>
         <nav className='navegacao_menu'>

@@ -39,8 +39,8 @@ option {
 }
 
 .flex_gap {
-    @apply flex h-full;
-    /*max-height: 44px;*/
+    @apply flex;
+    max-height: 44px;
 }
 
 .botao_cadastro {

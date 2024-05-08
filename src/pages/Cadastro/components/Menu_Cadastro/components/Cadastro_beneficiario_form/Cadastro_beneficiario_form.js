@@ -22,7 +22,8 @@ function CreateUser (valoresDoForm) {
             setValues ({
                 ...values,
                 [name]: value,
-            });    
+            });
+            console.log("value: ", value, "\nNome:", name);
         },
 
         clearForm () {
@@ -68,11 +69,16 @@ function Cadastro_beneficiario_form() {
         dataNasc: yup.string().required("É necessário preencher sua data de nascimento"),
         generos: yup.string().required("É necessário selecionar um gênero"),
         email: yup.string().email().required("É necessário preencher seu e-mail"),
-        senha: yup.string()
+        senha: yup.string("Not string 1")
                     .min(8, "A senha deve ter no mínimo 8 caracteres")
-                    .uppercase("A senha deve conter pelo menos uma letra maiúscula")
+                    .matches(/^(?=.*[a-z])(?=.*[A-Z])/, "A senha deve conter pelo menos uma letra maiúscula e uma letra minúscula")
                     .required("É necessário informar uma senha"),
-        confirmar_senha: yup.string().oneOf([yup.ref("senha")], "As senhas devem coincidir").required("É necessário confirmar sua senha"),
+        confirmar_senha: yup.string("Not string")
+                    /*.test('match', 'As senhas devem coincidir 2', function(value) {
+                        console.log("value: ", value, "\nsenha: ", this.parent.senha, "\nComparacao:",value === this.parent.senha)
+                        return value === this.parent.senha || value === null;})*/
+                    .oneOf([yup.ref("senha"), null], "As senhas devem coincidir")
+                    .required("É necessário confirmar sua senha"),
         cep: yup.string().required("É necessário informar seu CEP"),
         bairro: yup.string().required("É necessário preencher este campo"),
         logradouro: yup.string().required("É necessário preencher este campo"),
@@ -308,7 +314,7 @@ function Cadastro_beneficiario_form() {
                     <input type="password" name="confirmar_senha" value={ formCadastroBeneficiario.values.confirmar_senha } placeholder="Confirmar senha" onChange={ formCadastroBeneficiario.handleChange } />
                 </div>
                 {erros.senha && <div className='text-red-600 mt-0 mb-2'>{erros.senha}</div>}
-                {erros.confirmar_senha && <div className='text-red-600 mt-0 mb-2'>{erros.confirmar_senha}</div>}
+                {erros.confirmar_senha && <div className='text-red-600 mt-0 mb-2'>{erros.confirmar_senha} <p>{formCadastroBeneficiario.values.senha}</p><p>{formCadastroBeneficiario.values.confirmar_senha}</p></div>}
             </div>
             <div className="inputs_direita">
                 <div className='flex_gap'>

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useForm} from 'react-hook-form';
 import "./cadastro_ong_form.css";
 import * as yup from "yup";
@@ -9,6 +9,7 @@ import Swal from 'sweetalert2';
 const PROJECT_URL = "https://xljeosvrbsygpekwclan.supabase.co";
 const PUBLIC_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhsamVvc3ZyYnN5Z3Bla3djbGFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTQ1MTY1NzAsImV4cCI6MjAzMDA5MjU3MH0.InFDrSOcPxRe4LXMBJ4dT59bBb3LSpKw063S90E3uPo"
 const supabase = createClient(PROJECT_URL, PUBLIC_KEY);
+
 
 function CreateInstituicao (valoresDoForm) {
     const [values, setValues] = React.useState(valoresDoForm.initialValues);
@@ -22,6 +23,7 @@ function CreateInstituicao (valoresDoForm) {
                 ...values,
                 [name]: value,
             });
+            console.log("value: ", value, "\nNome:", name);
         },
 
         clearForm () {
@@ -38,20 +40,47 @@ function CreateInstituicao (valoresDoForm) {
                 uf: '',
                 complemento: '',
                 numero: '',
-                telefone: ''
+                telefone: '',
+                categorias: ''
             });
         }
     };
 }
 
 function Cadastro_ong_form() {
-
+    //const [categorias, setCategorias] = useState(null);
     const {register, setError, clearErrors, formState} = useForm();
     const { errors } = formState;
     //const onSubmit = (data, e) => console.log(data, e)
     //const onError = (errors, e) => console.log(errors, e)
     const [erros, setErros] = useState({});
 
+    const [fetchError, setFetchError] = useState([]);
+    const [categorias, setCategorias] = useState([]);
+    
+    useEffect(() => {
+        //console.log('oi');
+        const fetchCategorias = async () => {
+            const { data, error } = await supabase
+            .from('categoria')
+            .select('*')
+            
+            if (error) {
+                setFetchError("Não foi possível recuperar as informações")
+                setCategorias(null)
+                console.log(fetchError)
+            }
+
+            if (data) {
+                console.log("categoria:", data)
+                setCategorias(data)
+                console.log(categorias)
+                setFetchError(null)
+            }
+        }
+        //console.log(categorias)
+        fetchCategorias()
+    }, [])
     //FUNÇÃO DE VALIDAÇÃO DOS CAMPOS DO FORMULÁRIO
     const validationSchema= yup.object({
         cnpj: yup.string().required("É necessário informar o CNPJ"),
@@ -70,7 +99,8 @@ function Cadastro_ong_form() {
         uf: yup.string().required("É necessário preencher este campo"),
         //complemento: yup.string().required("É necessário informar o complemento"),
         numero: yup.string().required("É necessário informar o número do logradouro"),
-        telefone: yup.string().required("É necessário informar seu telefone")
+        telefone: yup.string().required("É necessário informar seu telefone"),
+        categorias: yup.string().required("É necessário selecionar uma categoria")
     })
 
     const validaCNPJ = (e) => {
@@ -100,7 +130,8 @@ function Cadastro_ong_form() {
             uf: '',
             complemento: '',
             numero: '',
-            telefone: ''
+            telefone: '',
+            categorias: ''
         }
     });
 
@@ -175,6 +206,7 @@ function Cadastro_ong_form() {
 
   return (
     <>
+    
     <form onSubmit={async (e) => {
         e.preventDefault();
  
@@ -227,7 +259,8 @@ function Cadastro_ong_form() {
                 uf: formCadastroInstituicao.values.uf,
                 complemento: formCadastroInstituicao.values.complemento,
                 numero: formCadastroInstituicao.values.numero,
-                telefone: formCadastroInstituicao.values.telefone
+                telefone: formCadastroInstituicao.values.telefone,
+                categoria: formCadastroInstituicao.values.categorias
               },
             },
         })
@@ -280,7 +313,9 @@ function Cadastro_ong_form() {
                 <input type="text" value="Educação" onChange={formCadastroInstituicao.handleChange}  disabled />
                 <select name="categorias" id="categorias" value={ formCadastroInstituicao.values.categorias } onChange={formCadastroInstituicao.handleChange}>
                     <option value="">Categoria</option>
-                    <option value="Música">Música</option>
+                    {categorias.map((categoria) => (
+                        <option key={categoria.codcategoria} value={categoria.codcategoria} onChange={formCadastroInstituicao.handleChange}>{categoria.nomecategoria}</option>
+                    ))}
                 </select>
             </div>
             {erros.categorias && <div className='text-red-600 mt-0 mb-2'>{erros.categorias}</div>}

@@ -7,7 +7,7 @@ const Login = () => {
     return (    
         <>
             <Menu_ />
-            <div class = "flex flex-col md:flex-row justify-center w-full"style={{display:"flex", height:"100%"}}>
+            <div className = "flex flex-col md:flex-row justify-center w-full"style={{display:"flex", height:"100%"}}>
                 <Login_cadastrar />
                 <Form_login />
             </div>

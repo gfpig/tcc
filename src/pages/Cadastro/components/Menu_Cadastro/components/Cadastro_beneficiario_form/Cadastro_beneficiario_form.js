@@ -23,7 +23,6 @@ function CreateUser (valoresDoForm) {
                 ...values,
                 [name]: value,
             });
-            console.log("value: ", value, "\nNome:", name);
         },
 
         clearForm () {
@@ -89,6 +88,7 @@ function Cadastro_beneficiario_form() {
         telefone: yup.string().required("É necessário informar seu telefone")
     })
 
+    //Valida a existência do CPF informado
     const validaCPF = (e) => {
         const valor = e.target.value.replace(/\D/g, ''); //substitui todos os caracteres que não são números por nulo
         console.log('valor:', valor)
@@ -159,6 +159,7 @@ function Cadastro_beneficiario_form() {
         }
     }*/
 
+    //Checa se o CPF informado já está cadastrado
     async function checarCPFExistente(ValorCPF) {
             const { data, error } = await supabase
             .from('candidato')
@@ -173,6 +174,7 @@ function Cadastro_beneficiario_form() {
             return data.length > 0;
     }
 
+    //Checa se o e-mail informado já está cadastrado
     async function checarEmailExistente(ValorEmail) {
         const { data, error } = await supabase
         .from('candidato')
@@ -203,7 +205,6 @@ function Cadastro_beneficiario_form() {
                 novoErro[err.path] = err.message
             });
             setErros(novoErro);
-            //console.log(erros);
             return;
         }
 

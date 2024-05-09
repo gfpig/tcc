@@ -33,7 +33,7 @@
     border: none;
     border-radius: 5px;
     margin-bottom: 10px;
-    height: 30px;
+    padding: 7px;
 }
 
 .esqueci_senha {
@@ -50,7 +50,7 @@
     color: white;
     border: none;
     border-radius: 5px;
-    height: 30px;
+    padding: 7px;
     font-weight: 700;
 }
 

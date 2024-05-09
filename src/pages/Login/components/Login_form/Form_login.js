@@ -11,7 +11,6 @@ const supabase = createClient(PROJECT_URL, PUBLIC_KEY);
 function CreateUser (valoresDoLogin) {
     const [values, setValues] = React.useState(valoresDoLogin.initialValues);
     const {clearErrors} = useForm();
-    //console.log(values)
 
     return {
         values, 
@@ -26,13 +25,6 @@ function CreateUser (valoresDoLogin) {
                 [name]: value,
             });    
         },
-
-        clearForm () {
-            setValues({
-                email: '',
-                senha: ''
-            });
-        }
     };
 }
 
@@ -54,7 +46,6 @@ const Form_login = () => {
                     <h1>BEM-VINDO!</h1>
                     <form onSubmit={async (e) => {
                         e.preventDefault();
-                        //clearErrors('ErroLogin');
                          
                         try{
                             const { data, error } = await supabase.auth.signInWithPassword({
@@ -71,15 +62,9 @@ const Form_login = () => {
                             if (error) { //se deu algum erro
                                 setError('ErroLogin', { message: "Um erro inesperado ocorreu" });
                                 return;
-                                //console.error('Erro ao entrar:', error.message);
-                                //setError = ''
                             } else { //se o usuário foi logado com sucesso
-                                //console.log("Login efetuado com sucesso");
-                                //Código para redirecionar o usuário para a home
                                 navigate("/");
-                                //console.log("Alo");
                             }
-                            //console.log(data);
                         } catch (error) {
                             console.error('Sign in error:', error.message);
                         }
@@ -87,7 +72,7 @@ const Form_login = () => {
                         <div className="inputs">
                             <input type="email" name="email" value={ formLogin.values.email } placeholder="E-mail" onChange={ formLogin.handleChange } required />
                             <input type="password" name="senha" value={ formLogin.values.senha } placeholder="Senha" onChange={ formLogin.handleChange } required />
-                            <p style={{fontStyle: "italic", alignSelf: "end"}}><a href="" className="esqueci_senha">Esqueci a senha</a></p>
+                            <p className="italic self-end mt-3"><a href="" className="esqueci_senha">Esqueci a senha</a></p>
                             <button>ENTRAR</button>
                             {errors && <div className="text-red-600 mt-0 mb-2" id="alerta_login" style={{display: "none"}}>{errors.ErroLogin?.message}</div>}
 

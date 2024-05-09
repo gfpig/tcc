@@ -23,7 +23,6 @@ function CreateInstituicao (valoresDoForm) {
                 ...values,
                 [name]: value,
             });
-            //console.log("value: ", value, "\nNome:", name);
         },
 
         clearForm () {
@@ -55,6 +54,7 @@ function Cadastro_ong_form() {
     const [fetchError, setFetchError] = useState([]);
     const [categorias, setCategorias] = useState([]);
     
+    //Preenche as categorias do select com base no banco de dados
     useEffect(() => {
         const fetchCategorias = async () => {
             const { data, error } = await supabase
@@ -99,6 +99,7 @@ function Cadastro_ong_form() {
         categorias: yup.string().required("É necessário selecionar uma categoria")
     })
 
+    //Função que valida a existência do CNPJ informado
     const validaCNPJ = (e) => {
         const valor = e.target.value.replace(/\D/g, ''); //substitui todos os caracteres que não são números por nulo
         console.log('valor:', valor)
@@ -171,6 +172,7 @@ function Cadastro_ong_form() {
         });
     }
 
+    //Checa se o CNPJ informado já está cadastrado
     async function checarCNPJExistente(ValorCNPJ) {
         const { data, error } = await supabase
         .from('instituicao')
@@ -185,6 +187,7 @@ function Cadastro_ong_form() {
         return data.length > 0;
     }
 
+    //Checa se o e-mail informado já está cadastrado
     async function checarEmailExistente(ValorEmail) {
         const { data, error } = await supabase
         .from('instituicao')
@@ -259,7 +262,6 @@ function Cadastro_ong_form() {
             },
         })
 
-        //console.log(data);
         if (error == null) { //Se o cadastro for feito com sucesso
             //Mostra um pop-up na tela
             Swal.fire({

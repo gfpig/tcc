@@ -4,10 +4,13 @@ import Stepper from "./components/Stepper/Stepper.jsx"
 import Header from './components/Header/Header.js';
 import Footer from './components/Footer/Footer.js';
 import Menu from './components/Menu/Menu.js';
+import { useState } from 'react';
 
 /* PÁGINAS */
 
 const App = () => {
+  //const [token, setToken] = useState(false); //false = usuário não logado
+
   return (
     <>
       <Menu style={{backgroundColor: "#cccccc"}}/>

@@ -48,18 +48,14 @@ function CreateInstituicao (valoresDoForm) {
 }
 
 function Cadastro_ong_form() {
-    //const [categorias, setCategorias] = useState(null);
     const {register, setError, clearErrors, formState} = useForm();
     const { errors } = formState;
-    //const onSubmit = (data, e) => console.log(data, e)
-    //const onError = (errors, e) => console.log(errors, e)
     const [erros, setErros] = useState({});
 
     const [fetchError, setFetchError] = useState([]);
     const [categorias, setCategorias] = useState([]);
     
     useEffect(() => {
-        //console.log('oi');
         const fetchCategorias = async () => {
             const { data, error } = await supabase
             .from('categoria')
@@ -78,9 +74,9 @@ function Cadastro_ong_form() {
                 setFetchError(null)
             }
         }
-        //console.log(categorias)
         fetchCategorias()
     }, [])
+
     //FUNÇÃO DE VALIDAÇÃO DOS CAMPOS DO FORMULÁRIO
     const validationSchema= yup.object({
         cnpj: yup.string().required("É necessário informar o CNPJ"),
@@ -213,7 +209,6 @@ function Cadastro_ong_form() {
         try { //validar se todos os campos estão preenchidos
             await validationSchema.validate(formCadastroInstituicao.values, {abortEarly: false});
         } catch (erro) { //se não estão, cria um novo erro para ser exibido ao usuário
-            //console.log("oiiiii")
             const novoErro = {}
 
             erro.inner.forEach(err => {
@@ -225,7 +220,6 @@ function Cadastro_ong_form() {
         }
 
         if(errors.cnpjInvalido) { //verificando se o CNPJ informado é válido
-            //console.log("oi")
             return;
         }
 
@@ -278,8 +272,6 @@ function Cadastro_ong_form() {
         if (error != null) { //Se der algum problema, mostrar esse.
             console.log(error);
             mensagem = "Um erro inesperado ocorreu :(";
-                        
-            //if (error.code === "23505") { mensagem = "CPF e/ou e-mail já cadastrados" }
         
             Swal.fire({
                 icon: "error",

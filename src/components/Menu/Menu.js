@@ -66,7 +66,7 @@ const Menu = () => {
                 <div className='container__login'>
                     {session ? (
                                 imgPerfil ? (
-                                    <button id="botao-user" className="botaoUser"><a href="/Configuracoes_ONG"><FontAwesomeIcon icon={ faHandHoldingHeart } size='2x' color='#e87f45' id='img_none' /></a></button>
+                                    <button id="botao-user" className="botaoUser"><a href="/Configuracoes_ONG"><div class="overflow-clip bg-white rounded-full"><FontAwesomeIcon icon={ faHandHoldingHeart } size='2x' color='#e87f45' id='img_none' /></div></a></button>
                                 ) : (
                                     <button id="botao-user" className="botaoUser"><a href="/Configuracoes_ONG"><img src={imgPerfil}></img></a></button>
                                 )

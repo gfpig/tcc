@@ -93,7 +93,7 @@ function Cadastro_ong_form() {
         logradouro: yup.string().required("É necessário preencher este campo"),
         cidade: yup.string().required("É necessário preencher este campo"),
         uf: yup.string().required("É necessário preencher este campo"),
-        //complemento: yup.string().required("É necessário informar o complemento"),
+        //complemento: yup.string(),
         numero: yup.string().required("É necessário informar o número do logradouro"),
         telefone: yup.string().required("É necessário informar seu telefone"),
         categorias: yup.string().required("É necessário selecionar uma categoria")

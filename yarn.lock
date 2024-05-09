@@ -1941,6 +1941,26 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
+"@supabase/auth-helpers-nextjs@^0.7.0-next.8":
+  version "0.7.0-next.8"
+  resolved "https://registry.npmjs.org/@supabase/auth-helpers-nextjs/-/auth-helpers-nextjs-0.7.0-next.8.tgz"
+  integrity sha512-7pCbdnyAQo+D4qYQCvfg4B3OHIPtrILy/4LNwmF+1uheDeK7B6pxfN2SVeOR2TU3lolxMwEKUP6Q0h1qiCXbQg==
+  dependencies:
+    "@supabase/auth-helpers-shared" "0.4.0-next.3"
+    set-cookie-parser "^2.6.0"
+
+"@supabase/auth-helpers-react@^0.4.0-next.0":
+  version "0.4.0-next.0"
+  resolved "https://registry.npmjs.org/@supabase/auth-helpers-react/-/auth-helpers-react-0.4.0-next.0.tgz"
+  integrity sha512-V2ZcccgAHDIYO4objKXPbKzj/GTbUD/39DIr59JhWlrMSnFWOud5YnAkAaJOyOIZl/7Hl1UQjTLWG9w8SVDJXA==
+
+"@supabase/auth-helpers-shared@0.4.0-next.3":
+  version "0.4.0-next.3"
+  resolved "https://registry.npmjs.org/@supabase/auth-helpers-shared/-/auth-helpers-shared-0.4.0-next.3.tgz"
+  integrity sha512-ELvEbYPJdTlwvqXsHkRN8ADcRe1IQxHt+UNqxbV2SKIpJCieQ4BMsgUVI/w+e3gMQHRbydk0PaJpOa9aStzMyg==
+  dependencies:
+    jose "^4.14.3"
+
 "@supabase/auth-js@2.64.1":
   version "2.64.1"
   resolved "https://registry.npmjs.org/@supabase/auth-js/-/auth-js-2.64.1.tgz"
@@ -1986,7 +2006,7 @@
   dependencies:
     "@supabase/node-fetch" "^2.6.14"
 
-"@supabase/supabase-js@^2.43.0":
+"@supabase/supabase-js@^2.19.0", "@supabase/supabase-js@^2.43.0":
   version "2.43.0"
   resolved "https://registry.npmjs.org/@supabase/supabase-js/-/supabase-js-2.43.0.tgz"
   integrity sha512-e/MXc/7HPEXayWoxDTv+xqxF5+wlpH3/+UoP3TXLH0OiShICTbyJfmRgn/GCNw7E7+DlUq+3c48q12FtGWrVmQ==
@@ -6613,6 +6633,11 @@ jiti@^1.19.1:
   resolved "https://registry.npmjs.org/jiti/-/jiti-1.21.0.tgz"
   integrity sha512-gFqAIbuKyyso/3G2qhiO2OM6shY6EPP/R0+mkDbyspxKazh8BXDC5FiFsUjlczgdNz/vfra0da2y+aHrusLG/Q==
 
+jose@^4.14.3:
+  version "4.15.5"
+  resolved "https://registry.npmjs.org/jose/-/jose-4.15.5.tgz"
+  integrity sha512-jc7BFxgKPKi94uOvEmzlSWFFe2+vASyXaKUpdQKatWAESU2MWjDfFf0fdfc83CDKcA5QecabZeNLyfhe3yKNkg==
+
 "js-tokens@^3.0.0 || ^4.0.0", js-tokens@^4.0.0:
   version "4.0.0"
   resolved "https://registry.npmjs.org/js-tokens/-/js-tokens-4.0.0.tgz"
@@ -8920,6 +8945,11 @@ serve-static@1.15.0:
     escape-html "~1.0.3"
     parseurl "~1.3.3"
     send "0.18.0"
+
+set-cookie-parser@^2.6.0:
+  version "2.6.0"
+  resolved "https://registry.npmjs.org/set-cookie-parser/-/set-cookie-parser-2.6.0.tgz"
+  integrity sha512-RVnVQxTXuerk653XfuliOxBP81Sf0+qfQE73LIYKcyMYHG94AuH0kgrQpRDuTZnSmjpysHmzxJXKNfa6PjFhyQ==
 
 set-function-length@^1.2.1:
   version "1.2.1"

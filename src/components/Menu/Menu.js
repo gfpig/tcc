@@ -26,16 +26,14 @@ const Menu = () => {
                     .eq('id', session.user.id)
 
                     if (error) {
-                        console.log("alo")
                         setFetchError("Não foi possível recuperar as informações")
                         setImgPerfil(null)
                         console.log(fetchError)
                     }
         
                     if (data) {
-                        console.log("img:", data)
+                        //console.log("img:", data)
                         setImgPerfil(data)
-                        //console.log(imgPerfil)
                         setFetchError(null)
                     }
                 }
@@ -51,77 +49,8 @@ const Menu = () => {
         }
         verificaSessao()
     }, [])
-    console.log(imgPerfil)
-    //const { data: { session }} = await supabase.auth.getSession();
-    //console.log("Session:", session);
-    
-    /*useEffect(() => {
-        const fetchFotoPerfil = async () => {
-            try {
-                console.log("alo")
-                const session = supabase.auth.session;
-                console.log("user:", user)
-                if (user) {
-                    console.log("oi:")
-                    const { data, error } = await supabase
-                    .from('instituicao')
-                    .select('foto')
-                    .eq('id', user.id)
 
-                    if (error) {
-                        console.log("alo")
-                        setFetchError("Não foi possível recuperar as informações")
-                        setImgPerfil(null)
-                        console.log(fetchError)
-                    }
-        
-                    if (data) {
-                        console.log("alo")
-                        console.log("img:", data)
-                        setImgPerfil(data)
-                        console.log(imgPerfil)
-                        setFetchError(null)
-                    }
-                }
-            } catch(error) {
-                //console.log("alo")
-                console.log(fetchError)
-            }
-        }
-        // Function to fetch user session
-        const fetchUser = async () => {
-            try {
-                const session = supabase.auth.session;
-                console.log("session:", session)
-                setUser(session?.user ?? null); // Set user state based on session
-                console.log(user)
-                await fetchFotoPerfil();
-            } catch (error) {
-                console.error('Error fetching user:', error.message);
-            }
-        };
-
-        // Fetch user session on component mount
-        //const timer = setTimeout(fetchUser, 10000);
-        fetchUser();
-
-        // Subscribe to changes in auth state
-
-        const authListener = supabase.auth.onAuthStateChange((event, session) => {
-            //clearTimeout(timer);
-            setUser(session?.user ?? null); // Update user state based on auth event
-            //console.log("user:", user)
-        });
-
-        // Cleanup function
-        return () => {
-            try {
-                authListener?.data.subscription.unsubscribe(); //Sair do auth state
-            } catch (error) {
-                console.error('Error unsubscribing from auth state changes:', error.message);
-            }
-        };
-    }, []);*/
+    //console.log(imgPerfil)
 
     return (
         <>

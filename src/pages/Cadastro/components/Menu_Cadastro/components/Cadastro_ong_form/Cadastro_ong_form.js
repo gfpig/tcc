@@ -84,7 +84,7 @@ function Cadastro_ong_form() {
         emailinstituicao: yup.string().email().required("É necessário informar o e-mail"),
         senhainstituicao: yup.string()
                     .min(8, "A senha deve ter no mínimo 8 caracteres")
-                    .matches(/^(?=.*[a-z])(?=.*[A-Z])/, "A senha deve conter pelo menos uma letra maiúscula e uma letra minúscula")
+                    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])/, "A senha deve conter pelo menos uma letra maiúscula, uma letra minúscula, um caractere especial e um número")
                     .required("É necessário informar uma senha"),
         confirmar_senha: yup.string().oneOf([yup.ref("senhainstituicao")], "As senhas devem coincidir").required("É necessário confirmar sua senha"),
         categorias: yup.string().required("É necessário selecionar uma categoria"),

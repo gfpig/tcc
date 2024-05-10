@@ -4,10 +4,7 @@
 
 .form__login {
     @apply flex md:w-1/3 mt-12 md:mt-0 mb-2 md:mb-0;
-    
-    display: flex;
     justify-content: center;
-    /*flex-direction: column;*/
 }
 
 .div_login h1 {

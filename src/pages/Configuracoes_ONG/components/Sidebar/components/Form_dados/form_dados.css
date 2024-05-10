@@ -3,11 +3,16 @@
 }
 
 .inputs_editar_dados input {
+    @apply w-full;
     background-color: #eae8e8;
     border: none;
     border-radius: 5px;
     margin-bottom: 15px;
     padding: 10px;
+}
+
+.inputs_editar_dados input:disabled {
+    background-color: #d1cfcf;
 }
 
 .inputs_editar_dados {
@@ -31,10 +36,6 @@
     display: none;
 }
 
-.inputs_editar_dados input {
-    @apply w-full;
-}
-
 .inputs_editar_dados select {
     max-height: 44px;
     background-color: #eae8e8;
@@ -50,14 +51,27 @@
     background-color: #e1e1e1;
 }
 
+.inputs_editar_dados .botao_salvar {
+    @apply self-end p-2 text-white mb-2 font-bold rounded-md;
+    background-color: #6c419a;
+}
+
 .inputs_editar_dados .botao_deletarConta {
-    @apply self-end p-2 bg-red-600 text-white mb-2;
+    @apply self-end p-2 bg-red-600 text-white mb-2 font-bold rounded-md;
 }
 
 option {
     padding: 5px;
 }
 
-.flex_gap {
+.flex_gapEditar {
     @apply flex gap-3;
+}
+
+.flex_gapEditar div {
+    @apply w-full;
+}
+
+.flex_gapEditar select {
+    @apply w-full;
 }

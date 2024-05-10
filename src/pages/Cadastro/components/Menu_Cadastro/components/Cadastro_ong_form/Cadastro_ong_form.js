@@ -5,6 +5,7 @@ import * as yup from "yup";
 import { cnpj } from 'cpf-cnpj-validator'; 
 import { createClient } from "@supabase/supabase-js";
 import Swal from 'sweetalert2';
+import { hasUnreliableEmptyValue } from '@testing-library/user-event/dist/utils';
 
 const PROJECT_URL = "https://xljeosvrbsygpekwclan.supabase.co";
 const PUBLIC_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhsamVvc3ZyYnN5Z3Bla3djbGFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTQ1MTY1NzAsImV4cCI6MjAzMDA5MjU3MH0.InFDrSOcPxRe4LXMBJ4dT59bBb3LSpKw063S90E3uPo"
@@ -40,7 +41,11 @@ function CreateInstituicao (valoresDoForm) {
                 complemento: '',
                 numero: '',
                 telefone: '',
-                categorias: ''
+                categorias: '',
+                site: '',
+                whatsapp: '',
+                descricao: '',
+                foto: ''
             });
         }
     };
@@ -70,7 +75,7 @@ function Cadastro_ong_form() {
             if (data) {
                 console.log("categoria:", data)
                 setCategorias(data)
-                console.log(categorias)
+                //console.log(categorias)
                 setFetchError(null)
             }
         }
@@ -95,8 +100,7 @@ function Cadastro_ong_form() {
         uf: yup.string().required("É necessário preencher este campo"),
         //complemento: yup.string(),
         numero: yup.string().required("É necessário informar o número do logradouro"),
-        telefone: yup.string().required("É necessário informar seu telefone"),
-        categorias: yup.string().required("É necessário selecionar uma categoria")
+        telefone: yup.string().required("É necessário informar seu telefone")
     })
 
     //Função que valida a existência do CNPJ informado
@@ -203,11 +207,10 @@ function Cadastro_ong_form() {
         return data.length > 0;
     }
 
-  return (
-    <>
-    
-    <form onSubmit={async (e) => {
+    const handleSubmit_CadastroONG = async (e) => {
         e.preventDefault();
+        console.log(formCadastroInstituicao.values.senhainstituicao)
+        console.log(formCadastroInstituicao.values.confirmar_senha)
  
         try { //validar se todos os campos estão preenchidos
             await validationSchema.validate(formCadastroInstituicao.values, {abortEarly: false});
@@ -257,7 +260,11 @@ function Cadastro_ong_form() {
                 complemento: formCadastroInstituicao.values.complemento,
                 numero: formCadastroInstituicao.values.numero,
                 telefone: formCadastroInstituicao.values.telefone,
-                categoria: formCadastroInstituicao.values.categorias
+                categoria: formCadastroInstituicao.values.categorias,
+                site: '',
+                whatsapp: '',
+                descricao: '',
+                foto: ''
               },
             },
         })
@@ -272,7 +279,8 @@ function Cadastro_ong_form() {
         }
 
         if (error != null) { //Se der algum problema, mostrar esse.
-            console.log(error);
+            console.log("erro:",error.message);
+            console.log("mensagem:",error.message);
             mensagem = "Um erro inesperado ocorreu :(";
         
             Swal.fire({
@@ -280,8 +288,14 @@ function Cadastro_ong_form() {
                 title: mensagem
             })
         }
+
+        e.stopPropagation()
+    }
+
+  return (
+    <>
     
-    }}>
+    <form onSubmit={handleSubmit_CadastroONG}>
     <div className="container_inputs">
         <div className="inputs_esquerda">
             <input type="text" name='nomeinstituicao' value={ formCadastroInstituicao.values.nomeinstituicao } placeholder="Nome da instituição" onChange={formCadastroInstituicao.handleChange} />
@@ -339,7 +353,7 @@ function Cadastro_ong_form() {
         </div>    
     </div>
     <div className='botao_cadastro'>
-        <button className="btn_finalizarCadastro">Finalizar Cadastro</button>
+        <button type='submit' className="btn_finalizarCadastro">Finalizar Cadastro</button>
     </div>
     </form>
     </>    

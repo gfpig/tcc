@@ -39,7 +39,7 @@ option {
 }
 
 .flex_gap {
-    @apply flex;
+    @apply flex gap-3;
     max-height: 44px;
 }
 

@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import './form_login.css';
 import {useForm} from 'react-hook-form';
 import { createClient } from "@supabase/supabase-js";
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const PROJECT_URL = "https://xljeosvrbsygpekwclan.supabase.co";
 const PUBLIC_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhsamVvc3ZyYnN5Z3Bla3djbGFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTQ1MTY1NzAsImV4cCI6MjAzMDA5MjU3MH0.InFDrSOcPxRe4LXMBJ4dT59bBb3LSpKw063S90E3uPo"
@@ -31,7 +31,6 @@ function CreateUser (valoresDoLogin) {
 const Form_login = () => {
     //variáveis para redirecionar o usuário após o login bem sucedido
     const navigate = useNavigate();
-    const location = useLocation();
 
     const {setError, formState} = useForm();
     const { errors } = formState;

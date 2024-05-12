@@ -15,7 +15,7 @@ function Sidebar() {
 
   return (
         <>
-        <div style={{display:"flex", justifyContent:"center"}}>
+        <div style={{display:"flex", justifyContent:"center", flexDirection:"column"}}>
             {/* SIDEBAR */}
             <div className="sidebar">
                 <nav className="sidebar_navigation">

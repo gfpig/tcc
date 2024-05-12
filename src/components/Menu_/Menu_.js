@@ -18,9 +18,9 @@ const Menu = () => {
     useEffect(() => {
         const fetchFotoPerfil = async () => {
             try {
-                const { data: { session }} = await supabase.auth.getSession();
+                const { data: { session }} = await supabase.auth.getSession(); //pega a sessão do usuário (se tem alguém logado e quem é)
 
-                if (session) {
+                if (session) { //se houver usuário logado, faz um select com base no id do usuário
                     const { data, error } = await supabase
                     .from('instituicao')
                     .select('foto, cnpj')
@@ -43,7 +43,7 @@ const Menu = () => {
             }
         }
 
-        const verificaSessao = async () => {
+        const verificaSessao = async () => { //pegando a sessão e colocando numa variável
             const { data: { session }} = await supabase.auth.getSession();
             setSession(session);
             fetchFotoPerfil();
@@ -63,15 +63,15 @@ const Menu = () => {
                     <a className='busca' href="resultado"><FontAwesomeIcon icon={ faMagnifyingGlass } size="lg" /></a>
                 </div>
                 <div className='container__login'>
-                {session ? (
-                                imgPerfil ? (
+                {session ? ( //existe sessão? Se sim:
+                                imgPerfil ? ( //existe imgPerfil? Se sim:
                                     <button id="botao-user" className="botaoUser"><a href="/Configuracoes_ONG"><div className="overflow-clip bg-white rounded-full"><FontAwesomeIcon icon={ faHandHoldingHeart } size='2x' color='#e87f45' id='img_none' /></div></a></button>
-                                ) : (
+                                ) : ( //se não existir imgPerfil:
                                     <button id="botao-user" className="botaoUser"><a href="/Configuracoes_ONG"><img src={imgPerfil}></img></a></button>
                                 )
                             )
                         :
-                        (
+                        (//se não existir seção:
                             <button id="botao-login" className="botaoLogin"><a href="/login">LOGIN</a></button>
                         )
                     }

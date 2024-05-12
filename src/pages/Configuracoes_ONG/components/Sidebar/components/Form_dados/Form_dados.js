@@ -23,21 +23,21 @@ function CreateInstituicao (valoresDoForm) {
                 ...values,
                 [name]: value,
             });
-            //onImageChange()
             //console.log("name:", name, "\nvalue:", value);    
         }
     };
 }
 
 function Form_dados() {
-    const [fetchDone, setFetchDone] = useState(false);
-    const [img, setImg] = useState(); //armazena a foto de perfil
+    const [fetchDone, setFetchDone] = useState(false); //varíavel pra saber se já puxou os dados
+    const [img, setImg] = useState(null); //armazena a foto de perfil (para mostrar na tela)
+    const [file, setFile] = useState(null); //armazena a foto de perfil (para colocar no banco)
     const [fetchError, setFetchError] = useState([]);
     const [categorias, setCategorias] = useState([]); //vetor que armazenará as categorias
     const {register, setError, clearErrors, formState} = useForm();
     const { errors } = formState; //erros na validação do CEP
     const [erros, setErros] = useState({}); //erros na validação do preenchimento dos campos
-    const [session, setSession] = useState(null); //pegando a sessão para poder atualizar na tabela certa
+    //const [session, setSession] = useState(null); //pegando a sessão para poder atualizar na tabela certa
 
     //Vetor que vai armazenar os dados do formulário
     const formUpdateInstituicao = CreateInstituicao({
@@ -64,8 +64,14 @@ function Form_dados() {
     });
 
     const onImageChange = (e) => {
-        const [file] = e.target.files;
-        setImg(URL.createObjectURL(file));
+        const novaFoto = e.target.files[0];
+        setFile(novaFoto);
+        setImg(URL.createObjectURL(novaFoto));
+        //console.log(file);
+        //formUpdateInstituicao.values.foto = URL.createObjectURL(file);
+
+        //console.log(formUpdateInstituicao.values.foto)
+        //console.log(Array.isArray(file));
     };
 
     //Procura os dados do CEP de acordo com o que foi informado no input
@@ -111,6 +117,54 @@ function Form_dados() {
     }
 
     useEffect(() => {
+        let imgURL;
+        const fetchFotoPerfil = async () => {
+            try {
+                
+                const { data: { session }} = await supabase.auth.getSession(); //pega a sessão do usuário (se tem alguém logado e quem é)
+
+                if (session) { //se houver usuário logado, faz um select com base no id do usuário
+                    const { data, error } = await supabase
+                    .from('instituicao')
+                    .select('foto')
+                    .eq('id', session.user.id)
+
+                    if (error) {
+                        setFetchError("Não foi possível recuperar as informações")
+                        setImg(null)
+                        console.log(fetchError)
+                    }
+        
+                    if (data) {
+                        data.map((user) => imgURL = user.foto)
+                        console.log("url 1:", imgURL)
+
+                        //setImg(data.foto)
+                        //imgURL = data.foto;
+                        setFetchError(null)
+                    }
+
+                    try {
+                        // Fetch image URL from Supabase storage
+                            if (imgURL !== null) {
+                            const { data: img_url } = await supabase.storage.from('avatares').getPublicUrl(imgURL);
+                            
+                            setImg(img_url.publicUrl); // Set image URL in state
+                        }
+                        //console.log("url 2:",imgURL);
+                        //console.log("public:", img_url)
+                        //console.log("imagem:", img)
+                    } catch (error) {
+                        console.error('Error fetching image:', error.message);
+                    }
+
+                    fetchDados();
+                }
+            } catch(error) {
+                console.log(fetchError)
+            }
+        };
+
         const fetchDados = async () => {
             try {
                 const { data: { session }} = await supabase.auth.getSession();
@@ -129,12 +183,10 @@ function Form_dados() {
                     }
         
                     if (data) {
-                        //console.log("uf:", data)
                         data.map ((user) => (
                             formUpdateInstituicao.values.cnpj = user.cnpj,
                             formUpdateInstituicao.values.nomeinstituicao = user.nomeinstituicao,
                             formUpdateInstituicao.values.emailinstituicao = user.emailinstituicao,
-                            //formUpdateInstituicao.values.senhainstituicao = user.senhainstituicao,
                             formUpdateInstituicao.values.cep = user.cep,
                             formUpdateInstituicao.values.bairro = user.bairro,
                             formUpdateInstituicao.values.logradouro = user.logradouro,
@@ -148,22 +200,25 @@ function Form_dados() {
                             formUpdateInstituicao.values.whatsapp = user.whatsapp,
                             formUpdateInstituicao.values.descricao = user.descricao,
                             formUpdateInstituicao.values.foto = user.foto
-                            //setImg(URL.createObjectURL(formUpdateInstituicao.values.foto))
                         ))
                         setFetchDone(true);
-                        console.log("uf:", formUpdateInstituicao.values)
+                        console.log("uf:", formUpdateInstituicao.values.foto)
                         console.log("data:", data)
+                        console.log("imagem pós public:",img);
+                        //if (formUpdateInstituicao.values.foto !== '') { setImg(formUpdateInstituicao.values.foto) }
                         //formUpdateInstituicao.values.uf = 
                         //setImgPerfil(data)
                         //setFetchError(null)
                     }
                 }
+                console.log("img",img)
             } catch(error) {
                 console.log(fetchError)
             }
         }
 
-        fetchDados();
+        //fetchDados();
+        fetchFotoPerfil();
 
         //Preenche as categorias do select com base no banco de dados
         const fetchCategorias = async () => {
@@ -184,6 +239,7 @@ function Form_dados() {
             }
         }
         fetchCategorias()
+
     }, [])
 
     const validationSchema= yup.object({
@@ -200,7 +256,9 @@ function Form_dados() {
         telefone: yup.string().required("É necessário informar seu telefone")
     })
 
-    async function atualizarUsuario() { //atualiza a tabela auth.users
+    async function atualizarDados() { //atualiza a tabela auth.users
+        //const { data: { session }} = await supabase.auth.getSession();
+
         const { data, error } = await supabase.auth.updateUser({
             email: formUpdateInstituicao.values.emailinstituicao,
             data: {
@@ -219,78 +277,78 @@ function Form_dados() {
                 whatsapp: formUpdateInstituicao.values.whatsapp,
                 descricao: formUpdateInstituicao.values.descricao,
                 foto: formUpdateInstituicao.values.foto
-            },
+            },     
         })
 
-        /*if (error === null) { //Se o update for feito com sucesso
-            //Mostra um pop-up na tela
-            console.log("o inicio de um sonho");
-            Swal.fire({
-                icon: "success",
-                title: "Dados atualizados com sucesso"
-            })
-            //formUpdateInstituicao.clearForm(); //limpa o formulário
-        }
+        if (error == null) {
+            const { data: { session }} = await supabase.auth.getSession();
 
-        if (error !== null) { //Se der algum problema, mostrar esse.
-            console.log(error.message);
-            console.log(error);
+            const { error } = await supabase
+                .from('instituicao')
+                .update({
+                    cnpj: formUpdateInstituicao.values.cnpj,
+                    nomeinstituicao: formUpdateInstituicao.values.nomeinstituicao,
+                    cep: formUpdateInstituicao.values.cep,
+                    bairro: formUpdateInstituicao.values.bairro,
+                    logradouro: formUpdateInstituicao.values.logradouro,
+                    cidade: formUpdateInstituicao.values.cidade,
+                    uf: formUpdateInstituicao.values.uf,
+                    complemento: formUpdateInstituicao.values.complemento,
+                    numero: formUpdateInstituicao.values.numero,
+                    telefone: formUpdateInstituicao.values.telefone,
+                    codcategoria: formUpdateInstituicao.values.categorias,
+                    site: formUpdateInstituicao.values.site,
+                    whatsapp: formUpdateInstituicao.values.whatsapp,
+                    descricao: formUpdateInstituicao.values.descricao,
+                    foto: formUpdateInstituicao.values.foto })
+                .eq('id', session.user.id)
+
+                if(error == null) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Dados atualizados com sucesso"
+                    })
+                } else {
+                    let mensagem = "Um erro inesperado ocorreu :(";
+                
+                    Swal.fire({
+                        icon: "error",
+                        title: mensagem
+                    })
+                }
+        } else {
             let mensagem = "Um erro inesperado ocorreu :(";
         
             Swal.fire({
                 icon: "error",
                 title: mensagem
             })
-        }*/
-
-        return true;
+        }    
     }
 
-    async function atualizarInstituicao() { //atualiza a tabela instituição
-        const { data: { session }} = await supabase.auth.getSession();
+    async function uploadAvatar(event) {
+        try {
+          //const file = event.target.files[0]
+          const fileExt = file.name.split('.').pop()
+          const fileName = `${Math.random()}.${fileExt}`
+          const filePath = `${fileName}`
+    
+          const { error: uploadError } = await supabase.storage.from('avatares').upload(filePath, file)
+    
+          if (uploadError) {
+            throw uploadError
+          } else {
+            const { data: { session }} = await supabase.auth.getSession();
 
-        const { error } = await supabase
-            .from('instituicao')
-            .update({
-                cnpj: formUpdateInstituicao.values.cnpj,
-                nomeinstituicao: formUpdateInstituicao.values.nomeinstituicao,
-                cep: formUpdateInstituicao.values.cep,
-                bairro: formUpdateInstituicao.values.bairro,
-                logradouro: formUpdateInstituicao.values.logradouro,
-                cidade: formUpdateInstituicao.values.cidade,
-                uf: formUpdateInstituicao.values.uf,
-                complemento: formUpdateInstituicao.values.complemento,
-                numero: formUpdateInstituicao.values.numero,
-                telefone: formUpdateInstituicao.values.telefone,
-                codcategoria: formUpdateInstituicao.values.categorias,
-                site: formUpdateInstituicao.values.site,
-                whatsapp: formUpdateInstituicao.values.whatsapp,
-                descricao: formUpdateInstituicao.values.descricao,
-                foto: formUpdateInstituicao.values.foto })
-            .eq('id', session.user.id)
-
-        /*if (error === null) { //Se o update for feito com sucesso
-            //Mostra um pop-up na tela
-            console.log("o inicio de um sonho");
-            Swal.fire({
-                icon: "success",
-                title: "Dados atualizados com sucesso"
-            })
-            //formUpdateInstituicao.clearForm(); //limpa o formulário
+            const { error } = await supabase
+                .from('instituicao')
+                .update({
+                    foto: fileName })
+                .eq('id', session.user.id)
+          }
+        } catch (error) {
+          console.log("Erro no upload da foto:",error.message)
         }
-
-        if (error !== null) { //Se der algum problema, mostrar esse.
-            console.log("intituicao:", error.message);
-
-            let mensagem = "Um erro inesperado ocorreu :(";
-        
-            Swal.fire({
-                icon: "error",
-                title: mensagem
-            })
-        }*/
-
-        return true;
     }
 
     const HandleSubmit = async (e) => {
@@ -308,93 +366,9 @@ function Form_dados() {
             console.log(erros);
             return;
         }
-
         
-        atualizarUsuario(); //atualiza auth.user
-
-        /*const { data, error } = await supabase.auth.updateUser({
-            email: formUpdateInstituicao.values.emailinstituicao,
-            data: {
-                cnpj: formUpdateInstituicao.values.cnpj,
-                nomeinstituicao: formUpdateInstituicao.values.nomeinstituicao,
-                cep: formUpdateInstituicao.values.cep,
-                bairro: formUpdateInstituicao.values.bairro,
-                logradouro: formUpdateInstituicao.values.logradouro,
-                cidade: formUpdateInstituicao.values.cidade,
-                uf: formUpdateInstituicao.values.uf,
-                complemento: formUpdateInstituicao.values.complemento,
-                numero: formUpdateInstituicao.values.numero,
-                telefone: formUpdateInstituicao.values.telefone,
-                categoria: formUpdateInstituicao.values.categorias,
-                site: formUpdateInstituicao.values.site,
-                whatsapp: formUpdateInstituicao.values.whatsapp,
-                descricao: formUpdateInstituicao.values.descricao,
-                foto: formUpdateInstituicao.values.foto
-            },
-        })*/
-
-        atualizarInstituicao(); //atualiza a tabela instituição
-        /*const { data: { session }} = await supabase.auth.getSession();
-
-        const { updateError } = await supabase
-            .from('instituicao')
-            .update({
-                cnpj: formUpdateInstituicao.values.cnpj,
-                nomeinstituicao: formUpdateInstituicao.values.nomeinstituicao,
-                cep: formUpdateInstituicao.values.cep,
-                bairro: formUpdateInstituicao.values.bairro,
-                logradouro: formUpdateInstituicao.values.logradouro,
-                cidade: formUpdateInstituicao.values.cidade,
-                uf: formUpdateInstituicao.values.uf,
-                complemento: formUpdateInstituicao.values.complemento,
-                numero: formUpdateInstituicao.values.numero,
-                telefone: formUpdateInstituicao.values.telefone,
-                categoria: formUpdateInstituicao.values.categorias,
-                site: formUpdateInstituicao.values.site,
-                whatsapp: formUpdateInstituicao.values.whatsapp,
-                descricao: formUpdateInstituicao.values.descricao,
-                foto: formUpdateInstituicao.values.foto })
-            .eq('id', session.user.id)
-
-        //console.log("form:", formUpdateInstituicao.values)
-        //console.log("data:",data);
-        //console.log(updateError);*/
-
-        if(atualizarUsuario && atualizarInstituicao) {
-            Swal.fire({
-                icon: "success",
-                title: "Dados atualizados com sucesso"
-            })
-        } else {
-            let mensagem = "Um erro inesperado ocorreu :(";
-        
-            Swal.fire({
-                icon: "error",
-                title: mensagem
-            })
-        }
-
-
-        /*if (updateError === null) { //Se o update for feito com sucesso
-            //Mostra um pop-up na tela
-            console.log("o inicio de um sonho");
-            Swal.fire({
-                icon: "success",
-                title: "Dados atualizados com sucesso"
-            })
-            //formUpdateInstituicao.clearForm(); //limpa o formulário
-        }
-
-        if (updateError !== null) { //Se der algum problema, mostrar esse.
-            console.log("deu tudo errado");
-
-            let mensagem = "Um erro inesperado ocorreu :(";
-        
-            Swal.fire({
-                icon: "error",
-                title: mensagem
-            })
-        }*/
+        atualizarDados(); //atualiza a tabela instituição e tabela auth.users
+        uploadAvatar(file);
     }
 
     return (
@@ -405,8 +379,8 @@ function Form_dados() {
                 <form onSubmit={ HandleSubmit }>
                     <div className="inputs_editar_dados">
                         <label id="lbl_img" className="escolher_img">
-                            {img == null && <FontAwesomeIcon icon={ faHandHoldingHeart } size='4x' color='#e87f45' id='img_none' />}
-                            {img != null && <img id="img_perfilONG" src={img} alt="foto de perfil" className='rounded-full h-16 w-16' />}
+                            {img === null && <FontAwesomeIcon icon={ faHandHoldingHeart } size='4x' color='#e87f45' id='img_none' />}
+                            {img !== null && <img id="img_perfilONG" src={img} alt="foto de perfil" className='rounded-full h-16 w-16' />}
                             <div className='editar_fotoPerfil'>
                                 <FontAwesomeIcon icon={ faCamera } color='white' />
                                 <p>Escolha uma foto</p>

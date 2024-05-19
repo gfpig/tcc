@@ -98,7 +98,7 @@ const Menu = () => {
                     <a className='busca' href="resultado"><FontAwesomeIcon icon={ faMagnifyingGlass } size="lg" /></a>
                 </div>
                 <div className='container__login'>
-                {session ? ( //existe sessão? Se sim:
+                    {session ? ( //existe sessão? Se sim:
                             session.user.user_metadata.cpf === undefined ? (
                                 imgPerfil ? ( //existe imgPerfil? Se sim:
                                     <button id="botao-user" className="botaoUser"><a href="/Configuracoes_ONG"><img src={imgPerfil} className='h-9 w-9 rounded-full' /></a></button>

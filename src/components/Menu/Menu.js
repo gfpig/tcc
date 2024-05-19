@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import './menu.css';
 import { createClient } from "@supabase/supabase-js";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome' ;
-import { faHandHoldingHeart, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { faHandHoldingHeart, faUser, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import logotipo from '../../assets/other/logotipo_temporario.png';
 
 const PROJECT_URL = "https://xljeosvrbsygpekwclan.supabase.co";
@@ -15,26 +15,62 @@ const Menu = () => {
     const [session, setSession] = useState(null);
 
     useEffect(() => {
+        let imgURL
         const fetchFotoPerfil = async () => {
             try {
-                const { data: { session }} = await supabase.auth.getSession();
+                const { data: { session }} = await supabase.auth.getSession(); //pega a sessão do usuário (se tem alguém logado e quem é)
 
-                if (session) {
-                    const { data, error } = await supabase
-                    .from('instituicao')
-                    .select('foto, cnpj')
-                    .eq('id', session.user.id)
+                if (session) { //se houver usuário logado, faz um select com base no id do usuário
+                    if (session.user.user_metadata.cpf === undefined){ //se o cpf não existir, checa a tabela instituição
+                        const { data, error } = await supabase
+                        .from('instituicao')
+                        .select('foto, cnpj')
+                        .eq('id', session.user.id)
 
-                    if (error) {
-                        setFetchError("Não foi possível recuperar as informações")
-                        setImgPerfil(null)
-                        console.log(fetchError)
-                    }
-        
-                    if (data) {
-                        //console.log("img:", data)
-                        setImgPerfil(data)
-                        setFetchError(null)
+                        if (error) {
+                            setFetchError("Não foi possível recuperar as informações")
+                            setImgPerfil(null)
+                            console.log(fetchError)
+                        }
+            
+                        if (data) {
+                            data.map((user) => imgURL = user.foto)
+                        }
+
+                        try {
+                            //Pega a img do storage
+                            if (imgURL !== null) {
+                                const { data: img_url } = await supabase.storage.from('avatares').getPublicUrl(imgURL);
+                                setImgPerfil(img_url.publicUrl); //Coloca a URL no state
+                            }
+                        } catch (error) {
+                            console.error('Error fetching image:', error.message);
+                        }
+                    } else { //checa candidato
+                        const { data, error } = await supabase
+                        .from('candidato')
+                        .select('foto, cpf')
+                        .eq('id', session.user.id)
+
+                        if (error) {
+                            setFetchError("Não foi possível recuperar as informações")
+                            setImgPerfil(null)
+                        }
+            
+                        if (data) {
+                            data.map((user) => imgURL = user.foto)
+                        }
+
+                        try {
+                            //Pega a img do storage
+                            if (imgURL !== null) {
+                                const { data: img_url } = await supabase.storage.from('avatares').getPublicUrl(imgURL);
+                                
+                                setImgPerfil(img_url.publicUrl); //Coloca a URL no state
+                            }
+                        } catch (error) {
+                            console.error('Error fetching image:', error.message);
+                        }
                     }
                 }
             } catch(error) {
@@ -64,15 +100,22 @@ const Menu = () => {
                     <a className='busca' href="resultado"><FontAwesomeIcon icon={ faMagnifyingGlass } size="lg" color='white' /></a>
                 </div>
                 <div className='container__login'>
-                    {session ? (
-                                imgPerfil ? (
-                                    <button id="botao-user" className="botaoUser"><a href="/Configuracoes_ONG"><div className="overflow-clip bg-white rounded-full"><FontAwesomeIcon icon={ faHandHoldingHeart } size='2x' color='#e87f45' id='img_none' /></div></a></button>
-                                ) : (
-                                    <button id="botao-user" className="botaoUser"><a href="/Configuracoes_ONG"><img src={imgPerfil}></img></a></button>
+                    {session ? ( //existe sessão? Se sim:
+                            session.user.user_metadata.cpf === undefined ? (
+                                imgPerfil ? ( //existe imgPerfil? Se sim:
+                                    <button id="botao-user" className="botaoUser"><a href="/Configuracoes_ONG"><img src={imgPerfil} className='h-9 w-9 rounded-full' /></a></button>
+                                ) : ( //se não existir imgPerfil:
+                                    <button id="botao-user" className="botaoUser"><a href="/Configuracoes_ONG"><div className="overflow-clip bg-white h-9 w-9 rounded-full"><FontAwesomeIcon icon={ faHandHoldingHeart } size='2x' color='#e87f45' id='img_none' /></div></a></button>
+                                )
+                            ) : 
+                                imgPerfil ? ( //existe imgPerfil? Se sim:
+                                    <button id="botao-user" className="botaoUser"><a href="/configuracoes_candidato"><img src={imgPerfil} className='h-9 w-9 rounded-full' /></a></button>
+                                ) : ( //se não existir imgPerfil:
+                                    <button id="botao-user" className="botaoUser"><a href="configuracoes_candidato"><div className="flex items-end justify-center overflow-clip bg-white h-9 w-9 rounded-full"><FontAwesomeIcon icon={ faUser } size='2x' color='#e87f45' id='img_none' /></div></a></button>
                                 )
                             )
                         :
-                        (
+                        (//se não existir seção:
                             <button id="botao-login" className="botaoLogin"><a href="/login">LOGIN</a></button>
                         )
                     }

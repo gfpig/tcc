@@ -23,6 +23,8 @@ function CreateUser (valoresDoForm) {
                 ...values,
                 [name]: value,
             });
+            //console.log("nome", name)
+            //console.log("value:", value)
         },
 
         clearForm () {
@@ -60,6 +62,13 @@ function Cadastro_beneficiario_form() {
     const { errors } = formState;
     const [erros, setErros] = useState({});
 
+    //validação da senha
+    const [senhaFocus, setSenhaFocus] = useState(false);
+    const [validaQtde, setQtde] = useState(false)
+    const [validaMaiuscula, setMaiuscula] = useState(false)
+    const [validaNumero, setNumero] = useState(false)
+    const [validaSimbolo, setSimbolo] = useState(false)
+
     //FUNÇÃO DE VALIDAÇÃO DOS CAMPOS DO FORMULÁRIO
     const validationSchema= yup.object({
         cpf: yup.string().required("É necessário preencher o CPF"),
@@ -69,13 +78,10 @@ function Cadastro_beneficiario_form() {
         generos: yup.string().required("É necessário selecionar um gênero"),
         email: yup.string().email().required("É necessário preencher seu e-mail"),
         senha: yup.string("Not string 1")
-                    .min(8, "A senha deve ter no mínimo 8 caracteres")
-                    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])/, "A senha deve conter pelo menos uma letra maiúscula, uma letra minúscula, um caractere especial e um número")
+                    .min(8, "")
+                    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])/, "Os requisitos da senha devem ser atendidos")
                     .required("É necessário informar uma senha"),
         confirmar_senha: yup.string("Not string")
-                    /*.test('match', 'As senhas devem coincidir 2', function(value) {
-                        console.log("value: ", value, "\nsenha: ", this.parent.senha, "\nComparacao:",value === this.parent.senha)
-                        return value === this.parent.senha || value === null;})*/
                     .oneOf([yup.ref("senha"), null], "As senhas devem coincidir")
                     .required("É necessário confirmar sua senha"),
         cep: yup.string().required("É necessário informar seu CEP"),
@@ -83,7 +89,6 @@ function Cadastro_beneficiario_form() {
         logradouro: yup.string().required("É necessário preencher este campo"),
         cidade: yup.string().required("É necessário preencher este campo"),
         uf: yup.string().required("É necessário preencher este campo"),
-        //complemento: yup.string().required("É necessário informar o complemento"),
         numero: yup.string().required("É necessário informar o número do logradouro"),
         telefone: yup.string().required("É necessário informar seu telefone")
     })
@@ -91,7 +96,6 @@ function Cadastro_beneficiario_form() {
     //Valida a existência do CPF informado
     const validaCPF = (e) => {
         const valor = e.target.value.replace(/\D/g, ''); //substitui todos os caracteres que não são números por nulo
-        console.log('valor:', valor)
 
         if(cpf.isValid(valor)) {
             clearErrors('cpfInvalido');
@@ -99,25 +103,20 @@ function Cadastro_beneficiario_form() {
         } else {     
             setError('cnpjInvalido', { message: "Informe um CPF válido"});
             document.getElementById("alerta_cpf").style.display = 'block'
-            //console.log(errors.cnpjInvalido?.message)
         }
     }
 
     //Procura os dados do CEP de acordo com o que foi informado no input
     const pesquisaCEP = (e) => {
         const cep = e.target.value.replace(/\D/g, ''); //substitui todos os caracteres que não são números por nulo
-        //console.log(cep);
         fetch(`https://viacep.com.br/ws/${cep}/json/`)
         .then(res => {
-            //console.log(res);
             return res.json();
         })
         .then(data => {
-            //console.log(data);
             clearErrors('apiError'); //limpa todos os erros (para não aparecer nenhuma mensagem indesejada)
             document.getElementById("alerta_cep").style.display = "none"
             if(data.erro === true) { //Caso o CEP informado tenha o número certo de caracteres, porém não exista
-                //console.log("erro = true");
                 setError('apiError', { message: "Não foi possível encontrar o CEP informado" });
                 document.getElementById("alerta_cep").style.display = "block"
                 formCadastroBeneficiario.values.logradouro = '';
@@ -135,6 +134,7 @@ function Cadastro_beneficiario_form() {
         .catch(() => { //caso o CEP informado não exista, cria um erro e apaga os valores dos outros campos
             setError('apiError', { message: "Não foi possível encontrar o CEP informado" });
             document.getElementById("alerta_cep").style.display = 'block'
+
             //Limpando os campos
             formCadastroBeneficiario.values.logradouro = '';
             formCadastroBeneficiario.values.bairro = '';
@@ -142,22 +142,6 @@ function Cadastro_beneficiario_form() {
             formCadastroBeneficiario.values.uf = '';
         });
     }
-
-    /*const validarCampos = async () => {
-        try { //validar se todos os campos estão preenchidos
-            await validationSchema.validate(formCadastroBeneficiario.values, {abortEarly: false});
-        } catch (erro) { //se não estão, cria um novo erro para ser exibido ao usuário
-            const novoErro = {}
-
-            erro.inner.forEach(err => {
-                novoErro[err.path] = err.message
-            });
-            setErros(novoErro);
-            //console.log(erros);
-            return;
-            //process.exit();
-        }
-    }*/
 
     //Checa se o CPF informado já está cadastrado
     async function checarCPFExistente(ValorCPF) {
@@ -189,6 +173,37 @@ function Cadastro_beneficiario_form() {
         //se for devolvido um valor, o dado existe
         return data.length > 0;
     }
+
+    const handlePasswordChange = (e) => {
+        const maiuscula = new RegExp('(?=.*[A-Z])');
+        const numero = new RegExp('(?=.*[0-9])');
+        const simbolo = new RegExp('(?=.*[!@#\$%\^&\*])');
+        const qtde = new RegExp('(?=.{8,})');
+
+        if(maiuscula.test(e)) {
+            setMaiuscula(true)
+        } else {
+            setMaiuscula(false)
+        }
+
+        if(numero.test(e)) {
+            setNumero(true)
+        } else {
+            setNumero(false)
+        }
+
+        if(simbolo.test(e)) {
+            setSimbolo(true)
+        } else {
+            setSimbolo(false)
+        }
+
+        if(qtde.test(e)) {
+            setQtde(true)
+        } else {
+            setQtde(false)
+        }        
+    };
 
   return (
     <>
@@ -249,7 +264,6 @@ function Cadastro_beneficiario_form() {
               },
             },
         })
-        //console.log(data);
 
         if (error == null || data?.user?.identities?.length !== 0) { //Se o cadastro for feito com sucesso
             if(data?.user == null) {
@@ -260,7 +274,6 @@ function Cadastro_beneficiario_form() {
                 })
                 return;
             }
-            console.log(data);
             //Mostra um pop-up na tela
             Swal.fire({
               icon: "success",
@@ -311,11 +324,20 @@ function Cadastro_beneficiario_form() {
                 <input type="email" name="email" value={ formCadastroBeneficiario.values.email } placeholder="E-mail" onChange={ formCadastroBeneficiario.handleChange } />
                 {erros.email && <div className='text-red-600 mt-0 mb-2'>{erros.email}</div>}
                 <div className='flex_gap'>
-                    <input type="password" name="senha" value={ formCadastroBeneficiario.values.senha } placeholder="Senha" onChange={ formCadastroBeneficiario.handleChange } />
+                    <input type="password" id="senha" name="senha" value={ formCadastroBeneficiario.values.senha } placeholder="Senha" onChange={(e) => { handlePasswordChange(e.target.value); formCadastroBeneficiario.handleChange(e); }} onFocus={() => setSenhaFocus(true)} onBlur={() => setSenhaFocus(false)} />
                     <input type="password" name="confirmar_senha" value={ formCadastroBeneficiario.values.confirmar_senha } placeholder="Confirmar senha" onChange={ formCadastroBeneficiario.handleChange } />
                 </div>
+
+                {senhaFocus &&
+                    <div className='requisitos_senha'>
+                        <div className={validaQtde? 'validado' : 'nao-validado'}>A senha deve conter, no mínimo, oito caracteres</div>
+                        <div className={validaMaiuscula? 'validado' : 'nao-validado'}>A senha deve conter, no mínimo, uma letra maiúscula</div>
+                        <div className={validaNumero? 'validado' : 'nao-validado'}>A senha deve conter, no mínimo, um número</div>
+                        <div className={validaSimbolo? 'validado' : 'nao-validado'}>A senha deve conter, no mínimo, um caractere especial</div>
+                    </div>
+                }
                 {erros.senha && <div className='text-red-600 mt-0 mb-2'>{erros.senha}</div>}
-                {erros.confirmar_senha && <div className='text-red-600 mt-0 mb-2'>{erros.confirmar_senha} <p>{formCadastroBeneficiario.values.senha}</p><p>{formCadastroBeneficiario.values.confirmar_senha}</p></div>}
+                {erros.confirmar_senha && <div className='text-red-600 mt-0 mb-2'>{erros.confirmar_senha}</div>}
             </div>
             <div className="inputs_direita">
                 <div className='flex_gap'>

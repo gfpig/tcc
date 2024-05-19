@@ -58,6 +58,13 @@ function Cadastro_ong_form() {
 
     const [fetchError, setFetchError] = useState([]);
     const [categorias, setCategorias] = useState([]);
+
+    //validação da senha
+    const [senhaFocus, setSenhaFocus] = useState(false);
+    const [validaQtde, setQtde] = useState(false)
+    const [validaMaiuscula, setMaiuscula] = useState(false)
+    const [validaNumero, setNumero] = useState(false)
+    const [validaSimbolo, setSimbolo] = useState(false)
     
     //Preenche as categorias do select com base no banco de dados
     useEffect(() => {
@@ -92,8 +99,8 @@ function Cadastro_ong_form() {
                         .matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.+-]+\.gov$/, "O e-mail deve terminar com '.gov'")
                         .required("É necessário informar o e-mail"),
         senhainstituicao: yup.string()
-                    .min(8, "A senha deve ter no mínimo 8 caracteres")
-                    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])/, "A senha deve conter pelo menos uma letra maiúscula, uma letra minúscula, um caractere especial e um número")
+                    .min(8, "")
+                    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])/, "Os requisitos da senha devem ser atendidos")
                     .required("É necessário informar uma senha"),
         confirmar_senha: yup.string().oneOf([yup.ref("senhainstituicao")], "As senhas devem coincidir").required("É necessário confirmar sua senha"),
         categorias: yup.string().required("É necessário selecionar uma categoria"),
@@ -296,30 +303,51 @@ function Cadastro_ong_form() {
         e.stopPropagation()
     }
 
+    const handlePasswordChange = (e) => {
+        const maiuscula = new RegExp('(?=.*[A-Z])');
+        const numero = new RegExp('(?=.*[0-9])');
+        const simbolo = new RegExp('(?=.*[!@#\$%\^&\*])');
+        const qtde = new RegExp('(?=.{8,})');
+
+        if(maiuscula.test(e)) {
+            setMaiuscula(true)
+        } else {
+            setMaiuscula(false)
+        }
+
+        if(numero.test(e)) {
+            setNumero(true)
+        } else {
+            setNumero(false)
+        }
+
+        if(simbolo.test(e)) {
+            setSimbolo(true)
+        } else {
+            setSimbolo(false)
+        }
+
+        if(qtde.test(e)) {
+            setQtde(true)
+        } else {
+            setQtde(false)
+        }        
+    };
+
   return (
     <>
     
     <form onSubmit={handleSubmit_CadastroONG}>
     <div className="container_inputs">
         <div className="inputs_esquerda">
-            <input type="text" name='nomeinstituicao' value={ formCadastroInstituicao.values.nomeinstituicao } placeholder="Nome da instituição" onChange={formCadastroInstituicao.handleChange} />
-            {erros.nomeinstituicao && <div className='text-red-600 mt-0 mb-2'>{erros.nomeinstituicao}</div>}
-
-            <input type="text" name='cnpj' placeholder="CNPJ" value={ formCadastroInstituicao.values.cnpj }
+        <input type="text" name='cnpj' placeholder="CNPJ" value={ formCadastroInstituicao.values.cnpj }
             onChange={formCadastroInstituicao.handleChange}
             onBlur={validaCNPJ} />
             {errors && <div className="text-red-600 mt-0 mb-2" id="alerta_cnpj" style={{display: "none"}}>{errors.cnpjInvalido?.message}</div>}
             {erros.cnpj && <div className='text-red-600 mt-0 mb-2'>{erros.cnpj}</div>}
 
-            <input type="email" name='emailinstituicao' value={ formCadastroInstituicao.values.emailinstituicao } placeholder="E-mail" onChange={formCadastroInstituicao.handleChange} />
-            {erros.emailinstituicao && <div className='text-red-600 mt-0 mb-2'>{erros.emailinstituicao}</div>}
-
-            <div className='flex_gap'>
-                <input type="password" name='senhainstituicao' value={ formCadastroInstituicao.values.senhainstituicao } placeholder="Senha" onChange={formCadastroInstituicao.handleChange} />
-                <input type="password" name="confirmar_senha" value={ formCadastroInstituicao.values.confirmar_senha } placeholder="Confirmar senha" onChange={formCadastroInstituicao.handleChange} />
-            </div>
-            {erros.senhainstituicao && <div className='text-red-600 mt-0 mb-2'>{erros.senhainstituicao}</div>}
-            {erros.confirmar_senha && <div className='text-red-600 mt-0 mb-2'>{erros.confirmar_senha}</div>}
+            <input type="text" name='nomeinstituicao' value={ formCadastroInstituicao.values.nomeinstituicao } placeholder="Nome da instituição" onChange={formCadastroInstituicao.handleChange} />
+            {erros.nomeinstituicao && <div className='text-red-600 mt-0 mb-2'>{erros.nomeinstituicao}</div>}
 
             <div className='flex_gap'>
                 <input type="text" value="Educação" onChange={formCadastroInstituicao.handleChange}  disabled />
@@ -331,6 +359,25 @@ function Cadastro_ong_form() {
                 </select>
             </div>
             {erros.categorias && <div className='text-red-600 mt-0 mb-2'>{erros.categorias}</div>}
+
+            <input type="email" name='emailinstituicao' value={ formCadastroInstituicao.values.emailinstituicao } placeholder="E-mail" onChange={formCadastroInstituicao.handleChange} />
+            {erros.emailinstituicao && <div className='text-red-600 mt-0 mb-2'>{erros.emailinstituicao}</div>}
+
+            <div className='flex_gap'>
+                <input type="password" name='senhainstituicao' value={ formCadastroInstituicao.values.senhainstituicao } placeholder="Senha" onChange={(e) => {formCadastroInstituicao.handleChange(e); handlePasswordChange(e.target.value);}} onFocus={() => setSenhaFocus(true)} onBlur={() => setSenhaFocus(false)} />
+                <input type="password" name="confirmar_senha" value={ formCadastroInstituicao.values.confirmar_senha } placeholder="Confirmar senha" onChange={formCadastroInstituicao.handleChange} />
+            </div>
+            {senhaFocus && 
+                <div className='requisitos_senha' id="requisitos_senha">
+                    <div className={validaQtde? 'validado' : 'nao-validado'}>A senha deve conter, no mínimo, oito caracteres</div>
+                    <div className={validaMaiuscula? 'validado' : 'nao-validado'}>A senha deve conter, no mínimo, uma letra maiúscula</div>
+                    <div className={validaNumero? 'validado' : 'nao-validado'}>A senha deve conter, no mínimo, um número</div>
+                    <div className={validaSimbolo? 'validado' : 'nao-validado'}>A senha deve conter, no mínimo, um caractere especial</div>
+                </div>
+            }
+            {erros.senhainstituicao && <div className='text-red-600 mt-0 mb-2'>{erros.senhainstituicao}</div>}
+            {erros.confirmar_senha && <div className='text-red-600 mt-0 mb-2'>{erros.confirmar_senha}</div>}
+    
         </div>
         <div className="inputs_direita">
             <div className='flex_gap'>

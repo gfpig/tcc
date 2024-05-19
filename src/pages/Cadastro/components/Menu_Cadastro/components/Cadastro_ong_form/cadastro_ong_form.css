@@ -19,6 +19,14 @@
     flex-direction: column;
 }
 
+.requisitos_senha .validado {
+    color: green;
+}
+
+.requisitos_senha .nao-validado {
+    color: red;
+}
+
 .container_inputs select {
     background-color: #eae8e8;
     border: none;

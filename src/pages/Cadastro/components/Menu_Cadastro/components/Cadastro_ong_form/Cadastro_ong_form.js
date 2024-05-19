@@ -85,8 +85,12 @@ function Cadastro_ong_form() {
     //FUNÇÃO DE VALIDAÇÃO DOS CAMPOS DO FORMULÁRIO
     const validationSchema= yup.object({
         cnpj: yup.string().required("É necessário informar o CNPJ"),
-        nomeinstituicao: yup.string().required("É necessário informar o nome da instituição"),
-        emailinstituicao: yup.string().email().required("É necessário informar o e-mail"),
+        nomeinstituicao: yup.string()
+                        .required("É necessário informar o nome da instituição"),
+        emailinstituicao: yup.string()
+                        .email()
+                        .matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.+-]+\.gov$/, "O e-mail deve terminar com '.gov'")
+                        .required("É necessário informar o e-mail"),
         senhainstituicao: yup.string()
                     .min(8, "A senha deve ter no mínimo 8 caracteres")
                     .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])/, "A senha deve conter pelo menos uma letra maiúscula, uma letra minúscula, um caractere especial e um número")

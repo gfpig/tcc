@@ -2,9 +2,8 @@ import React, {useState, useEffect} from 'react';
 import './menu_.css';
 import { createClient } from "@supabase/supabase-js";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome' ;
-import { faHandHoldingHeart, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { faHandHoldingHeart, faUserCircle, faUser, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import logotipo from '../../assets/other/logotipo_temporario.png';
-import search from '../../assets/icons/search_bar.png';
 
 const PROJECT_URL = "https://xljeosvrbsygpekwclan.supabase.co";
 const PUBLIC_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhsamVvc3ZyYnN5Z3Bla3djbGFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTQ1MTY1NzAsImV4cCI6MjAzMDA5MjU3MH0.InFDrSOcPxRe4LXMBJ4dT59bBb3LSpKw063S90E3uPo"
@@ -16,26 +15,62 @@ const Menu = () => {
     const [session, setSession] = useState(null);
 
     useEffect(() => {
+        let imgURL;
         const fetchFotoPerfil = async () => {
             try {
                 const { data: { session }} = await supabase.auth.getSession(); //pega a sessão do usuário (se tem alguém logado e quem é)
 
                 if (session) { //se houver usuário logado, faz um select com base no id do usuário
-                    const { data, error } = await supabase
-                    .from('instituicao')
-                    .select('foto, cnpj')
-                    .eq('id', session.user.id)
+                    if (session.user.user_metadata.cpf === undefined){ //se o cpf não existir, checa a tabela instituição
+                        const { data, error } = await supabase
+                        .from('instituicao')
+                        .select('foto, cnpj')
+                        .eq('id', session.user.id)
 
-                    if (error) {
-                        setFetchError("Não foi possível recuperar as informações")
-                        setImgPerfil(null)
-                        console.log(fetchError)
-                    }
-        
-                    if (data) {
-                        //console.log("img:", data)
-                        setImgPerfil(data)
-                        setFetchError(null)
+                        if (error) {
+                            setFetchError("Não foi possível recuperar as informações")
+                            setImgPerfil(null)
+                            console.log(fetchError)
+                        }
+            
+                        if (data) {
+                            data.map((user) => imgURL = user.foto)
+                        }
+
+                        try {
+                            //Pega a img do storage
+                            if (imgURL !== null) {
+                                const { data: img_url } = await supabase.storage.from('avatares').getPublicUrl(imgURL);
+                                setImgPerfil(img_url.publicUrl); //Coloca a URL no state
+                            }
+                        } catch (error) {
+                            console.error('Error fetching image:', error.message);
+                        }
+                    } else { //checa candidato
+                        const { data, error } = await supabase
+                        .from('candidato')
+                        .select('foto, cpf')
+                        .eq('id', session.user.id)
+
+                        if (error) {
+                            setFetchError("Não foi possível recuperar as informações")
+                            setImgPerfil(null)
+                        }
+            
+                        if (data) {
+                            data.map((user) => imgURL = user.foto)
+                        }
+
+                        try {
+                            //Pega a img do storage
+                            if (imgURL !== null) {
+                                const { data: img_url } = await supabase.storage.from('avatares').getPublicUrl(imgURL);
+                                
+                                setImgPerfil(img_url.publicUrl); //Coloca a URL no state
+                            }
+                        } catch (error) {
+                            console.error('Error fetching image:', error.message);
+                        }
                     }
                 }
             } catch(error) {
@@ -64,10 +99,17 @@ const Menu = () => {
                 </div>
                 <div className='container__login'>
                 {session ? ( //existe sessão? Se sim:
+                            session.user.user_metadata.cpf === undefined ? (
                                 imgPerfil ? ( //existe imgPerfil? Se sim:
-                                    <button id="botao-user" className="botaoUser"><a href="/Configuracoes_ONG"><div className="overflow-clip bg-white rounded-full"><FontAwesomeIcon icon={ faHandHoldingHeart } size='2x' color='#e87f45' id='img_none' /></div></a></button>
+                                    <button id="botao-user" className="botaoUser"><a href="/Configuracoes_ONG"><img src={imgPerfil} className='h-9 w-9 rounded-full' /></a></button>
                                 ) : ( //se não existir imgPerfil:
-                                    <button id="botao-user" className="botaoUser"><a href="/Configuracoes_ONG"><img src={imgPerfil}></img></a></button>
+                                    <button id="botao-user" className="botaoUser"><a href="/Configuracoes_ONG"><div className="overflow-clip bg-white h-9 w-9 rounded-full"><FontAwesomeIcon icon={ faHandHoldingHeart } size='2x' color='#e87f45' id='img_none' /></div></a></button>
+                                )
+                            ) : 
+                                imgPerfil ? ( //existe imgPerfil? Se sim:
+                                    <button id="botao-user" className="botaoUser"><a href="/configuracoes_candidato"><img src={imgPerfil} className='h-9 w-9 rounded-full' /></a></button>
+                                ) : ( //se não existir imgPerfil:
+                                    <button id="botao-user" className="botaoUser"><a href="configuracoes_candidato"><div className="flex items-end justify-center overflow-clip bg-white h-9 w-9 rounded-full"><FontAwesomeIcon icon={ faUser } size='2x' color='#e87f45' id='img_none' /></div></a></button>
                                 )
                             )
                         :

@@ -7,7 +7,7 @@ import Form_dados from './components/Form_dados/Form_dados';
 import Solicitacoes from './components/Solicitacoes/Solicitacoes';
 import Notificacoes from './components/Notificacoes/Notificacoes';
 import { createClient } from "@supabase/supabase-js";
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
 
 const PROJECT_URL = "https://xljeosvrbsygpekwclan.supabase.co";

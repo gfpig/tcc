@@ -45,8 +45,8 @@ function Form_dados() {
             cnpj: '',
             nomeinstituicao: '',
             emailinstituicao: '',
-            senhainstituicao: '',
-            confirmar_senha: '',
+            //senhainstituicao: '',
+            //confirmar_senha: '',
             cep: '',
             bairro: '',
             logradouro: '',
@@ -67,11 +67,6 @@ function Form_dados() {
         const novaFoto = e.target.files[0];
         setFile(novaFoto);
         setImg(URL.createObjectURL(novaFoto));
-        //console.log(file);
-        //formUpdateInstituicao.values.foto = URL.createObjectURL(file);
-
-        //console.log(formUpdateInstituicao.values.foto)
-        //console.log(Array.isArray(file));
     };
 
     //Procura os dados do CEP de acordo com o que foi informado no input

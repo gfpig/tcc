@@ -45,8 +45,6 @@ function Form_dados() {
             cnpj: '',
             nomeinstituicao: '',
             emailinstituicao: '',
-            //senhainstituicao: '',
-            //confirmar_senha: '',
             cep: '',
             bairro: '',
             logradouro: '',
@@ -132,10 +130,6 @@ function Form_dados() {
         
                     if (data) {
                         data.map((user) => imgURL = user.foto)
-                        console.log("url 1:", imgURL)
-
-                        //setImg(data.foto)
-                        //imgURL = data.foto;
                         setFetchError(null)
                     }
 
@@ -146,9 +140,6 @@ function Form_dados() {
                             
                             setImg(img_url.publicUrl); // Set image URL in state
                         }
-                        //console.log("url 2:",imgURL);
-                        //console.log("public:", img_url)
-                        //console.log("imagem:", img)
                     } catch (error) {
                         console.error('Error fetching image:', error.message);
                     }

@@ -11,7 +11,7 @@ const Header = () => {
                 <img className='logotipo' src={logotipo} alt='logotipo' />
             </div>
             <div className='descricao'>
-                <h1>NOME HIPOTÉTICO</h1>
+                <h1>CADUCEU</h1>
                 <p>NOSSA PLATAFORMA TEM COMO OBJETIVO PRINCIPAL FACILITAR A CONEXÃO ENTRE ONGs E QUALQUER PESSOA QUE ESTEJA INTERESSADA EM PARTICIPAR COMO BENERFICIÁRIO DELAS.
                     AQUI, TANTO ORGANIZAÇÕES QUANTO FUTUROS BENEFICIÁRIOS PODEM CRIAR SUAS CONTAS E USUFRUIR DAS VANTAGENS DO NOSSO SITE.
                 </p>

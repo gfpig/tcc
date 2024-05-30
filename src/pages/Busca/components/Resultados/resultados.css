@@ -3,7 +3,7 @@
 }
 
 .container_resultado {
-    @apply flex items-center justify-between w-4/5 h-2/5 mb-5;
+    @apply flex items-center justify-between w-4/5 md:h-48 mb-5;
     background-color: #7d387c;
 }
 
@@ -16,7 +16,13 @@
 }
 
 .container__dadosResultado {
-    @apply flex flex-col content-between text-white ml-3;
+    @apply flex flex-col content-between text-white ml-3 w-full;
+}
+
+@media (min-width: 768px){
+    .container__dadosResultado span {
+        width: 1050px;
+    }
 }
 
 .container_resultado .nome_ong {

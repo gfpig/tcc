@@ -8,7 +8,6 @@ function Busca() {
     <>
     <Menu_ />
     <div style={{position: "relative", top: "50px"}}>
-        <Filtro />
         <Resultados />
     </div>
     </>

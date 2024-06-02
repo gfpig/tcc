@@ -67,11 +67,12 @@ function Resultados() {
             }
 
             Object.entries(filtros).forEach(([coluna, valor]) => {
-                //console.log(`Filter column: ${coluna}, Filter value: ${valor}`);
+                console.log(`Filter column: ${coluna}, Filter value: ${valor}`);
                 // Check if filter value is not empty
                 if (valor !== '' && valor !== null) {
                     query = query.eq(coluna, valor);
                 }
+                console.log("query", query)
             });
 
             const { data, error } = await query;
@@ -261,19 +262,19 @@ function Resultados() {
     <>
     {/* console.log("fetchDone2", fetchDone)*/}
     <div className='barra_filtros'>
-        <select name="estados" id="estados" value={ formFiltro.values.estados }>
+        <select name="estado" id="estados" value={ formFiltro.values.estado } onChange={(e) => {formFiltro.handleChange(e); fetchInstituicoes()}}>
             <option value="">Estado</option>
             {estados.map((estado , index) => (
                 <option key={index} value={estado} onChange={formFiltro.handleChange}>{estado}</option>
             ))}
         </select>
-        <select name="cidades" id="cidades" value={ formFiltro.values.cidades }>
+        <select name="cidade" id="cidades" value={ formFiltro.values.cidade } onChange={(e) => {formFiltro.handleChange(e); fetchInstituicoes()}}>
             <option value="">Cidade</option>
             {cidades.map((cidade , index) => (
                 <option key={index} value={cidade} onChange={formFiltro.handleChange}>{cidade}</option>
             ))}
         </select>
-        <select name="bairros" id="bairros" value={ formFiltro.values.bairros }>
+        <select name="bairro" id="bairros" value={ formFiltro.values.bairro } onChange={(e) => {formFiltro.handleChange(e); fetchInstituicoes()}}>
             <option value="">Bairro</option>
             {bairros.map((bairro , index) => (
                 <option key={index} value={bairro} onChange={formFiltro.handleChange}>{bairro}</option>

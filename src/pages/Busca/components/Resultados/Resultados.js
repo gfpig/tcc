@@ -305,7 +305,7 @@ function Resultados() {
                         </span>
 
                         <div className='opcoes_resultado'>
-                            <button>SITE</button>
+                            <button><a href={instituicao.site}>SITE</a></button>
                             <button><a href='/perfil_instituicao'>MAIS INFORMAÇÕES</a></button>
                         </div> 
                     </div>       

@@ -29,7 +29,7 @@
     justify-content: center;
     & > div {
       flex: 1;
-      height: 50%;
+      height: 60%;
       border-radius: 8px;
       max-width: 320px;
       display: flex;

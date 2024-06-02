@@ -24,6 +24,7 @@ function CreateInstituicao (valoresDoForm) {
                 ...values,
                 [name]: value,
             });
+            //console.log("name:", name, "\nvalue:", value);
         },
 
         clearForm () {
@@ -100,7 +101,7 @@ function Cadastro_ong_form() {
                         .required("É necessário informar o e-mail"),
         senhainstituicao: yup.string()
                     .min(8, "")
-                    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])/, "Os requisitos da senha devem ser atendidos")
+                    .matches(/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])/, "Os requisitos da senha devem ser atendidos")
                     .required("É necessário informar uma senha"),
         confirmar_senha: yup.string().oneOf([yup.ref("senhainstituicao")], "As senhas devem coincidir").required("É necessário confirmar sua senha"),
         categorias: yup.string().required("É necessário selecionar uma categoria"),

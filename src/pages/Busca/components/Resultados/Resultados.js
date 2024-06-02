@@ -4,7 +4,6 @@ import './filtros.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHandHoldingHeart } from '@fortawesome/free-solid-svg-icons';
 import { createClient } from "@supabase/supabase-js";
-import { UNSAFE_FetchersContext } from 'react-router-dom';
 
 const PROJECT_URL = "https://xljeosvrbsygpekwclan.supabase.co";
 const PUBLIC_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhsamVvc3ZyYnN5Z3Bla3djbGFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTQ1MTY1NzAsImV4cCI6MjAzMDA5MjU3MH0.InFDrSOcPxRe4LXMBJ4dT59bBb3LSpKw063S90E3uPo"
@@ -23,7 +22,7 @@ function CreateForm (valoresDoForm) {
                 ...values,
                 [name]: value,
             });
-            //console.log("name:", name, "\nvalue:", value);    
+            console.log("name:", name, "\nvalue:", value);
         }
     };
 }
@@ -37,7 +36,9 @@ function Resultados() {
     const [vagasAbertas, setVagasAbertas] = useState(null)
     const [img, setImg] = useState(null); //armazena a foto de perfil (para mostrar na tela)
     const [fetchError, setFetchError] = useState([]);
-    const [fetchDone, setFetchDone] = useState(false); //varíavel pra saber se já puxou os dados
+    const [fetchInstituicaoDone, setFetchInstituicaoDone] = useState(false); //varíavel pra saber se já puxou os dados da instituicao
+    const [fetchFiltrosDone, setFetchFiltrosDone] = useState(false)
+    //const fetchInstituicoesRef = useRef(null)
 
     //Vetor que vai armazenar os filtros
     const formFiltro = CreateForm({
@@ -50,19 +51,92 @@ function Resultados() {
         }
     });
 
-    useEffect(() => {
-        let imgURL;
+    let imgURL;
 
-        const fetchInstituicoes = async () => {
+    const fetchInstituicoes = async () => {
+        try {
+            setFetchInstituicaoDone(false)
+            console.log("fetchInstituicao:", fetchInstituicaoDone)
+            let query = supabase.from('instituicao').select('*')
+            const filtros = {
+                'codcategoria': formFiltro.values.categorias,
+                'cidade': formFiltro.values.cidade,
+                'uf': formFiltro.values.estado,
+                'bairro': formFiltro.values.bairro,
+                //'vagasAbertas': formFiltro.values.vagasAbertas
+            }
+
+            Object.entries(filtros).forEach(([coluna, valor]) => {
+                //console.log(`Filter column: ${coluna}, Filter value: ${valor}`);
+                // Check if filter value is not empty
+                if (valor !== '' && valor !== null) {
+                    query = query.eq(coluna, valor);
+                }
+            });
+
+            const { data, error } = await query;
+
+            if (error) {
+                setFetchError("Não foi possível recuperar as informações")
+                setInstituicoes(null)
+                console.log(error)
+            }
+
+            if (data) {
+                setInstituicoes(data)
+                setFetchError(null)
+                //setFetchInstituicaoDone(true)
+            }
+        } catch(error) {
+            console.log(error);
+        } finally {
+            setFetchInstituicaoDone(true)
+        }
+
+        try {
+            // Fetch image URL from Supabase storage
+                if (imgURL !== null) {
+                const { data: img_url } = await supabase.storage.from('avatares').getPublicUrl(imgURL);
+                
+                setImg(img_url.publicUrl); // Set image URL in state
+            }
+        } catch (error) {
+            console.error('Error fetching image:', error.message);
+        }
+    }
+
+    useEffect(() => {
+        if (!fetchInstituicaoDone) {
+            fetchInstituicoes();
+        }
+        /*let imgURL;
+
+        fetchInstituicoesRef.current = async () => {
             try {
-                const { data, error } = await supabase
-                .from('instituicao')
-                .select('*')
+                setFetchDone(false)
+                let query = supabase.from('instituicao').select('*')
+                const filtros = {
+                    'codcategoria': formFiltro.values.categorias,
+                    'cidade': formFiltro.values.cidade,
+                    'uf': formFiltro.values.estado,
+                    'bairro': formFiltro.values.bairro,
+                    //'vagasAbertas': formFiltro.values.vagasAbertas
+                }
+
+                Object.entries(filtros).forEach(([coluna, valor]) => {
+                    //console.log(`Filter column: ${coluna}, Filter value: ${valor}`);
+                    // Check if filter value is not empty
+                    if (valor !== '' && valor !== null) {
+                        query = query.eq(coluna, valor);
+                    }
+                });
+
+                const { data, error } = await query;
     
                 if (error) {
                     setFetchError("Não foi possível recuperar as informações")
                     setInstituicoes(null)
-                    console.log(fetchError)
+                    console.log(error)
                 }
     
                 if (data) {
@@ -71,7 +145,7 @@ function Resultados() {
                     setFetchDone(true)
                 }
             } catch(error) {
-                console.log(fetchError);
+                console.log(error);
             }
 
             try {
@@ -84,9 +158,9 @@ function Resultados() {
             } catch (error) {
                 console.error('Error fetching image:', error.message);
             }
-        }
+        }*/
 
-        console.log(img);
+        //console.log(img);
 
         //fetchInstituicoes();
 
@@ -106,7 +180,8 @@ function Resultados() {
                 //console.log("categoria:", data)
                 setCategorias(data)
                 setFetchError(null)
-                fetchInstituicoes();
+                setFetchFiltrosDone(true)
+                //fetchInstituicoes();
             }
         }
         //fetchCategorias()
@@ -177,12 +252,14 @@ function Resultados() {
         }
         fetchBairros()
 
-    }, [])
+    }, [fetchInstituicaoDone])
 
   return (
     <>
-    { fetchDone ?
+    {/*console.log("done1:", fetchFiltrosDone, "\ndone2:", fetchInstituicaoDone)*/}
+    { fetchInstituicaoDone && fetchFiltrosDone ?
     <>
+    {/* console.log("fetchDone2", fetchDone)*/}
     <div className='barra_filtros'>
         <select name="estados" id="estados" value={ formFiltro.values.estados }>
             <option value="">Estado</option>
@@ -202,7 +279,7 @@ function Resultados() {
                 <option key={index} value={bairro} onChange={formFiltro.handleChange}>{bairro}</option>
             ))}
         </select>
-        <select name="categorias" id="categorias" value={ formFiltro.values.categorias }>
+        <select name="categorias" id="categorias" value={ formFiltro.values.categorias } onChange={(e) => {formFiltro.handleChange(e); fetchInstituicoes()}}>
             <option value="">Categoria</option>
             {categorias.map((categoria) => (
                 <option key={categoria.codcategoria} value={categoria.codcategoria} onChange={formFiltro.handleChange}>{categoria.nomecategoria}</option>
@@ -234,40 +311,6 @@ function Resultados() {
                 </div>
             </div>
         ))}
-        <div className='container_resultado'>
-            <div className='info_ong'>
-                <FontAwesomeIcon icon={ faHandHoldingHeart } size='8x' color='white' />
-                <div className='container__dadosResultado'>
-                    <span>
-                        <p className='nome_ong'>LOREM IPSUM</p>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eget ligula eu lectus lobortis condimentum. Aliquam nonummy auctor massa. Pellentesque habitant morbi tristique senectus et netus...</p>
-                    </span>
-
-                    <div className='opcoes_resultado'>
-                        <button>SITE</button>
-                        <button><a href='/perfil_instituicao'>MAIS INFORMAÇÕES</a></button>
-                    </div> 
-                </div>       
-            </div>
-        </div>
-
-        <div className='container_resultado'>
-            <div className='info_ong'>
-                <FontAwesomeIcon icon={ faHandHoldingHeart } size='8x' color='white' />
-                <div className='container__dadosResultado'>
-                    <span>
-                        <p className='nome_ong'>LOREM IPSUM</p>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eget ligula eu lectus lobortis condimentum. Aliquam nonummy auctor massa. Pellentesque habitant morbi tristique senectus et netus...</p>
-                    </span>
-
-                    <div className='opcoes_resultado'>
-                        <button>SITE</button>
-                        <button>MAIS INFORMAÇÕES</button>
-                    </div>
-                </div>     
-            </div>
-            
-        </div>
     </div>
     </>
     : null}

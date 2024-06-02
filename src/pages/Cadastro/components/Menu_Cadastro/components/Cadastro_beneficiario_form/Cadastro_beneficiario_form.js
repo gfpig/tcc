@@ -79,7 +79,7 @@ function Cadastro_beneficiario_form() {
         email: yup.string().email().required("É necessário preencher seu e-mail"),
         senha: yup.string("Not string 1")
                     .min(8, "")
-                    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])/, "Os requisitos da senha devem ser atendidos")
+                    .matches(/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])/, "Os requisitos da senha devem ser atendidos")
                     .required("É necessário informar uma senha"),
         confirmar_senha: yup.string("Not string")
                     .oneOf([yup.ref("senha"), null], "As senhas devem coincidir")

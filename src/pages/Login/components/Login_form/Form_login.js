@@ -19,7 +19,7 @@ function CreateUser (valoresDoLogin) {
             document.getElementById("alerta_login").style.display = "none";
             const value = evento.target.value;
             const name = evento.target.name;
-            console.log("value: ", value);
+            //console.log("value: ", value);
             setValues ({
                 ...values,
                 [name]: value,

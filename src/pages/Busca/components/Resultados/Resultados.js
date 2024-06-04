@@ -56,7 +56,6 @@ function Resultados() {
     const fetchInstituicoes = async () => {
         try {
             setFetchInstituicaoDone(false)
-            //console.log("fetchInstituicao:", fetchInstituicaoDone)
             let query = supabase.from('instituicao').select('*')
             const filtros = {
                 'codcategoria': formFiltro.values.categorias,
@@ -67,7 +66,6 @@ function Resultados() {
             }
 
             Object.entries(filtros).forEach(([coluna, valor]) => {
-                //console.log(`Filter column: ${coluna}, Filter value: ${valor}`);
                 // Checa se o valor do filtro não é vazio/nulo
                 if (valor !== '' && valor !== null) {
                     query = query.eq(coluna, valor);
@@ -86,7 +84,6 @@ function Resultados() {
             if (data) {
                 setInstituicoes(data)
                 setFetchError(null)
-                //setFetchInstituicaoDone(true)
             }
         } catch(error) {
             console.log(error);
@@ -94,22 +91,7 @@ function Resultados() {
             setFetchInstituicaoDone(true)
         }
 
-        /*try {
-            //Pega a URL da foto de perfil da tabela
-            if (imgURL !== null) {
-                console.log("tem imagem")
-                const { data: img_url } = await supabase.storage.from('avatares').getPublicUrl(imgURL);
-                
-                setImg(img_url.publicUrl); // Set image URL in state
-            } else {
-                console.log("não tem imagem")
-                setImg('null')
-            }
-        } catch (error) {
-            console.error('Error fetching image:', error.message);
-        }*/
         try {
-            //console.log("oi")
             const {data, error} = await supabase
             .from('instituicao')
             .select('foto')
@@ -122,25 +104,37 @@ function Resultados() {
 
             if (data) { //coloca as urls dentro de um vetor para posteriormente pegar o link delas
                 //const { data: img_url } = await supabase.storage.from('avatares').getPublicUrl(imgURL);
-                console.log("data.foto", data.map((dado) => (dado.foto)))
-                /*data.map((dado) => (
-                    console.log("dado foto:",dado.foto),
-                    setImgURL(dado.foto)
-                ))*/
-                /*data.forEach((foto) => {
-                    console.log("foto:", foto)
-                    setImgURL(foto)
-                })*/
+                //console.log("data.foto", data.map((dado) => (dado.foto)))
+
                 setImgURL(data)
-                //data.map((dado) => (
-                    
-                //))
                 //setImg(img_url.publicUrl); // Set image URL in state
             }
         } catch (error) {
             console.log("Erro capturando a foto de perfil:", error.message)
         }
     }
+
+    const FetchFotosPerfil = async () => {
+        /*imgURL.forEach((dado, index) => {
+            console.log("foreach:", dado.foto,"\nindex:", index)
+            const { data: img_url } = await supabase.storage.from('avatares').getPublicUrl(imgURL);
+        })*/
+        //console.log("imgURL", imgURL)
+        imgURL.map(async (dado, index) => {
+            console.log("foreach:", dado.foto);
+            if(dado.foto === null) { 
+                console.log("oi")
+                img[index] = null
+            } else {
+                const { data } = await supabase.storage.from('avatares').getPublicUrl(dado.foto);
+                img[index] = data.publicUrl
+            }
+            //console.log("data:", data.publicUrl)
+        });
+        console.log("img urls", img)
+    }
+
+    FetchFotosPerfil()
 
     useEffect(() => {
         if (!fetchInstituicaoDone) {
@@ -234,7 +228,7 @@ function Resultados() {
     <>
     { fetchInstituicaoDone && fetchFiltrosDone ?
     <>
-    {console.log("img:",imgURL)}
+    {console.log("imgURL:",imgURL)}
     <div className='barra_filtros'>
         <select name="estado" id="estados" value={ formFiltro.values.estado } onChange={(e) => {formFiltro.handleChange(e); fetchInstituicoes()}}>
             <option value="">Estado</option>
@@ -269,9 +263,9 @@ function Resultados() {
         {instituicoes.map((instituicao, index) => (
             <div className='container_resultado'>
                 <div className='info_ong'>
-                    {console.log("img[index] === null:", imgURL[index].foto === null)}
-                    {imgURL[index].foto === null && <FontAwesomeIcon icon={ faHandHoldingHeart } size='8x' color='white' id='img_none' />}
-                    {imgURL[index].foto !== null && <img id="img_perfilONG" src={imgURL[index].foto} alt="foto de perfil" className='rounded-full h-16 w-16' />}
+                    {console.log("img[index] === null:", img[index] === null)}
+                    {img[index] === null && <FontAwesomeIcon icon={ faHandHoldingHeart } size='8x' color='white' id='img_none' />}
+                    {img[index] !== null && <img id="img_perfilONG" src={img[index]} alt="foto de perfil" className='h-26 w-20' />}
                     <div className='container__dadosResultado'>
                         <span>
                             <p className='nome_ong'>{instituicao.nomeinstituicao}</p>

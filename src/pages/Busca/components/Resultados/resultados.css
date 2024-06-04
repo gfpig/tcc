@@ -19,11 +19,11 @@
     @apply flex flex-col content-between text-white ml-3 w-full;
 }
 
-@media (min-width: 768px){
+/*@media (min-width: 768px){
     .container__dadosResultado span {
         width: 1050px;
     }
-}
+}*/
 
 .container_resultado .nome_ong {
     @apply flex mt-6 md:mt-0 font-bold;

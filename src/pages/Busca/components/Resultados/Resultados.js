@@ -34,11 +34,11 @@ function Resultados() {
     const [bairros, setBairros] = useState(null);
     const [categorias, setCategorias] = useState(null);
     const [vagasAbertas, setVagasAbertas] = useState(null)
-    const [img, setImg] = useState(null); //armazena a foto de perfil (para mostrar na tela)
+    const [imgURL, setImgURL] = useState([])
+    const [img, setImg] = useState([]); //armazena a foto de perfil em vetor (para mostrar na tela)
     const [fetchError, setFetchError] = useState([]);
     const [fetchInstituicaoDone, setFetchInstituicaoDone] = useState(false); //varíavel pra saber se já puxou os dados da instituicao
     const [fetchFiltrosDone, setFetchFiltrosDone] = useState(false)
-    //const fetchInstituicoesRef = useRef(null)
 
     //Vetor que vai armazenar os filtros
     const formFiltro = CreateForm({
@@ -51,12 +51,12 @@ function Resultados() {
         }
     });
 
-    let imgURL;
+    //let imgURL;
 
     const fetchInstituicoes = async () => {
         try {
             setFetchInstituicaoDone(false)
-            console.log("fetchInstituicao:", fetchInstituicaoDone)
+            //console.log("fetchInstituicao:", fetchInstituicaoDone)
             let query = supabase.from('instituicao').select('*')
             const filtros = {
                 'codcategoria': formFiltro.values.categorias,
@@ -67,12 +67,12 @@ function Resultados() {
             }
 
             Object.entries(filtros).forEach(([coluna, valor]) => {
-                console.log(`Filter column: ${coluna}, Filter value: ${valor}`);
-                // Check if filter value is not empty
+                //console.log(`Filter column: ${coluna}, Filter value: ${valor}`);
+                // Checa se o valor do filtro não é vazio/nulo
                 if (valor !== '' && valor !== null) {
                     query = query.eq(coluna, valor);
                 }
-                console.log("query", query)
+                //console.log("query", query)
             });
 
             const { data, error } = await query;
@@ -94,15 +94,51 @@ function Resultados() {
             setFetchInstituicaoDone(true)
         }
 
-        try {
-            // Fetch image URL from Supabase storage
-                if (imgURL !== null) {
+        /*try {
+            //Pega a URL da foto de perfil da tabela
+            if (imgURL !== null) {
+                console.log("tem imagem")
                 const { data: img_url } = await supabase.storage.from('avatares').getPublicUrl(imgURL);
                 
                 setImg(img_url.publicUrl); // Set image URL in state
+            } else {
+                console.log("não tem imagem")
+                setImg('null')
             }
         } catch (error) {
             console.error('Error fetching image:', error.message);
+        }*/
+        try {
+            //console.log("oi")
+            const {data, error} = await supabase
+            .from('instituicao')
+            .select('foto')
+
+            if (error) {
+                setFetchError("Não foi possível recuperar as informações")
+                setInstituicoes(null)
+                console.log(error)
+            }
+
+            if (data) { //coloca as urls dentro de um vetor para posteriormente pegar o link delas
+                //const { data: img_url } = await supabase.storage.from('avatares').getPublicUrl(imgURL);
+                console.log("data.foto", data.map((dado) => (dado.foto)))
+                /*data.map((dado) => (
+                    console.log("dado foto:",dado.foto),
+                    setImgURL(dado.foto)
+                ))*/
+                /*data.forEach((foto) => {
+                    console.log("foto:", foto)
+                    setImgURL(foto)
+                })*/
+                setImgURL(data)
+                //data.map((dado) => (
+                    
+                //))
+                //setImg(img_url.publicUrl); // Set image URL in state
+            }
+        } catch (error) {
+            console.log("Erro capturando a foto de perfil:", error.message)
         }
     }
 
@@ -110,56 +146,6 @@ function Resultados() {
         if (!fetchInstituicaoDone) {
             fetchInstituicoes();
         }
-        /*let imgURL;
-
-        fetchInstituicoesRef.current = async () => {
-            try {
-                setFetchDone(false)
-                let query = supabase.from('instituicao').select('*')
-                const filtros = {
-                    'codcategoria': formFiltro.values.categorias,
-                    'cidade': formFiltro.values.cidade,
-                    'uf': formFiltro.values.estado,
-                    'bairro': formFiltro.values.bairro,
-                    //'vagasAbertas': formFiltro.values.vagasAbertas
-                }
-
-                Object.entries(filtros).forEach(([coluna, valor]) => {
-                    //console.log(`Filter column: ${coluna}, Filter value: ${valor}`);
-                    // Check if filter value is not empty
-                    if (valor !== '' && valor !== null) {
-                        query = query.eq(coluna, valor);
-                    }
-                });
-
-                const { data, error } = await query;
-    
-                if (error) {
-                    setFetchError("Não foi possível recuperar as informações")
-                    setInstituicoes(null)
-                    console.log(error)
-                }
-    
-                if (data) {
-                    setInstituicoes(data)
-                    setFetchError(null)
-                    setFetchDone(true)
-                }
-            } catch(error) {
-                console.log(error);
-            }
-
-            try {
-                // Fetch image URL from Supabase storage
-                    if (imgURL !== null) {
-                    const { data: img_url } = await supabase.storage.from('avatares').getPublicUrl(imgURL);
-                    
-                    setImg(img_url.publicUrl); // Set image URL in state
-                }
-            } catch (error) {
-                console.error('Error fetching image:', error.message);
-            }
-        }*/
 
         //console.log(img);
 
@@ -178,14 +164,11 @@ function Resultados() {
             }
 
             if (data) {
-                //console.log("categoria:", data)
                 setCategorias(data)
                 setFetchError(null)
                 setFetchFiltrosDone(true)
-                //fetchInstituicoes();
             }
         }
-        //fetchCategorias()
 
         const fetchEstados = async () => {
             const { data, error } = await supabase
@@ -199,15 +182,12 @@ function Resultados() {
             }
 
             if (data) {
-                //console.log("categoria:", data)
                 const estadosUnicos = Array.from(new Set(data.map(row => row.uf)));
-                //console.log("unicos:", estadosUnicos)
                 setEstados(estadosUnicos)
                 setFetchError(null)
                 fetchCategorias()
             }
         }
-        //fetchEstados()
 
         const fetchCidades = async () => {
             const { data, error } = await supabase
@@ -221,15 +201,12 @@ function Resultados() {
             }
 
             if (data) {
-                //console.log("categoria:", data)
                 const cidadesUnicas = Array.from(new Set(data.map(row => row.cidade)));
-                //console.log("unicos:", estadosUnicos)
                 setCidades(cidadesUnicas)
                 setFetchError(null)
                 fetchEstados()
             }
         }
-        //fetchCidades()
 
         const fetchBairros = async () => {
             const { data, error } = await supabase
@@ -243,9 +220,7 @@ function Resultados() {
             }
 
             if (data) {
-                //console.log("categoria:", data)
                 const bairrosUnicos = Array.from(new Set(data.map(row => row.bairro)));
-                //console.log("unicos:", estadosUnicos)
                 setBairros(bairrosUnicos)
                 setFetchError(null)
                 fetchCidades()
@@ -257,10 +232,9 @@ function Resultados() {
 
   return (
     <>
-    {/*console.log("done1:", fetchFiltrosDone, "\ndone2:", fetchInstituicaoDone)*/}
     { fetchInstituicaoDone && fetchFiltrosDone ?
     <>
-    {/* console.log("fetchDone2", fetchDone)*/}
+    {console.log("img:",imgURL)}
     <div className='barra_filtros'>
         <select name="estado" id="estados" value={ formFiltro.values.estado } onChange={(e) => {formFiltro.handleChange(e); fetchInstituicoes()}}>
             <option value="">Estado</option>
@@ -291,13 +265,13 @@ function Resultados() {
             <label for="vagas">Vagas Abertas</label>
         </span>
     </div>
-    <div className='resultados'>
-        
-        {instituicoes.map((instituicao) => (
+    <div className='resultados'> 
+        {instituicoes.map((instituicao, index) => (
             <div className='container_resultado'>
                 <div className='info_ong'>
-                    {!img === null && <FontAwesomeIcon icon={ faHandHoldingHeart } size='8x' color='white' id='img_none' />}
-                    {img !== null && <img id="img_perfilONG" src={img} alt="foto de perfil" className='rounded-full h-16 w-16' />}
+                    {console.log("img[index] === null:", imgURL[index].foto === null)}
+                    {imgURL[index].foto === null && <FontAwesomeIcon icon={ faHandHoldingHeart } size='8x' color='white' id='img_none' />}
+                    {imgURL[index].foto !== null && <img id="img_perfilONG" src={imgURL[index].foto} alt="foto de perfil" className='rounded-full h-16 w-16' />}
                     <div className='container__dadosResultado'>
                         <span>
                             <p className='nome_ong'>{instituicao.nomeinstituicao}</p>

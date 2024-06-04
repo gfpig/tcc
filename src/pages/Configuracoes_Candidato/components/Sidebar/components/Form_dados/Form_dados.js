@@ -222,6 +222,28 @@ function Form_dados() {
         telefone: yup.string().required("É necessário informar seu telefone")
     })
 
+    async function deletaAvatar() { //deleta o avatar que foi trocado
+        let url;
+        const { data: { session }} = await supabase.auth.getSession();
+
+        const { data, error } = await supabase
+                .from('instituicao')
+                .select('foto')
+                .eq('id', session.user.id)
+        if (data) {
+            data.map((user) => (url = user.foto))
+
+            try {
+                const { data, error } = await supabase
+                .storage
+                .from('avatares')
+                .remove([url])
+            } catch (erro) {
+                console.log("Erro ao deletar a imagem de perfil:", erro);
+            }
+        } 
+    }
+
     async function atualizarDados() { //atualiza a tabela auth.users
         //const { data: { session }} = await supabase.auth.getSession();
 
@@ -341,6 +363,7 @@ function Form_dados() {
             return;
         }
         
+        deletaAvatar()
         atualizarDados(); //atualiza a tabela instituição e tabela auth.users
         uploadAvatar(file);
     }

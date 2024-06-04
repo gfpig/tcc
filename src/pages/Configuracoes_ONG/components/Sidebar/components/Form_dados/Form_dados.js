@@ -23,7 +23,6 @@ function CreateInstituicao (valoresDoForm) {
                 ...values,
                 [name]: value,
             });
-            //console.log("name:", name, "\nvalue:", value);    
         }
     };
 }
@@ -37,7 +36,6 @@ function Form_dados() {
     const {register, setError, clearErrors, formState} = useForm();
     const { errors } = formState; //erros na validação do CEP
     const [erros, setErros] = useState({}); //erros na validação do preenchimento dos campos
-    //const [session, setSession] = useState(null); //pegando a sessão para poder atualizar na tabela certa
 
     //Vetor que vai armazenar os dados do formulário
     const formUpdateInstituicao = CreateInstituicao({
@@ -154,7 +152,6 @@ function Form_dados() {
         const fetchDados = async () => {
             try {
                 const { data: { session }} = await supabase.auth.getSession();
-                //console.log("sessao", session);
 
                 if (session) {
                     const { data, error } = await supabase
@@ -164,7 +161,6 @@ function Form_dados() {
 
                     if (error) {
                         setFetchError("Não foi possível recuperar as informações")
-                        //setImgPerfil(null)
                         console.log(fetchError)
                     }
         
@@ -188,22 +184,13 @@ function Form_dados() {
                             formUpdateInstituicao.values.foto = user.foto
                         ))
                         setFetchDone(true);
-                        console.log("uf:", formUpdateInstituicao.values.foto)
-                        console.log("data:", data)
-                        console.log("imagem pós public:",img);
-                        //if (formUpdateInstituicao.values.foto !== '') { setImg(formUpdateInstituicao.values.foto) }
-                        //formUpdateInstituicao.values.uf = 
-                        //setImgPerfil(data)
-                        //setFetchError(null)
                     }
                 }
-                console.log("img",img)
             } catch(error) {
                 console.log(fetchError)
             }
         }
 
-        //fetchDados();
         fetchFotoPerfil();
 
         //Preenche as categorias do select com base no banco de dados
@@ -219,7 +206,6 @@ function Form_dados() {
             }
 
             if (data) {
-                //console.log("categoria:", data)
                 setCategorias(data)
                 setFetchError(null)
             }
@@ -243,9 +229,7 @@ function Form_dados() {
     })
 
     async function atualizarDados() { //atualiza a tabela auth.users
-        //const { data: { session }} = await supabase.auth.getSession();
-
-        const { data, error } = await supabase.auth.updateUser({
+        const { data, error } = await supabase.auth.updateUser({ //atualiza na tabela auth
             email: formUpdateInstituicao.values.emailinstituicao,
             data: {
                 cnpj: formUpdateInstituicao.values.cnpj,
@@ -266,7 +250,7 @@ function Form_dados() {
             },     
         })
 
-        if (error == null) {
+        if (error == null) { //atualiza na tabela do usuário
             const { data: { session }} = await supabase.auth.getSession();
 
             const { error } = await supabase
@@ -312,6 +296,31 @@ function Form_dados() {
         }    
     }
 
+    async function deletaAvatar() { //deleta o avatar que foi trocado
+        let url;
+        const { data: { session }} = await supabase.auth.getSession();
+
+        const { data, error } = await supabase
+                .from('instituicao')
+                .select('foto')
+                .eq('id', session.user.id)
+        //console.log("deleta:",data)
+        if (data) {
+            data.map((user) => (url = user.foto))
+            
+            try {
+                const { data, error } = await supabase
+                .storage
+                .from('avatares')
+                .remove([url])
+            } catch (erro) {
+                console.log("Erro ao deletar a imagem de perfil:", erro);
+            }
+        }
+
+        
+    }
+
     async function uploadAvatar(event) {
         try {
           //const file = event.target.files[0]
@@ -353,6 +362,7 @@ function Form_dados() {
             return;
         }
         
+        deletaAvatar()
         atualizarDados(); //atualiza a tabela instituição e tabela auth.users
         uploadAvatar(file);
     }

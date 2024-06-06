@@ -9,6 +9,7 @@ import Configuracoes_ONG from './pages/Configuracoes_ONG/Configuracoes_ONG';
 import Busca from './pages/Busca/Busca';
 import Perfil_ONG from './pages/Perfil_ONG/Perfil_ONG';
 import Configuracoes_Candidato from './pages/Configuracoes_Candidato/Configuracoes_Candidato';
+import Redefinir_Senha from './pages/Redefinir_Senha/Redefinir_Senha';
 
 import {
   createRoutesFromElements,
@@ -16,7 +17,7 @@ import {
   Route,
   RouterProvider,
 } from "react-router-dom";
-import Redefinir_Senha from './pages/Redefinir_Senha/Redefinir_Senha';
+
 
 
 

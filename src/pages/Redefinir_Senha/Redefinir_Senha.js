@@ -1,7 +1,7 @@
 import React from 'react'
-import Form_redefinir from './components/Form_redefinir'
 import Login_cadastrar from '../Login/components/Login_cadastrar/Login_cadastrar'
 import Menu_ from '../../components/Menu_/Menu_'
+import Form_redefinir from './components/form_redefinir'
 
 function Redefinir_Senha() {
   return (

@@ -7,6 +7,11 @@
     background-color: #7d387c;
 }
 
+.barra_filtros .botao_salvar {
+    @apply p-2 text-white font-bold;
+    background-color: #6c419a;
+}
+
 .info_ong {
     @apply flex flex-col md:flex-row justify-center items-center p-5;
 }
@@ -19,12 +24,6 @@
     @apply flex flex-col content-between text-white ml-3 w-full;
 }
 
-/*@media (min-width: 768px){
-    .container__dadosResultado span {
-        width: 1050px;
-    }
-}*/
-
 .container_resultado .nome_ong {
     @apply flex mt-6 md:mt-0 font-bold;
 }
@@ -33,6 +32,6 @@
     @apply flex flex-col md:flex-row items-center md:self-end p-2;
 }
 
-.opcoes_resultado button{
+.opcoes_resultado button {
     @apply text-white bg-none font-bold text-center p-2 rounded-lg underline;
 }

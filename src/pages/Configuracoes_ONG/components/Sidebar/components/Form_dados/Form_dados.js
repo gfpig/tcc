@@ -304,10 +304,9 @@ function Form_dados() {
                 .from('instituicao')
                 .select('foto')
                 .eq('id', session.user.id)
-        //console.log("deleta:",data)
         if (data) {
             data.map((user) => (url = user.foto))
-            
+
             try {
                 const { data, error } = await supabase
                 .storage

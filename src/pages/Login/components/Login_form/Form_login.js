@@ -37,47 +37,67 @@ const Form_login = () => {
     const formLogin = CreateUser({
         initialValues: { email: "", senha: ""}
     });
+    const formRecuperacaoSenha = CreateUser({
+        initialValues: {email: ''}
+    });
+    const [esqueciSenha, setEsqueciSenha] = useState(false)
 
     return (
         <>
+        {console.log(esqueciSenha)}
+        
             <div className="form__login">
                 <div className="div_login">     
                     <h1>BEM-VINDO!</h1>
-                    <form onSubmit={async (e) => {
-                        e.preventDefault();
-                         
-                        try{
-                            const { data, error } = await supabase.auth.signInWithPassword({
-                                email: formLogin.values.email,
-                                password: formLogin.values.senha,
-                            })
+                    {!esqueciSenha &&
+                        <form onSubmit={async (e) => {
+                            e.preventDefault();
+                            
+                            try{
+                                const { data, error } = await supabase.auth.signInWithPassword({
+                                    email: formLogin.values.email,
+                                    password: formLogin.values.senha,
+                                })
 
-                            if(data.user === null && data.session === null) { //caso o login falhe
-                                setError('ErroLogin', { message: "E-mail ou senha incorretos." });
-                                document.getElementById("alerta_login").style.display = "block";
-                                return;
-                            }
+                                if(data.user === null && data.session === null) { //caso o login falhe
+                                    setError('ErroLogin', { message: "E-mail ou senha incorretos." });
+                                    document.getElementById("alerta_login").style.display = "block";
+                                    return;
+                                }
 
-                            if (error) { //se deu algum erro
-                                setError('ErroLogin', { message: "Um erro inesperado ocorreu" });
-                                return;
-                            } else { //se o usuário foi logado com sucesso
-                                navigate("/");
+                                if (error) { //se deu algum erro
+                                    setError('ErroLogin', { message: "Um erro inesperado ocorreu" });
+                                    return;
+                                } else { //se o usuário foi logado com sucesso
+                                    navigate("/");
+                                }
+                            } catch (error) {
+                                console.error('Sign in error:', error.message);
                             }
-                        } catch (error) {
-                            console.error('Sign in error:', error.message);
-                        }
-                    }}>
+                        }}>
                         <div className="inputs">
                             <input type="email" name="email" value={ formLogin.values.email } placeholder="E-mail" onChange={ formLogin.handleChange } required />
                             <input type="password" name="senha" value={ formLogin.values.senha } placeholder="Senha" onChange={ formLogin.handleChange } required />
-                            <p className="italic self-end mt-3"><a href="" className="esqueci_senha">Esqueci a senha</a></p>
+                            <p className="italic self-end mt-3 esqueci_senha" onClick={() => setEsqueciSenha(!esqueciSenha)}>Esqueci a senha</p>
                             <button>ENTRAR</button>
                             {errors && <div className="text-red-600 mt-0 mb-2" id="alerta_login" style={{display: "none"}}>{errors.ErroLogin?.message}</div>}
-
-                        </div>
-                    </form>
-                    
+                        </div>    
+                    </form>  
+                    }
+                    {esqueciSenha &&
+                    <form onSubmit={async (e) => {
+                        e.preventDefault();
+                            
+                        /*Código para mandar o e-mail de alterar senha */
+                    }}>
+                        <div className="inputs">
+                            <input type="email" name="email" value={ formRecuperacaoSenha.values.email } placeholder="E-mail" onChange={ formRecuperacaoSenha.handleChange } required />
+                            <p className="italic self-end mt-3 esqueci_senha" onClick={() => setEsqueciSenha(!esqueciSenha)}>Voltar</p>
+                            <button>CONFIRMAR</button>
+                            {errors && <div className="text-red-600 mt-0 mb-2" id="alerta_login" style={{display: "none"}}>{errors.ErroLogin?.message}</div>}
+                        </div>    
+                    </form>  
+                    }
                 </div>
             </div>
         </>

@@ -16,6 +16,7 @@ import {
   Route,
   RouterProvider,
 } from "react-router-dom";
+import Redefinir_Senha from './pages/Redefinir_Senha/Redefinir_Senha';
 
 
 
@@ -47,6 +48,10 @@ const router = createBrowserRouter([
   {
     path: "perfil_instituicao",
     element: <Perfil_ONG />
+  },
+  {
+    path: "redefinir_senha",
+    element: <Redefinir_Senha />
   }
 ]);
 

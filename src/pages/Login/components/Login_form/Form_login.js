@@ -24,6 +24,7 @@ function CreateUser (valoresDoLogin) {
                 ...values,
                 [name]: value,
             });    
+            //console.log("value: ", value);
         },
     };
 }
@@ -89,9 +90,20 @@ const Form_login = () => {
                         e.preventDefault();
                             
                         /*Código para mandar o e-mail de alterar senha */
+                        try {
+                            const {error} = await supabase
+                            .auth
+                            .resetPasswordForEmail(formRecuperacaoSenha.values.email, {
+                                redirectTo: "http://localhost:3000/redefinir_senha"
+                            })
+                            //console.log(formRecuperacaoSenha.values.email)
+                            //console.log("https://tcc-phi-two.vercel.app/")
+                        } catch (error) {
+                            console.log(error)
+                        }
                     }}>
                         <div className="inputs">
-                            <input type="email" name="email" value={ formRecuperacaoSenha.values.email } placeholder="E-mail" onChange={ formRecuperacaoSenha.handleChange } required />
+                            <input type="email" name="email" value={ formRecuperacaoSenha.values.email } placeholder="E-mail" onChange={ formRecuperacaoSenha.handleChange } />
                             <p className="italic self-end mt-3 esqueci_senha" onClick={() => setEsqueciSenha(!esqueciSenha)}>Voltar</p>
                             <button>CONFIRMAR</button>
                             {errors && <div className="text-red-600 mt-0 mb-2" id="alerta_login" style={{display: "none"}}>{errors.ErroLogin?.message}</div>}

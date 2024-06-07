@@ -51,7 +51,7 @@ const router = createBrowserRouter([
     element: <Perfil_ONG />
   },
   {
-    path: "redefinir_senha",
+    path: "login/redefinir_senha",
     element: <Redefinir_Senha />
   }
 ]);

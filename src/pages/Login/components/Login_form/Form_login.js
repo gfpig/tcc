@@ -94,10 +94,8 @@ const Form_login = () => {
                             const {error} = await supabase
                             .auth
                             .resetPasswordForEmail(formRecuperacaoSenha.values.email, {
-                                redirectTo: "http://localhost:3000/redefinir_senha"
+                                redirectTo: `${window.location.href}redefinir_senha`
                             })
-                            //console.log(formRecuperacaoSenha.values.email)
-                            //console.log("https://tcc-phi-two.vercel.app/")
                         } catch (error) {
                             console.log(error)
                         }

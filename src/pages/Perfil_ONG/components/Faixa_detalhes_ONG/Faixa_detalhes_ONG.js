@@ -8,7 +8,7 @@ function Faixa_detalhes_ONG() {
 
   const location = useLocation();
   const instituicao = location.state
-  console.log("state faixa detalhes: ",instituicao);
+  //console.log("state faixa detalhes: ",instituicao);
 
   return (
     <>

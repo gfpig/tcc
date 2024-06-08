@@ -1,5 +1,5 @@
 import React from 'react'
-import { useParams, useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import { LocationProvider } from '../../components/Context'
 import Menu_ from '../../components/Menu_/Menu_'
 import Header_ONG from './components/Header_ONG/Header_ONG'
@@ -7,11 +7,8 @@ import Faixa_detalhes_ONG from './components/Faixa_detalhes_ONG/Faixa_detalhes_O
 import Timeline_Sobre from './components/Timeline_Sobre/Timeline_Sobre'
 
 function Perfil_ONG () {
-    //const params = useParams()
     const instituicao = useLocation();
-    //const state = location.state ;
-    //const { state } = props.location;
-    //console.log(instituicao.state);
+
     return (
       <>
         <LocationProvider>

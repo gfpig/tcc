@@ -4,6 +4,9 @@ import './filtros.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHandHoldingHeart } from '@fortawesome/free-solid-svg-icons';
 import { createClient } from "@supabase/supabase-js";
+import { Link, useNavigate } from 'react-router-dom';
+//import { Link } from 'next/link';
+
 
 const PROJECT_URL = "https://xljeosvrbsygpekwclan.supabase.co";
 const PUBLIC_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhsamVvc3ZyYnN5Z3Bla3djbGFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTQ1MTY1NzAsImV4cCI6MjAzMDA5MjU3MH0.InFDrSOcPxRe4LXMBJ4dT59bBb3LSpKw063S90E3uPo"
@@ -33,13 +36,14 @@ function Resultados() {
     const [estados, setEstados] = useState(null);
     const [bairros, setBairros] = useState(null);
     const [categorias, setCategorias] = useState(null);
-    const [vagasAbertas, setVagasAbertas] = useState(null)
     const [imgURL, setImgURL] = useState([])
     const [img, setImg] = useState([]); //armazena a foto de perfil em vetor (para mostrar na tela)
     const [fetchIcon, setFetchIcon] = useState(false)
     const [fetchError, setFetchError] = useState([]);
     const [fetchInstituicaoDone, setFetchInstituicaoDone] = useState(false); //varíavel pra saber se já puxou os dados da instituicao
     const [fetchFiltrosDone, setFetchFiltrosDone] = useState(false)
+
+    const navigate = useNavigate();
 
     //Vetor que vai armazenar os filtros
     const formFiltro = CreateForm({
@@ -51,8 +55,6 @@ function Resultados() {
             vagasAbertas: ''
         }
     });
-
-    //let imgURL;
 
     const fetchInstituicoes = async () => {
         try {
@@ -70,7 +72,6 @@ function Resultados() {
                 if (valor !== '' && valor !== null) {
                     query = query.eq(coluna, valor);
                 }
-                //console.log("query", query)
             });
 
             const { data, error } = await query;
@@ -96,24 +97,6 @@ function Resultados() {
             const {data, error} = await supabase
             .from('instituicao')
             .select('foto')
-            //setImg([])
-            //setImgURL([])
-            /*let query = supabase.from('instituicao').select('*')
-            const filtros = {
-                'codcategoria': formFiltro.values.categorias,
-                'cidade': formFiltro.values.cidade,
-                'uf': formFiltro.values.estado,
-                'bairro': formFiltro.values.bairro,
-                //'vagasAbertas': formFiltro.values.vagasAbertas
-            }
-
-            Object.entries(filtros).forEach(([coluna, valor]) => {
-                // Checa se o valor do filtro não é vazio/nulo
-                if (valor !== '' && valor !== null) {
-                    query = query.eq(coluna, valor);
-                }
-                //console.log("query", query)
-            });*/
 
             if (error) {
                 setFetchError("Não foi possível recuperar as informações")
@@ -122,12 +105,7 @@ function Resultados() {
             }
 
             if (data) { //coloca as urls dentro de um vetor para posteriormente pegar o link delas
-                //setImg([])
-                //setImgURL([])
-                //console.log("status:", imgURL)
                 setImgURL(data)
-
-                //console.log("status2:", imgURL)
             }
         } catch (error) {
             console.log("Erro capturando a foto de perfil:", error.message)
@@ -136,17 +114,13 @@ function Resultados() {
 
     const FetchFotosPerfil = async () => {
         imgURL.map(async (dado, index) => {
-            //console.log("foreach:", dado.foto);
             if(dado.foto === null) { 
-                //console.log("oi")
                 img[index] = null
             } else {
                 const { data } = await supabase.storage.from('avatares').getPublicUrl(dado.foto);
                 img[index] = data.publicUrl
             }
         });
-        //setFetchIcon(true)
-        //console.log("img urls", img)
     }
 
     FetchFotosPerfil()
@@ -246,10 +220,6 @@ function Resultados() {
 
     const Pesquisar = async (e) => {
         e.preventDefault()
-        //setImg([])
-        //setImgURL([])
-        console.log("vetores:", img, imgURL)
-
         try {
             setFetchInstituicaoDone(false)
             let query = supabase.from('instituicao').select('*')
@@ -265,7 +235,6 @@ function Resultados() {
                 if (valor !== '' && valor !== null) {
                     query = query.eq(coluna, valor);
                 }
-                //console.log("query", query)
             });
 
             const { data, error } = await query;
@@ -300,7 +269,6 @@ function Resultados() {
                 if (valor !== '' && valor !== null) {
                     query = query.eq(coluna, valor);
                 }
-                console.log("query", query)
             });
 
             const { data, error } = await query;
@@ -312,12 +280,7 @@ function Resultados() {
             }
 
             if (data) { //coloca as urls dentro de um vetor para posteriormente pegar o link delas
-                //setImg([])
-                //setImgURL([])
-                //console.log("status:", imgURL)
                 setImgURL(data)
-
-                //console.log("status2:", imgURL)
             }
         } catch (error) {
             console.log("Erro capturando a foto de perfil:", error.message)
@@ -326,7 +289,7 @@ function Resultados() {
 
   return (
     <>
-    { fetchInstituicaoDone && fetchFiltrosDone /*&& fetchIcon*/ ?
+    { fetchInstituicaoDone && fetchFiltrosDone ?
     <>
     <div className='barra_filtros'>
         <select name="estado" id="estados" value={ formFiltro.values.estado } onChange={(e) => {formFiltro.handleChange(e)}}>
@@ -368,8 +331,10 @@ function Resultados() {
                         </span>
 
                         <div className='opcoes_resultado'>
-                            <button><a href={instituicao.site}>SITE</a></button>
-                            <button><a href='/perfil_instituicao'>MAIS INFORMAÇÕES</a></button>
+                            {instituicao.site && <button><a href={instituicao.site}>SITE</a></button>}
+                            {/*<button><a href='/perfil_instituicao'>MAIS INFORMAÇÕES</a></button>*/}
+                            {/*<button><Link to={{pathname:"/perfil_instituicao", state: instituicao}}>MAIS INFORMAÇÕES</Link></button>*/}
+                            <button onClick={() => navigate('/perfil_instituicao', {state: instituicao})}>MAIS INFORMAÇÕES</button>
                         </div> 
                     </div>       
                 </div>

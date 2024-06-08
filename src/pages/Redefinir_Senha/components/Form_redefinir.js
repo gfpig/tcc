@@ -1,8 +1,8 @@
-import React, {useState} from "react";
+import React from "react";
 //import './form_login.css';
 import {useForm} from 'react-hook-form';
 import { createClient } from "@supabase/supabase-js";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
 
 const PROJECT_URL = "https://xljeosvrbsygpekwclan.supabase.co";
@@ -20,12 +20,10 @@ function CreateUser (valoresDoLogin) {
             document.getElementById("alerta_login").style.display = "none";
             const value = evento.target.value;
             const name = evento.target.name;
-            //console.log("value: ", value);
             setValues ({
                 ...values,
                 [name]: value,
-            });    
-            //console.log("value: ", value);
+            });
         },
     };
 }
@@ -54,8 +52,7 @@ function Form_redefinir() {
                                 icon: "success",
                                 title: "Senha atualizada com sucesso"
                             })
-                            //formSenha.clearForm();
-                            ///resetaValidacao();
+                            navigate("/");
                         } else {
                             Swal.fire({
                                 icon: "error",

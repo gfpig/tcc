@@ -11,15 +11,7 @@ import Perfil_ONG from './pages/Perfil_ONG/Perfil_ONG';
 import Configuracoes_Candidato from './pages/Configuracoes_Candidato/Configuracoes_Candidato';
 import Redefinir_Senha from './pages/Redefinir_Senha/Redefinir_Senha';
 
-import {
-  createRoutesFromElements,
-  createBrowserRouter,
-  Route,
-  RouterProvider,
-} from "react-router-dom";
-
-
-
+import { createBrowserRouter, RouterProvider, BrowserRouter, Routes, Route } from "react-router-dom";
 
 const router = createBrowserRouter([
   {
@@ -28,7 +20,7 @@ const router = createBrowserRouter([
   },
   {
     path: "login",
-    element: <Login />,
+    element: <Login />
   },
   {
     path: "cadastro",

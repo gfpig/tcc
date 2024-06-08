@@ -6,7 +6,7 @@ import Posts from './Posts/Posts';
 
 function Timeline() {
   return (
-    <div class="flex flex-col ml-3 mr-3 md:ml-0 md:mr-0 items-center self-center">
+    <div className="flex flex-col ml-3 mr-3 md:ml-0 md:mr-0 items-center self-center">
 
       <div className='funcoes_postar'>
         <textarea className='digitar_post' placeholder="Digite seu post" />

@@ -2,7 +2,8 @@ import React, {useState} from "react";
 import './form_login.css';
 import {useForm} from 'react-hook-form';
 import { createClient } from "@supabase/supabase-js";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import Swal from 'sweetalert2';
 
 const PROJECT_URL = "https://xljeosvrbsygpekwclan.supabase.co";
 const PUBLIC_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhsamVvc3ZyYnN5Z3Bla3djbGFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTQ1MTY1NzAsImV4cCI6MjAzMDA5MjU3MH0.InFDrSOcPxRe4LXMBJ4dT59bBb3LSpKw063S90E3uPo"
@@ -96,6 +97,13 @@ const Form_login = () => {
                             .resetPasswordForEmail(formRecuperacaoSenha.values.email, {
                                 redirectTo: `${window.location.href}redefinir_senha`
                             })
+
+                            if (!error) {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Um e-mail para redefinição de senha foi enviado"
+                                })
+                            }
                         } catch (error) {
                             console.log(error)
                         }

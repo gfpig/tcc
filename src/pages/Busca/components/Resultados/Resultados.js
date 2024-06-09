@@ -4,14 +4,11 @@ import './filtros.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHandHoldingHeart } from '@fortawesome/free-solid-svg-icons';
 import { createClient } from "@supabase/supabase-js";
-import { Link, useNavigate } from 'react-router-dom';
-//import { Link } from 'next/link';
-
+import { useNavigate } from 'react-router-dom';
 
 const PROJECT_URL = "https://xljeosvrbsygpekwclan.supabase.co";
 const PUBLIC_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhsamVvc3ZyYnN5Z3Bla3djbGFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTQ1MTY1NzAsImV4cCI6MjAzMDA5MjU3MH0.InFDrSOcPxRe4LXMBJ4dT59bBb3LSpKw063S90E3uPo"
 const supabase = createClient(PROJECT_URL, PUBLIC_KEY);
-
 
 function CreateForm (valoresDoForm) {
     const [values, setValues] = React.useState(valoresDoForm.initialValues);
@@ -332,8 +329,6 @@ function Resultados() {
 
                         <div className='opcoes_resultado'>
                             {instituicao.site && <button><a href={instituicao.site}>SITE</a></button>}
-                            {/*<button><a href='/perfil_instituicao'>MAIS INFORMAÇÕES</a></button>*/}
-                            {/*<button><Link to={{pathname:"/perfil_instituicao", state: instituicao}}>MAIS INFORMAÇÕES</Link></button>*/}
                             <button onClick={() => navigate('/perfil_instituicao', {state: instituicao})}>MAIS INFORMAÇÕES</button>
                         </div> 
                     </div>       

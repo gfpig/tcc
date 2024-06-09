@@ -4,7 +4,7 @@
 }
 
 .container_sobre img {
-    @apply mt-5 w-2/5 h-2/5 lg:h-3/5 md:mb-16 lg:mb-12;
+    @apply mt-5 w-2/5 h-2/5 lg:min-w-60 lg:min-h-60 lg:max-w-60 lg:max-h-60 md:mb-16 lg:mb-12;
 }
 
 .informacoes_instituicao {

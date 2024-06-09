@@ -6,10 +6,10 @@ import Sobre from './components/Sobre/Sobre';
 import { LocationProvider } from '../../../../components/Context';
 
 function Timeline_Sobre() {
-    const opcoes = [<Timeline />, <Sobre />];
-    const [opcaoAtual, setOpcaoAtual] = useState(0);
-    const location = useLocation();
-    //const instituicao = location.state
+  const opcoes = [<Timeline />, <Sobre />];
+  const [opcaoAtual, setOpcaoAtual] = useState(0);
+  const location = useLocation();
+  //const instituicao = location.state
 
   return (
     <>
@@ -23,7 +23,7 @@ function Timeline_Sobre() {
             }}>SOBRE</button>
         </div>
         <div style={{display:"flex", justifyContent:"center"}}>
-           {opcoes[opcaoAtual]}
+          {opcoes[opcaoAtual]}
         </div>
       </LocationProvider>
     </>

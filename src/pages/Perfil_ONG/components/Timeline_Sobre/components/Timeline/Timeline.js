@@ -45,9 +45,10 @@ function Timeline() {
 
   const [fotoPerfil, setFotoPerfil] = useState(null)
   const [posts, setPosts] = useState([]);
-  const [imgPost, setImgPost] = useState() //vetor que armazena as imagens do post que será feito
+  const [imgPost, setImgPost] = useState() //armazena a imagem do post que será feito
   const [imgURL, setImgURL] = useState([]) //vetor que vai guardar as imagens dos posts já feitos
   const [imagem, setImagem] = useState([]);
+  const [imgFront, setImgFront] = useState();
   const [fetchDone, setFetchDone] = useState(false)
   const [fetchImgDone, setFetchImgDone] = useState(false)
   const [isInstituicao, setIsInstituicao] = useState(null) //variável para saber se o usuário é a instituição do perfil
@@ -56,7 +57,7 @@ function Timeline() {
   const onImageChange = (e) => {
     const novaFoto = e.target.files[0];
     setFile(novaFoto);
-    setImgPost(URL.createObjectURL(novaFoto));
+    setImgFront(URL.createObjectURL(novaFoto));
   };
 
   useEffect(() => {
@@ -99,7 +100,7 @@ function Timeline() {
         }
   
         if (data) {
-          //console.log(data.map((post =>(post.codpostagem))))
+          console.log(data.map((post =>(post.codpostagem))))
           setPosts(data)
           for (let i = 0; i < data.length; i++) {
             //console.log(Array.isArray(data[i]))
@@ -153,30 +154,43 @@ function Timeline() {
     setImagem(newImagem);
     setFetchImgDone(true);
   };
-  
 
-  const HandleSubmit = async (e) => {
-    e.preventDefault()
-    
+  const uploadImagemPost = async () => {
     try {
       const fileExt = file.name.split('.').pop()
       const fileName = `${Math.random()}.${fileExt}`
       const filePath = `${fileName}`
 
       setImgPost(fileName);
+      //console.log(imgPost)
+      //console.log(fileName)
 
       const { error: uploadError } = await supabase.storage.from('imagens_post').upload(filePath, file)
 
       try{
           if (uploadError) {
             throw uploadError
+          } else {
+            const { error } = await supabase
+                .from('postagem_instituicao')
+                .update({
+                    imagem: fileName })
+                .eq('id', instituicao.id)
           }
-        } catch (error) {
-          console.log("Erro no upload da foto:",error.message)
-        }
       } catch (error) {
         console.log("Erro no upload da foto:",error.message)
       }
+    } catch (error) {
+      console.log("Erro no upload da foto:",error.message)
+    }
+  }
+  
+  useEffect(() => {
+    console.log(imgPost); // This will log the updated value of imgPost
+  }, [imgPost]);
+
+  const HandleSubmit = async (e) => {
+    e.preventDefault()
 
     try { //coloca o post na tabela
       const { error } = await supabase
@@ -191,6 +205,8 @@ function Timeline() {
     } catch (erro) { //se não estão, cria um novo erro para ser exibido ao usuário
         console.log("Ocorreu um erro: ", erro.message);
     }
+
+    uploadImagemPost()
   }
 
   return (
@@ -206,7 +222,7 @@ function Timeline() {
               <div className='acoes_postar'>
                   <label className='mr-2'>
                     <FontAwesomeIcon icon={ faCamera } size="2xl" />
-                    <input type="file" style={{display:"none"}} className='selecionar_imagem' onChange={(e) => {onImageChange(e);}} />
+                    <input type="file" style={{display:"none"}} className='selecionar_imagem' onChange={(e) => {onImageChange(e); formPost.handleChange(e)}} />
                   </label>
                   <button className='publicar'>PUBLICAR</button>
               </div>
@@ -229,7 +245,9 @@ function Timeline() {
             </div>
             <div className='corpo_post'>
                 <p>{post.descricao}</p>
-                <img className='img_post' src={imagem[index]} alt="imagem" />
+                {imagem[index] !== null ? (
+                  <img className='img_post' src={imagem[index]} alt="imagem" />
+                ) : null}
             </div>
           </div>
         ))

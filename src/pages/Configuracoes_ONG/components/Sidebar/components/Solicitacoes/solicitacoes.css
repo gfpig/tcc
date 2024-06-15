@@ -24,7 +24,7 @@
 }
 
 .container__candidato {
-    @apply flex items-center justify-between w-full h-2/5 mb-5;
+    @apply flex items-center justify-between w-full h-44 mb-5;
     background-color: #7d387c;
 }
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import './solicitacoes.css';
+//import './solicitacoes.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHandHoldingHeart, faCircle } from '@fortawesome/free-solid-svg-icons';
 import foto_perfil from './icons/icon_ong.png';

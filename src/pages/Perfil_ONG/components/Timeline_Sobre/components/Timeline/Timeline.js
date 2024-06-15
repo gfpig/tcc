@@ -61,6 +61,7 @@ function Timeline() {
   };
 
   useEffect(() => {
+    //console.log(instituicao.id)
     const verificaSessao = async () => { //pegando a sessão e colocando numa variável
       const { data: { session }} = await supabase.auth.getSession();
       if (session !== null) {
@@ -100,11 +101,9 @@ function Timeline() {
         }
   
         if (data) {
-          console.log(data.map((post =>(post.codpostagem))))
+          //console.log(data.map((post =>(post.codpostagem))))
           setPosts(data)
           for (let i = 0; i < data.length; i++) {
-            //console.log(Array.isArray(data[i]))
-            //console.log(data[i].codpostagem)
             codigo_post = data[i].codpostagem
             FetchImagemPosts(codigo_post)
           }
@@ -122,13 +121,10 @@ function Timeline() {
         .select('imagem')
 
         if (error) {
-            //setFetchError("Não foi possível recuperar as informações")
-            //setInstituicoes(null)
             console.log(error)
         }
 
         if (data) { //coloca as urls dentro de um vetor para posteriormente pegar o link delas
-          //console.log(data)
           setImgURL(data)
         }
       } catch (error) {
@@ -143,16 +139,16 @@ function Timeline() {
 
   const FetchImagemPosts = async () => {
     const newImagem = await Promise.all(imgURL.map(async (dado) => {
-      if (dado.imagem === null) {
-        return null;
-      } else {
-        const { data } = await supabase.storage.from('imagens_post').getPublicUrl(dado.imagem);
+        if (dado.imagem === null) {
+          return null;
+        } else {
+          const { data } = await supabase.storage.from('imagens_post').getPublicUrl(dado.imagem);
         return data.publicUrl;
-      }
-    }));
+        }
+      }));
   
-    setImagem(newImagem);
-    setFetchImgDone(true);
+      setImagem(newImagem);
+      setFetchImgDone(true);
   };
 
   const uploadImagemPost = async () => {
@@ -185,9 +181,9 @@ function Timeline() {
     }
   }
   
-  useEffect(() => {
+  /*useEffect(() => {
     console.log(imgPost); // This will log the updated value of imgPost
-  }, [imgPost]);
+  }, [imgPost])*/
 
   const HandleSubmit = async (e) => {
     e.preventDefault()
@@ -213,7 +209,6 @@ function Timeline() {
     <>  
     {fetchDone && fetchImgDone && isInstituicao !== null ? 
     <>
-    {console.log(imagem)}
     <div className="flex flex-col ml-3 mr-3 md:ml-0 md:mr-0 items-center self-center w-full xl:w-2/3 md:w-2/3">
       {isInstituicao ? (
           <form className='form_post' onSubmit={HandleSubmit}>

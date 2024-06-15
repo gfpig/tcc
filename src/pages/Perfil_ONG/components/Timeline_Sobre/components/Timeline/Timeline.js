@@ -6,8 +6,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome' ;
 import { faCamera } from '@fortawesome/free-solid-svg-icons';
 import { createClient } from "@supabase/supabase-js";
 import Posts from './Posts/Posts';
-//import foto_perfil from './assets/cats.png';
-//import imagem_post from './assets/fatec.png';
 
 const PROJECT_URL = "https://xljeosvrbsygpekwclan.supabase.co";
 const PUBLIC_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhsamVvc3ZyYnN5Z3Bla3djbGFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTQ1MTY1NzAsImV4cCI6MjAzMDA5MjU3MH0.InFDrSOcPxRe4LXMBJ4dT59bBb3LSpKw063S90E3uPo"
@@ -20,21 +18,18 @@ function CreateUser (valoresDoLogin) {
   return {
       values, 
       handleChange: (evento) => {
-          //clearErrors('ErroPost');
-          //document.getElementById("alerta_login").style.display = "none";
           const value = evento.target.value;
           const name = evento.target.name;
           setValues ({
               ...values,
               [name]: value,
-          });    
-          //console.log("value: ", value);
+          });
+          console.log("value: ", value);
       },
   };
 }
 
 var data = new Date()
-//console.log(data.toLocaleString())
 
 function Timeline() {
   const location = useLocation();
@@ -141,53 +136,24 @@ function Timeline() {
     }  
   }, [])
 
-  //let imgURL;
-  /*const FetchImagemPosts = async () => {
-    //console.log(codPost)
-    try {
-      const { data, error } = await supabase
-      .from('postagem_instituicao')
-      .select('codpostagem, imagem')
-      //.eq('codpostagem', codPost)
-      
-      if (error) {
-          console.log(error)
-          setPosts([])
-      }
+  useEffect(() => {
+    FetchImagemPosts()
+  }, [imgURL])
 
-      if (data) {
-        data.map((post) => imgURL = post.imagem)
-        console.log(imgURL)
-      }
-
-      // Fetch image URL from Supabase storag
-      if (imgURL !== null) {
-        const { data: img_url } = await supabase.storage.from('imagens_post').getPublicUrl(imgURL); 
-        imagem[0] = img_url.publicUrl; // Set image URL in state
-        console.log(imagem[0])
-        //return imagem;
-      }
-    } catch (erro) {
-      console.log(erro)
-    }finally {
-      setFetchDone(true)
-    }
-  }*/
-  const FetchImagemPosts = async () => {   
-    imgURL.map(async (dado, index) => {
-      //console.log(dado.imagem)
-      if(dado.imagem === null) { 
-        imagem[index] = null
+  const FetchImagemPosts = async () => {
+    const newImagem = await Promise.all(imgURL.map(async (dado) => {
+      if (dado.imagem === null) {
+        return null;
       } else {
         const { data } = await supabase.storage.from('imagens_post').getPublicUrl(dado.imagem);
-        imagem[index] = data.publicUrl
-        console.log(imagem[index])
+        return data.publicUrl;
       }
-    });
-    //setFetchImgDone(true)
-  }
-
-  FetchImagemPosts()
+    }));
+  
+    setImagem(newImagem);
+    setFetchImgDone(true);
+  };
+  
 
   const HandleSubmit = async (e) => {
     e.preventDefault()
@@ -229,15 +195,14 @@ function Timeline() {
 
   return (
     <>  
-    {fetchDone && isInstituicao !== null ? 
+    {fetchDone && fetchImgDone && isInstituicao !== null ? 
     <>
+    {console.log(imagem)}
     <div className="flex flex-col ml-3 mr-3 md:ml-0 md:mr-0 items-center self-center w-full xl:w-2/3 md:w-2/3">
       {isInstituicao ? (
           <form className='form_post' onSubmit={HandleSubmit}>
             <div className='funcoes_postar'>
-              <textarea className='digitar_post' name="descricao" value={ formPost.values.descricao } placeholder="Digite seu post" onChange={ formPost.handleChange }>
-                {imgPost ? <img src={imgPost} alt='imagem post' /> : null}
-              </textarea>
+              <textarea className='digitar_post' name="descricao" value={ formPost.values.descricao } placeholder="Digite seu post" onChange={ formPost.handleChange } />
               <div className='acoes_postar'>
                   <label className='mr-2'>
                     <FontAwesomeIcon icon={ faCamera } size="2xl" />
@@ -249,7 +214,7 @@ function Timeline() {
           </form>
         ) : null
       }
-      {/*<Posts />*/}
+      {/*<Posts/>*/}
       {posts.length !== 0 ? 
         posts.map((post, index) => (
           <div className='post'>

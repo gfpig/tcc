@@ -6,8 +6,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome' ;
 import { faCamera } from '@fortawesome/free-solid-svg-icons';
 import { createClient } from "@supabase/supabase-js";
 import Posts from './Posts/Posts';
-import foto_perfil from './assets/cats.png';
-import imagem_post from './assets/fatec.png';
+//import foto_perfil from './assets/cats.png';
+//import imagem_post from './assets/fatec.png';
 
 const PROJECT_URL = "https://xljeosvrbsygpekwclan.supabase.co";
 const PUBLIC_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhsamVvc3ZyYnN5Z3Bla3djbGFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTQ1MTY1NzAsImV4cCI6MjAzMDA5MjU3MH0.InFDrSOcPxRe4LXMBJ4dT59bBb3LSpKw063S90E3uPo"
@@ -28,13 +28,13 @@ function CreateUser (valoresDoLogin) {
               ...values,
               [name]: value,
           });    
-          console.log("value: ", value);
+          //console.log("value: ", value);
       },
   };
 }
 
 var data = new Date()
-console.log(data.toLocaleString())
+//console.log(data.toLocaleString())
 
 function Timeline() {
   const location = useLocation();
@@ -48,9 +48,21 @@ function Timeline() {
     }
   });
 
+  const [fotoPerfil, setFotoPerfil] = useState(null)
   const [posts, setPosts] = useState([]);
+  const [imgPost, setImgPost] = useState() //vetor que armazena as imagens do post que será feito
+  const [imgURL, setImgURL] = useState([]) //vetor que vai guardar as imagens dos posts já feitos
+  const [imagem, setImagem] = useState([]);
   const [fetchDone, setFetchDone] = useState(false)
+  const [fetchImgDone, setFetchImgDone] = useState(false)
   const [isInstituicao, setIsInstituicao] = useState(null) //variável para saber se o usuário é a instituição do perfil
+  const [file, setFile] = useState(null); //armazena a foto do post (para colocar no banco)
+
+  const onImageChange = (e) => {
+    const novaFoto = e.target.files[0];
+    setFile(novaFoto);
+    setImgPost(URL.createObjectURL(novaFoto));
+  };
 
   useEffect(() => {
     const verificaSessao = async () => { //pegando a sessão e colocando numa variável
@@ -65,16 +77,78 @@ function Timeline() {
         setIsInstituicao(false)
       }
     }
-
     verificaSessao()
+
+    const FetchFotoStorage = async () => { //Pega a foto de perfil da ONG
+      try {
+        const { data } = await supabase.storage.from('avatares').getPublicUrl(instituicao.foto);
+        setFotoPerfil(data.publicUrl)
+        FetchPosts()
+      } finally {
+        setFetchDone(true)
+      }
+    }
+    FetchFotoStorage()
+
+    let codigo_post;
+    const FetchPosts = async () => {
+      try {
+        const { data, error } = await supabase
+        .from('postagem_instituicao')
+        .select('*')
+        .eq('id_instituicao', instituicao.id)
+        
+        if (error) {
+            console.log(error)
+            setPosts([])
+        }
+  
+        if (data) {
+          //console.log(data.map((post =>(post.codpostagem))))
+          setPosts(data)
+          for (let i = 0; i < data.length; i++) {
+            //console.log(Array.isArray(data[i]))
+            //console.log(data[i].codpostagem)
+            codigo_post = data[i].codpostagem
+            FetchImagemPosts(codigo_post)
+          }
+        }
+      } catch (erro) {
+        console.log(erro)
+      } finally {
+        setFetchDone(true)
+      }
+
+      try {
+        //setFetchIcon(false)
+        const {data, error} = await supabase
+        .from('postagem_instituicao')
+        .select('imagem')
+
+        if (error) {
+            //setFetchError("Não foi possível recuperar as informações")
+            //setInstituicoes(null)
+            console.log(error)
+        }
+
+        if (data) { //coloca as urls dentro de um vetor para posteriormente pegar o link delas
+          //console.log(data)
+          setImgURL(data)
+        }
+      } catch (error) {
+          console.log("Erro capturando a foto de perfil:", error.message)
+      }
+    }  
   }, [])
 
-  const FetchPosts = async () => {
+  //let imgURL;
+  /*const FetchImagemPosts = async () => {
+    //console.log(codPost)
     try {
       const { data, error } = await supabase
       .from('postagem_instituicao')
-      .select('*')
-      .eq('id_instituicao', instituicao.id)
+      .select('codpostagem, imagem')
+      //.eq('codpostagem', codPost)
       
       if (error) {
           console.log(error)
@@ -82,20 +156,75 @@ function Timeline() {
       }
 
       if (data) {
-          setPosts(data)
+        data.map((post) => imgURL = post.imagem)
+        console.log(imgURL)
+      }
+
+      // Fetch image URL from Supabase storag
+      if (imgURL !== null) {
+        const { data: img_url } = await supabase.storage.from('imagens_post').getPublicUrl(imgURL); 
+        imagem[0] = img_url.publicUrl; // Set image URL in state
+        console.log(imagem[0])
+        //return imagem;
       }
     } catch (erro) {
       console.log(erro)
-    } finally {
+    }finally {
       setFetchDone(true)
     }
+  }*/
+  const FetchImagemPosts = async () => {   
+    imgURL.map(async (dado, index) => {
+      //console.log(dado.imagem)
+      if(dado.imagem === null) { 
+        imagem[index] = null
+      } else {
+        const { data } = await supabase.storage.from('imagens_post').getPublicUrl(dado.imagem);
+        imagem[index] = data.publicUrl
+        console.log(imagem[index])
+      }
+    });
+    //setFetchImgDone(true)
   }
 
-  FetchPosts()
+  FetchImagemPosts()
 
   const HandleSubmit = async (e) => {
     e.preventDefault()
-    console.log(formPost);
+    
+    try {
+      const fileExt = file.name.split('.').pop()
+      const fileName = `${Math.random()}.${fileExt}`
+      const filePath = `${fileName}`
+
+      setImgPost(fileName);
+
+      const { error: uploadError } = await supabase.storage.from('imagens_post').upload(filePath, file)
+
+      try{
+          if (uploadError) {
+            throw uploadError
+          }
+        } catch (error) {
+          console.log("Erro no upload da foto:",error.message)
+        }
+      } catch (error) {
+        console.log("Erro no upload da foto:",error.message)
+      }
+
+    try { //coloca o post na tabela
+      const { error } = await supabase
+      .from('postagem_instituicao')
+      .insert({
+        id_instituicao: formPost.values.id_instituicao,
+        descricao: formPost.values.descricao,
+        data: formPost.values.data,
+        imagem: imgPost
+      })
+
+    } catch (erro) { //se não estão, cria um novo erro para ser exibido ao usuário
+        console.log("Ocorreu um erro: ", erro.message);
+    }
   }
 
   return (
@@ -106,9 +235,14 @@ function Timeline() {
       {isInstituicao ? (
           <form className='form_post' onSubmit={HandleSubmit}>
             <div className='funcoes_postar'>
-              <textarea className='digitar_post' name="descricao" value={ formPost.values.descricao } placeholder="Digite seu post" onChange={ formPost.handleChange } />
+              <textarea className='digitar_post' name="descricao" value={ formPost.values.descricao } placeholder="Digite seu post" onChange={ formPost.handleChange }>
+                {imgPost ? <img src={imgPost} alt='imagem post' /> : null}
+              </textarea>
               <div className='acoes_postar'>
-                  <button className='selecionar_imagem'><FontAwesomeIcon icon={ faCamera } size="2xl" /></button>
+                  <label className='mr-2'>
+                    <FontAwesomeIcon icon={ faCamera } size="2xl" />
+                    <input type="file" style={{display:"none"}} className='selecionar_imagem' onChange={(e) => {onImageChange(e);}} />
+                  </label>
                   <button className='publicar'>PUBLICAR</button>
               </div>
             </div>
@@ -117,24 +251,20 @@ function Timeline() {
       }
       {/*<Posts />*/}
       {posts.length !== 0 ? 
-        posts.map((post) => (
+        posts.map((post, index) => (
           <div className='post'>
             <div className='cabecalho_post'>
                 <div className='foto_cabecalho'>
-                    <img src={foto_perfil} alt="foto de perfil da instituição" />
+                    <img src={fotoPerfil} alt="foto de perfil da instituição" />
                 </div>
                 <div className='detalhes_cabecalho'>
-                    <p className='nome_instituicao'>Lorem Ipsum</p>
-                    <p>8 de setembro de 2023</p>
+                    <p className='nome_instituicao'>{instituicao.nomeinstituicao}</p>
+                    <p>{post.data}</p>
                 </div>
             </div>
             <div className='corpo_post'>
-                <p>
-                    As inscrições para o vestibular da FATEC já estão abertas! Fique atento às datas para não perder nenhum etapa do processo:
-                    <br /><br />
-                    Inscrições apenas no site: www.vestibularfatec.com.br
-                </p>
-                <img className='img_post' src={imagem_post} alt="imagem" />
+                <p>{post.descricao}</p>
+                <img className='img_post' src={imagem[index]} alt="imagem" />
             </div>
           </div>
         ))

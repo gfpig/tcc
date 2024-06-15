@@ -110,8 +110,7 @@ function Form_dados() {
     useEffect(() => {
         let imgURL;
         const fetchFotoPerfil = async () => {
-            try {
-                
+            try {       
                 const { data: { session }} = await supabase.auth.getSession(); //pega a sessão do usuário (se tem alguém logado e quem é)
 
                 if (session) { //se houver usuário logado, faz um select com base no id do usuário
@@ -132,7 +131,7 @@ function Form_dados() {
                     }
 
                     try {
-                        // Fetch image URL from Supabase storage
+                            // Fetch image URL from Supabase storage
                             if (imgURL !== null) {
                             const { data: img_url } = await supabase.storage.from('avatares').getPublicUrl(imgURL);
                             
@@ -141,7 +140,6 @@ function Form_dados() {
                     } catch (error) {
                         console.error('Error fetching image:', error.message);
                     }
-
                     fetchDados();
                 }
             } catch(error) {

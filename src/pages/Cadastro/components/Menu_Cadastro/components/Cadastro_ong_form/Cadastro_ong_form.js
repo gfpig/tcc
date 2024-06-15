@@ -221,8 +221,6 @@ function Cadastro_ong_form() {
 
     const handleSubmit_CadastroONG = async (e) => {
         e.preventDefault();
-        console.log(formCadastroInstituicao.values.senhainstituicao)
-        console.log(formCadastroInstituicao.values.confirmar_senha)
  
         try { //validar se todos os campos estão preenchidos
             await validationSchema.validate(formCadastroInstituicao.values, {abortEarly: false});

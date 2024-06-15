@@ -9,7 +9,6 @@ function Timeline_Sobre() {
   const opcoes = [<Timeline />, <Sobre />];
   const [opcaoAtual, setOpcaoAtual] = useState(0);
   const location = useLocation();
-  //const instituicao = location.state
 
   return (
     <>

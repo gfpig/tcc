@@ -1,7 +1,7 @@
 import React from 'react'
 import Menu_ from '../../components/Menu_/Menu_'
 import Resultados from './components/Resultados/Resultados'
-import Filtro from './components/Filtro/Filtro'
+//import Filtro from './components/Filtro/Filtro'
 
 function Busca() {
   return (

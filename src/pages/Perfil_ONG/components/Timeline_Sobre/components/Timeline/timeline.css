@@ -1,5 +1,9 @@
 .funcoes_postar {
-    @apply flex flex-col w-full mb-6 md:w-2/3;
+    @apply flex flex-col w-full mb-6;
+}
+
+.form_post {
+    @apply w-full
 }
 
 .digitar_post {

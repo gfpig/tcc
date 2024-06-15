@@ -123,18 +123,9 @@ function Resultados() {
     FetchFotosPerfil()
 
     useEffect(() => {
-        //console.log(fetchIcon)
         if (!fetchInstituicaoDone) {
             fetchInstituicoes();
         }
-
-        /*if(!fetchIcon) {
-            FetchFotosPerfil()
-        }*/
-
-        //console.log(img);
-
-        //fetchInstituicoes();
 
         //Preenche as categorias do select com base no banco de dados
         const fetchCategorias = async () => {

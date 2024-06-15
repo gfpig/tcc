@@ -46,8 +46,6 @@ const Form_login = () => {
 
     return (
         <>
-        {console.log(esqueciSenha)}
-        
             <div className="form__login">
                 <div className="div_login">     
                     <h1>BEM-VINDO!</h1>

@@ -1,14 +1,16 @@
 import React from 'react';
 import './header.css';
 import header_image from '../../assets/other/header_temporario.png';
-import logotipo from '../../assets/other/logotipo_temporario.png';
+import logotipo_roxo from '../../assets/other/logotipo_roxo.png';
+import logotipo_gelo from '../../assets/other/logotipo_gelo.png';
+import logotipo_transparente from '../../assets/other/logotipo_transparente.png';
 
 const Header = () => {
     return (
     <>
         <div className='header'>
             <div className='container_logo'>
-                <img className='logotipo' src={logotipo} alt='logotipo' />
+                <img className='logotipo' src={logotipo_transparente} alt='logotipo' />
             </div>
             <div className='descricao'>
                 <h1>CADUCEU</h1>

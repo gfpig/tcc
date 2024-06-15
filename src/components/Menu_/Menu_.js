@@ -3,7 +3,10 @@ import './menu_.css';
 import { createClient } from "@supabase/supabase-js";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome' ;
 import { faHandHoldingHeart, faUserCircle, faUser, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
-import logotipo from '../../assets/other/logotipo_temporario.png';
+//import logotipo from '../../assets/other/logotipo_temporario.png';
+import logotipo_roxo from '../../assets/other/logotipo_roxo.png';
+import logotipo_gelo from '../../assets/other/logotipo_gelo.png';
+import logotipo_transparente from '../../assets/other/logotipo_transparente.png';
 
 const PROJECT_URL = "https://xljeosvrbsygpekwclan.supabase.co";
 const PUBLIC_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhsamVvc3ZyYnN5Z3Bla3djbGFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTQ1MTY1NzAsImV4cCI6MjAzMDA5MjU3MH0.InFDrSOcPxRe4LXMBJ4dT59bBb3LSpKw063S90E3uPo"
@@ -91,7 +94,7 @@ const Menu = () => {
         <nav className='navegacao_menu'>
             <ul className="menu_">
                 <div className='logo'>
-                    <a href="/"><img src={logotipo} alt="logotipo" /></a>
+                    <a href="/"><img src={logotipo_transparente} alt="logotipo" /></a>
                 </div>
                 <div className='search_bar'>
                     <input id="search-input" type="text" maxLength="800" placeholder="Digite o nome da ONG" />

@@ -11,7 +11,12 @@
 }
 
 .cabecalho__candidatura select {
-    @apply text-white rounded-lg p-2 ml-4;
+    @apply text-white rounded-lg p-2;
+    background-color: #6c419a;
+}
+
+.cabecalho__candidatura .botao_salvar {
+    @apply p-2 text-white font-bold;
     background-color: #6c419a;
 }
 

@@ -61,7 +61,6 @@ function Timeline() {
   };
 
   useEffect(() => {
-    //console.log(instituicao.id)
     const verificaSessao = async () => { //pegando a sessão e colocando numa variável
       const { data: { session }} = await supabase.auth.getSession();
       if (session !== null) {
@@ -101,7 +100,6 @@ function Timeline() {
         }
   
         if (data) {
-          //console.log(data.map((post =>(post.codpostagem))))
           setPosts(data)
           for (let i = 0; i < data.length; i++) {
             codigo_post = data[i].codpostagem
@@ -115,7 +113,6 @@ function Timeline() {
       }
 
       try {
-        //setFetchIcon(false)
         const {data, error} = await supabase
         .from('postagem_instituicao')
         .select('imagem')
@@ -139,16 +136,16 @@ function Timeline() {
 
   const FetchImagemPosts = async () => {
     const newImagem = await Promise.all(imgURL.map(async (dado) => {
-        if (dado.imagem === null) {
-          return null;
-        } else {
-          const { data } = await supabase.storage.from('imagens_post').getPublicUrl(dado.imagem);
-        return data.publicUrl;
-        }
-      }));
-  
-      setImagem(newImagem);
-      setFetchImgDone(true);
+      if (dado.imagem === null) {
+        return null;
+      } else {
+        const { data } = await supabase.storage.from('imagens_post').getPublicUrl(dado.imagem);
+      return data.publicUrl;
+      }
+    }));
+
+    setImagem(newImagem);
+    setFetchImgDone(true);
   };
 
   const uploadImagemPost = async () => {
@@ -180,10 +177,6 @@ function Timeline() {
       console.log("Erro no upload da foto:",error.message)
     }
   }
-  
-  /*useEffect(() => {
-    console.log(imgPost); // This will log the updated value of imgPost
-  }, [imgPost])*/
 
   const HandleSubmit = async (e) => {
     e.preventDefault()

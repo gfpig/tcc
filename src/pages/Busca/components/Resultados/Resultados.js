@@ -308,7 +308,7 @@ function Resultados() {
     </div>
     <div className='resultados'> 
         {instituicoes.map((instituicao, index) => (
-            <div className='container_resultado'>
+            <div className='container_resultado' key={instituicao.id}>
                 <div className='info_ong'>
                     {img[index] === null && <FontAwesomeIcon icon={ faHandHoldingHeart } size='8x' color='white' id='img_none' />}
                     {img[index] !== null && <img id="img_perfilONG" src={img[index]} alt="foto de perfil" className='h-26 w-20' />}

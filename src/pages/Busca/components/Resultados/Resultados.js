@@ -112,18 +112,13 @@ function Resultados() {
             console.log(error.message)
         } finally {
             setFetchInstituicaoDone(true)
-            //console.log(imgURL)
-            //FetchFotosPerfil()
         }
     }
 
     const FetchFotosPerfil = async () => {
         try {
-            //console.log(imgURL)
             const imagens = [] = await Promise.all( imgURL.map(async (dado, index) => {
-                //console.log(dado.foto)
                 if(dado.foto === null) {
-                    //setImg(null)
                     return null;
                 } else {
                     const { data, error } = await supabase.storage.from('avatares').getPublicUrl(dado.foto);
@@ -133,14 +128,10 @@ function Resultados() {
                     }
 
                     if(data) {
-                        //console.log(imgURL)
-                        //console.log(data)
-                        //setImg(data)
                         return data.publicUrl
                     }
                 }
             }));
-            //console.log("imagens",imagens)
             setImg(imagens)
         } catch (error) {
             console.log(error.message)
@@ -317,9 +308,10 @@ function Resultados() {
     }
 
     useEffect (() => {
-        /*if(!fetchInstituicaoDone) {
+        if(!pesquisaDone) {
            Pesquisar()
-        }*/
+        }
+
         if(fetchInstituicaoDone || !pesquisaDone) {
             FetchFotosPerfil()
         }

@@ -8,11 +8,29 @@ const PROJECT_URL = "https://xljeosvrbsygpekwclan.supabase.co";
 const PUBLIC_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhsamVvc3ZyYnN5Z3Bla3djbGFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTQ1MTY1NzAsImV4cCI6MjAzMDA5MjU3MH0.InFDrSOcPxRe4LXMBJ4dT59bBb3LSpKw063S90E3uPo"
 const supabase = createClient(PROJECT_URL, PUBLIC_KEY);
 
+function CreateForm (valoresDoForm) {
+    const [values, setValues] = React.useState(valoresDoForm.initialValues);
+
+    return {
+        values, 
+        handleChange: (evento) => {
+            const value = evento.target.value;
+            const name = evento.target.name;
+            setValues ({
+                ...values,
+                [name]: value,
+            });
+            console.log("name:", name, "\nvalue:", value);
+        }
+    };
+}
+
 
 function Solicitacoes() {
-    //const [sessao, setSessao] = useState(null)
+    const [detalhes, setDetalhes] = useState(false)
+
     const [candidaturas, setCandidaturas] = useState([])
-    const [categorias, setCategorias] = useState([]);
+    const [cidades, setCidades] = useState([]);
     const [imgURL, setImgURL] = useState([]) //vetor que armazena a url das fotos de perfil
     const [img, setImg] = useState([]) //vetor que armazena as fotos de perfil
     const [idade, setIdade] = useState([])
@@ -20,7 +38,7 @@ function Solicitacoes() {
 
     const [fetchDone, setFetchDone] = useState(false)
     const [fetchURLDone, setFetchURLDone] = useState(false)
-    const [fetchCategoriasDone, setFetchCategoriasDone] = useState(false)
+    const [fetchCidadesDone, setFetchCidadesDone] = useState(false)
     const [fetchFotoPerfilDone, setFetchFotoPerfilDone] = useState(false)
     const [calculoIdadeDone, setCalculoIdadeDone] = useState(false)
 
@@ -35,22 +53,30 @@ function Solicitacoes() {
         }
         verificaSessao()
 
-        const fetchCategorias = async () => {
-            const { data, error } = await supabase
-            .from('categoria')
-            .select('*')
-            
-            if (error) {
-                setCategorias(null)
-                console.log(error.message)
-            }
-
-            if (data) {
-                setCategorias(data)
-                setFetchCategoriasDone(true)
+        const fetchCidades = async () => { //pega as cidades dos candidatos
+            try { //try para pegar a URL das fotos de perfil     
+                const cidade = await Promise.all(candidaturas.map(async (solicitacao) => {
+                    const { data, error } = await supabase
+                    .from('candidato')
+                    .select('cidade')
+                    .eq('id', solicitacao.id_candidato)
+    
+                    if (error) {
+                        console.log(error)
+                        return null
+                    }
+        
+                    if (data) { //coloca as urls dentro de um vetor para posteriormente pegar o link delas
+                        setCidades(data)
+                    }
+                }));      
+            } catch (error) {
+                console.log("Erro capturando a foto de perfil:", error.message)
+            } finally {
+                setFetchCidadesDone(true)
             }
         }
-        fetchCategorias()
+        //fetchCidades()
 
         const FetchCandidaturas = async (sessao) => {
             try { //try para pegar as candidaturas               
@@ -72,73 +98,21 @@ function Solicitacoes() {
             } catch (erro) {
                 console.log(erro)
             } finally {
-                //CalculaIdade()
-                //FetchUrl()
                 setFetchDone(true)
             }
         }
         if (fetchDone) {
             FetchUrl()
+            fetchCidades()
         }
 
         if(fetchURLDone) {
             FetchFotoPerfil()
         }
-
-        /*const FetchUrl = async () => {
-            try { //try para pegar a URL das fotos de perfil     
-                {console.log("candidaturas", candidaturas)}
-                const imgURL = await Promise.all(candidaturas.map(async (solicitacao) =>{
-                    const { data, error } = await supabase
-                    .from('candidato')
-                    .select('foto')
-                    .eq('id', solicitacao.id_candidato)
-
-                    if (error) {
-                        console.log(error)
-                        return null;
-                    }
-        
-                    if (data) { //coloca as urls dentro de um vetor para posteriormente pegar o link delas
-                        console.log(data[0].foto)
-                        console.log("oi")
-                        //data.map((user) => (url_foto = user.foto))
-                        return data && data[0] && data[0].foto;
-                    }                    
-                }));
-
-                setImgURL(imgURL)
-            } catch (error) {
-                console.log("Erro capturando a foto de perfil:", error.message)
-            } finally {
-                FetchFotoPerfil()
-            }
-        }*/
-
-        /*const FetchFotoPerfil = async () => {
-            {console.log(imgURL)}
-            const imagens = await Promise.all( imgURL.map(async (dado, index) => {
-                if(dado.foto === null) { 
-                    return null
-                } else {
-                    const { data } = await supabase.storage.from('avatares').getPublicUrl(dado.foto);
-                    return data.publicUrl
-                }
-            }));
-            setImg(imagens)
-            setFetchFotoPerfilDone(true)
-        }*/
-
-        /*if (!setFetchDone) {
-            FetchCandidaturas();
-        }*/
     }, [fetchDone, fetchURLDone])
 
     const FetchUrl = async () => {
         try { //try para pegar a URL das fotos de perfil     
-            {console.log("candidaturas", candidaturas)}
-            //const imgURL = await Promise.all(candidaturas.map(async (solicitacao) => {
-            //candidaturas.map(async (solicitacao) => {
             const imgURLData = await Promise.all(candidaturas.map(async (solicitacao) => {
                 const { data, error } = await supabase
                 .from('candidato')
@@ -151,18 +125,9 @@ function Solicitacoes() {
                 }
     
                 if (data) { //coloca as urls dentro de um vetor para posteriormente pegar o link delas
-                    //console.log(data[0].foto)
-                    //data.map((user) => setImgURL(user.foto))
                     setImgURL(data)
-                    //data.map((user) => (url_foto = user.foto)
-                    //return data && data[0] && data[0].foto;
-                    //return data && data[0] && data[0].foto;
                 }
-            //})  
             }));      
-            //}));
-
-            //setImgURL(imgURL)
         } catch (error) {
             console.log("Erro capturando a foto de perfil:", error.message)
         } finally {
@@ -171,9 +136,6 @@ function Solicitacoes() {
     }
 
     const FetchFotoPerfil = async () => {
-        console.log(imgURL)
-        console.log(fetchURLDone)
-        //console.log("5", Array.isArray(imgURL)
         const imagens = await Promise.all( imgURL.map(async (dado, index) => {
             if(dado.foto === null) { 
                 return null
@@ -201,7 +163,7 @@ function Solicitacoes() {
             setCalculoIdadeDone(true);
         }
 
-        if (candidaturas.length > 0) {
+        if (candidaturas.length > 0) { //coloca as idades no vetor de data de nascimento
             for (let i = 0; i < candidaturas.length; i++) {
                 setDatanasc(candidaturas[i].candidato.datanascimento);
             }
@@ -221,17 +183,15 @@ function Solicitacoes() {
 
   return (
     <>
-    {fetchDone && calculoIdadeDone && fetchFotoPerfilDone && fetchCategoriasDone ?
+    {fetchDone && calculoIdadeDone && fetchFotoPerfilDone && fetchCidadesDone ?
     <>
-    {/*console.log(fetchFotoPerfilDone)*/}
-    {console.log(img)}
         <div className='cabecalho__candidatura'>
             <div><p>CANDIDATOS</p></div>
             <div className='flex gap-3'>
-                <select name="categorias" id="categorias">
-                    <option value="">Categoria</option>
-                    {categorias.map((categoria) => (
-                        <option key={categoria.codcategoria} >{categoria.nomecategoria}</option>
+                <select name="cidades" id="cidades">
+                    <option value="">Cidade</option>
+                    {cidades.map((cidade) => (
+                        <option key={cidade.cidade} >{cidade.cidade}</option>
                     ))}
                 </select>
                 <select>
@@ -254,9 +214,16 @@ function Solicitacoes() {
                     <div className='container__dadosCandidato'>
                         <span>
                             <p className='nome_candidato'>{solicitacao.candidato.nomecandidato}</p>
-                            <p>Cidade: {solicitacao.candidato.cidade}</p>
-                            <p>Idade: {idade}</p>
                             <p>Gênero: {solicitacao.candidato.genero}</p>
+                            <p>Idade: {idade}</p>
+                            <p>Cidade: {solicitacao.candidato.cidade}</p>
+                            {detalhes ? (
+                                <>
+                                <p>E-mail: {solicitacao.candidato.emailcandidato}</p>
+                                <p>Telefone: {solicitacao.candidato.telefone}</p>
+                                {solicitacao.candidato.escolaridade && <p>Escolaridade: {solicitacao.candidato.escolaridade}</p>}
+                                </>
+                            ) : null}
                         </span>
                     </div>     
                 </div>
@@ -268,9 +235,8 @@ function Solicitacoes() {
                         <div className='flex gap-2'>
                             <button onClick={HandleAceitar} style={{backgroundColor:"#4CCD82"}}>ACEITAR</button>
                             <button onClick={HandleRecusar} style={{backgroundColor:"#E84645"}}>RECUSAR</button>
-                            <button>MAIS DETALHES</button>
+                            <button onClick={() => {setDetalhes(!detalhes)}}>MAIS DETALHES</button>
                         </div>
-                        
                 </div>
             </div>
             </>

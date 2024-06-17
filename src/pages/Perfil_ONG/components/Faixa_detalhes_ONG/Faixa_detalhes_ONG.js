@@ -38,8 +38,7 @@ function Faixa_detalhes_ONG() {
   const HandleClick_Candidatar = async () => {
     const resposta = window.confirm("Tem certeza que quer se candidatar?")
 
-    if(resposta) {
-      //console.log("Candidatou-se")
+    if(resposta) { //se a resposta for positiva, cria a solicitação
       try { //coloca o post na tabela
         const { error } = await supabase
         .from('solicitacao')
@@ -55,7 +54,7 @@ function Faixa_detalhes_ONG() {
             title: "Candidatura enviada!"
           })
         }
-      } catch (erro) { //se não estão, cria um novo erro para ser exibido ao usuário
+      } catch (erro) {
         let mensagem;
         if (sessao === null) {mensagem = "Faça login antes de continuar"} else {
           mensagem = "Um erro ocorreu"

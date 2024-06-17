@@ -34,6 +34,7 @@ function Solicitacoes() {
     const [datanasc, setDatanasc] = useState([])
 
     const [fetchDone, setFetchDone] = useState(false)
+    const [pesquisaDone, setPesquisaDone] = useState(null)
     const [fetchURLDone, setFetchURLDone] = useState(false)
     const [fetchCidadesDone, setFetchCidadesDone] = useState(false)
     const [fetchFotoPerfilDone, setFetchFotoPerfilDone] = useState(false)
@@ -48,7 +49,8 @@ function Solicitacoes() {
     });
 
     useEffect (() => {
-        const verificaSessao = async () => { //pegando a sessão e colocando numa variável
+        /*const verificaSessao = async () => { //pegando a sessão e colocando numa variável
+            console.log(":D")
             try {
                 const { data: { session }} = await supabase.auth.getSession();
                 FetchCandidaturas(session)
@@ -56,7 +58,7 @@ function Solicitacoes() {
                 console.log(error)
             }
         }
-        verificaSessao()
+        verificaSessao()*/
 
         const fetchCidades = async () => { //pega as cidades dos candidatos
             try { //try para pegar a URL das fotos de perfil     
@@ -83,11 +85,13 @@ function Solicitacoes() {
         }
 
         const FetchCandidaturas = async (sessao) => {
+            const { data: { session }} = await supabase.auth.getSession();
+
             try { //try para pegar as candidaturas               
                 const { data, error } = await supabase
                 .from('solicitacao')
                 .select(`*, candidato(*)`)
-                .eq('id_instituicao', sessao.user.id);
+                .eq('id_instituicao', session.user.id);
 
                 if (error) {
                     console.log(error)
@@ -105,6 +109,11 @@ function Solicitacoes() {
                 setFetchDone(true)
             }
         }
+
+        if(!fetchDone) {
+            FetchCandidaturas()
+        }
+
         if (fetchDone) {
             FetchUrl()
             fetchCidades()
@@ -113,11 +122,21 @@ function Solicitacoes() {
         if(fetchURLDone) {
             FetchFotoPerfil()
         }
-    }, [fetchDone, fetchURLDone])
+
+        if(!pesquisaDone) {
+            Pesquisar()
+         }
+
+         if(pesquisaDone) {
+            console.log("pesquisa done")
+            FetchUrl()
+         }
+    }, [fetchDone, fetchURLDone, pesquisaDone])
 
     const FetchUrl = async () => {
+        console.log("Oi")
         try { //try para pegar a URL das fotos de perfil     
-            const imgURLData = await Promise.all(candidaturas.map(async (solicitacao) => {
+            const imgURLData = [] = await Promise.all(candidaturas.map(async (solicitacao) => {
                 const { data, error } = await supabase
                 .from('candidato')
                 .select('foto')
@@ -130,8 +149,9 @@ function Solicitacoes() {
     
                 if (data) { //coloca as urls dentro de um vetor para posteriormente pegar o link delas
                     setImgURL(data)
+                    return data
                 }
-            }));      
+            }));          
         } catch (error) {
             console.log("Erro capturando a foto de perfil:", error.message)
         } finally {
@@ -140,16 +160,28 @@ function Solicitacoes() {
     }
 
     const FetchFotoPerfil = async () => {
-        const imagens = await Promise.all( imgURL.map(async (dado, index) => {
-            if(dado.foto === null) { 
-                return null
-            } else {
-                const { data } = await supabase.storage.from('avatares').getPublicUrl(dado.foto);
-                return data.publicUrl
-            }
-        }));
-        setImg(imagens)
-        setFetchFotoPerfilDone(true)
+        try {
+            const imagens = [] = await Promise.all( imgURL.map(async (dado) => { 
+                if(dado === null) {
+                    return null;
+                } else {
+                    const { data, error } = await supabase.storage.from('avatares').getPublicUrl(dado.foto);
+                    if(error) {
+                        console.log(error)
+                        return null
+                    }
+
+                    if(data) {
+                        return data.publicUrl
+                    }
+                }
+            }));
+            setImg(imagens)
+        } catch (error) {
+            console.log(error.message)
+        } finally {
+            setFetchFotoPerfilDone(true)
+        }
     }
 
     useEffect(() => {
@@ -174,13 +206,11 @@ function Solicitacoes() {
         }
 
         CalculaIdade();
-
     }, [candidaturas, datanasc]);
 
     const Pesquisar = async (e) => {
-        e.preventDefault()
+        //e.preventDefault()
         try {
-            setFetchDone(false)
             const { data: { session }} = await supabase.auth.getSession();
             
             const filtros = {
@@ -215,7 +245,7 @@ function Solicitacoes() {
         } catch(error) {
             console.log(error);
         } finally {
-            setFetchDone(true)
+            setPesquisaDone(true)
         }
     }
 
@@ -229,8 +259,11 @@ function Solicitacoes() {
 
   return (
     <>
-    {fetchDone && calculoIdadeDone && fetchFotoPerfilDone && fetchCidadesDone ?
+    {fetchDone && calculoIdadeDone && fetchFotoPerfilDone && fetchCidadesDone && pesquisaDone ?
     <>
+    {console.log("candidaturas", candidaturas)}
+    {console.log("imgURL", imgURL)}
+    {console.log("img", img)}
         <div className='cabecalho__candidatura'>
             <div><p>CANDIDATOS</p></div>
             <div className='flex gap-3'>
@@ -241,47 +274,50 @@ function Solicitacoes() {
                     ))}
                 </select>
                 <select name="status" id="status" value={ formFiltro.values.status } onChange={(e) => {formFiltro.handleChange(e)}}>
-                    <option>Status</option>
-                    <option>APROVADO</option>
-                    <option>EM ANÁLISE</option>
-                    <option>NÃO APROVADO</option>
+                    <option value="">Status</option>
+                    <option value="APROVADO">APROVADO</option>
+                    <option value="EM ANÁLISE">EM ANÁLISE</option>
+                    <option value="NÃO APROVADO">NÃO APROVADO</option>
                 </select>
-                <button className="botao_salvar" onClick={(e) => {setImg([]); setImgURL([]); Pesquisar(e)}}>FILTRAR</button>
+                <button className="botao_salvar" onClick={(e) => {setFetchFotoPerfilDone(false); setPesquisaDone(false)}}>FILTRAR</button>
             </div>
         </div>
         <hr className='hr_solicitacoes' />
-
-        {candidaturas.map((solicitacao, index) => (
-            <>
-            <div className='container__candidato' key={solicitacao.codsolicitacao}>
-                <div className='info_candidatura'>
-                    {img[index] !== null && <img id="img_perfilONG" src={img[index]} alt="foto de perfil"  />}
-                    {img[index] === null && <FontAwesomeIcon icon={ faUserCircle } size='8x' color='#e87f45' />}
-                    <div className='container__dadosCandidato'>
-                        <span>
-                            <p className='nome_candidato'>{solicitacao.candidato.nomecandidato}</p>
-                            <p>Gênero: {solicitacao.candidato.genero}</p>
-                            <p>Idade: {idade}</p>
-                            <p>Cidade: {solicitacao.candidato.cidade}</p>
-                            <p>E-mail: {solicitacao.candidato.emailcandidato}</p>
-                            <p>Telefone: {solicitacao.candidato.telefone}</p>
-                            {solicitacao.candidato.escolaridade && <p>Escolaridade: {solicitacao.candidato.escolaridade}</p>}
-                        </span>
-                    </div>     
+        {candidaturas.length === 0 ? <center>Nenhum candidato safistaz essa pesquisa</center>:
+             <>
+            {candidaturas.map((solicitacao, index) => (
+                <>
+                <div className='container__candidato' key={solicitacao.codsolicitacao}>
+                    <div className='info_candidatura'>
+                        {img[index] !== null && <img id="img_perfilONG" src={img[index]} alt="foto de perfil"  />}
+                        {img[index] === null && <FontAwesomeIcon icon={ faUserCircle } size='8x' color='#e87f45' />}
+                        <div className='container__dadosCandidato'>
+                            <span>
+                                <p className='nome_candidato'>{solicitacao.candidato.nomecandidato}</p>
+                                <p>Gênero: {solicitacao.candidato.genero}</p>
+                                <p>Idade: {idade}</p>
+                                <p>Cidade: {solicitacao.candidato.cidade}</p>
+                                <p>E-mail: {solicitacao.candidato.emailcandidato}</p>
+                                <p>Telefone: {solicitacao.candidato.telefone}</p>
+                                {solicitacao.candidato.escolaridade && <p>Escolaridade: {solicitacao.candidato.escolaridade}</p>}
+                            </span>
+                        </div>     
+                    </div>
+                    <div className='status_candaditura'>
+                            <div className='status analise'>
+                                <FontAwesomeIcon icon={ faCircle } />
+                                <span>{solicitacao.status}</span>
+                            </div>
+                            <div className='flex gap-2'>
+                                <button onClick={HandleAceitar} style={{backgroundColor:"#4CCD82"}}>ACEITAR</button>
+                                <button onClick={HandleRecusar} style={{backgroundColor:"#E84645"}}>RECUSAR</button>
+                            </div>
+                    </div>
                 </div>
-                <div className='status_candaditura'>
-                        <div className='status analise'>
-                            <FontAwesomeIcon icon={ faCircle } />
-                            <span>{solicitacao.status}</span>
-                        </div>
-                        <div className='flex gap-2'>
-                            <button onClick={HandleAceitar} style={{backgroundColor:"#4CCD82"}}>ACEITAR</button>
-                            <button onClick={HandleRecusar} style={{backgroundColor:"#E84645"}}>RECUSAR</button>
-                        </div>
-                </div>
-            </div>
+                </>
+            ))}
             </>
-        ))}
+        }
         </>
     : null}
         </>

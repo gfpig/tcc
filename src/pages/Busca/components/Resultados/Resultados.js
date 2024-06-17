@@ -34,7 +34,6 @@ function Resultados() {
     const [categorias, setCategorias] = useState(null);
     const [imgURL, setImgURL] = useState([])
     const [img, setImg] = useState([]); //armazena a foto de perfil em vetor (para mostrar na tela)
-    const [fetchIcon, setFetchIcon] = useState(false)
     const [fetchError, setFetchError] = useState([]);
     const [fetchInstituicaoDone, setFetchInstituicaoDone] = useState(false); //varíavel pra saber se já puxou os dados da instituicao
     const [pesquisaDone, setPesquisaDone] = useState(true)
@@ -91,7 +90,6 @@ function Resultados() {
             }
 
             try {
-                setFetchIcon(false)
                 const {data, error} = await supabase
                 .from('instituicao')
                 .select('foto')
@@ -117,7 +115,7 @@ function Resultados() {
 
     const FetchFotosPerfil = async () => {
         try {
-            const imagens = [] = await Promise.all( imgURL.map(async (dado, index) => {
+            const imagens = [] = await Promise.all( imgURL.map(async (dado) => {
                 if(dado.foto === null) {
                     return null;
                 } else {
@@ -139,16 +137,11 @@ function Resultados() {
             setFetchFotoDone(true)
         }   
     }
-    //FetchFotosPerfil()
 
     useEffect(() => {
         if (!fetchInstituicaoDone) {
             fetchInstituicoes();
         }
-        
-        
-       //fetchInstituicoes()
-       //FetchFotosPerfil()
 
         //Preenche as categorias do select com base no banco de dados
         const fetchCategorias = async () => {
@@ -230,13 +223,8 @@ function Resultados() {
     }, [])
 
     const Pesquisar = async () => {
-        //e.preventDefault()
-        //await setFetchInstituicaoDone(false)
-        //console.log(e)
-
         try {
             try {
-                //setFetchInstituicaoDone(false)
                 let query = supabase.from('instituicao').select('*')
                 const filtros = {
                     'codcategoria': formFiltro.values.categorias,
@@ -284,13 +272,11 @@ function Resultados() {
                     }
                 });
 
-                console.log(query)
-
                 const { data, error } = await query;
 
                 if (error) {
                     setFetchError("Não foi possível recuperar as informações")
-                    setInstituicoes(null)
+                    setImgURL(null)
                     console.log(error)
                 }
 
@@ -321,7 +307,7 @@ function Resultados() {
     <>
     { fetchInstituicaoDone && fetchFiltrosDone && fetchFotoDone ?
     <>
-    {console.log("img:", img)}
+    {console.log(instituicoes)}
     <div className='barra_filtros'>
         <select name="estado" id="estados" value={ formFiltro.values.estado } onChange={(e) => {formFiltro.handleChange(e)}}>
             <option value="">Estado</option>
@@ -349,7 +335,8 @@ function Resultados() {
         </select>
         <button className='botao_salvar' onClick={(e) => {setImg([]); setImgURL([]); setPesquisaDone(false)}}>PESQUISAR</button>
     </div>
-    <div className='resultados'> 
+    {instituicoes.length === 0 ? <center>Nenhuma instituição satisfaz essa pesquisa</center> :
+    <div className='resultados'>
         {instituicoes.map((instituicao, index) => (
             <div className='container_resultado' key={instituicao.id}>
                 <div className='info_ong'>
@@ -369,7 +356,7 @@ function Resultados() {
                 </div>
             </div>
         ))}
-    </div>
+    </div>}
     </>
     : null}
     </>

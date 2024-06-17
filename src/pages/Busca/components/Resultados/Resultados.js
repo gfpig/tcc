@@ -22,7 +22,6 @@ function CreateForm (valoresDoForm) {
                 ...values,
                 [name]: value,
             });
-            console.log("name:", name, "\nvalue:", value);
         }
     };
 }
@@ -38,7 +37,10 @@ function Resultados() {
     const [fetchIcon, setFetchIcon] = useState(false)
     const [fetchError, setFetchError] = useState([]);
     const [fetchInstituicaoDone, setFetchInstituicaoDone] = useState(false); //varíavel pra saber se já puxou os dados da instituicao
+    const [pesquisaDone, setPesquisaDone] = useState(true)
     const [fetchFiltrosDone, setFetchFiltrosDone] = useState(false)
+    const [fetchFotoDone, setFetchFotoDone] = useState(false)
+
 
     const navigate = useNavigate();
 
@@ -55,77 +57,107 @@ function Resultados() {
 
     const fetchInstituicoes = async () => {
         try {
-            setFetchInstituicaoDone(false)
-            let query = supabase.from('instituicao').select('*')
-            const filtros = {
-                'codcategoria': formFiltro.values.categorias,
-                'cidade': formFiltro.values.cidade,
-                'uf': formFiltro.values.estado,
-                'bairro': formFiltro.values.bairro
-            }
-
-            Object.entries(filtros).forEach(([coluna, valor]) => {
-                // Checa se o valor do filtro não é vazio/nulo
-                if (valor !== '' && valor !== null) {
-                    query = query.eq(coluna, valor);
+            try {
+                setFetchInstituicaoDone(false)
+                let query = supabase.from('instituicao').select('*')
+                const filtros = {
+                    'codcategoria': formFiltro.values.categorias,
+                    'cidade': formFiltro.values.cidade,
+                    'uf': formFiltro.values.estado,
+                    'bairro': formFiltro.values.bairro
                 }
-            });
 
-            const { data, error } = await query;
+                Object.entries(filtros).forEach(([coluna, valor]) => {
+                    // Checa se o valor do filtro não é vazio/nulo
+                    if (valor !== '' && valor !== null) {
+                        query = query.eq(coluna, valor);
+                    }
+                });
 
-            if (error) {
-                setFetchError("Não foi possível recuperar as informações")
-                setInstituicoes(null)
-                console.log(error)
+                const { data, error } = await query;
+
+                if (error) {
+                    setFetchError("Não foi possível recuperar as informações")
+                    setInstituicoes(null)
+                    console.log(error)
+                }
+
+                if (data) {
+                    setInstituicoes(data)
+                    setFetchError(null)
+                }
+            } catch(error) {
+                console.log(error);
             }
 
-            if (data) {
-                setInstituicoes(data)
-                setFetchError(null)
-            }
-        } catch(error) {
-            console.log(error);
-        } finally {
-            setFetchInstituicaoDone(true)
-        }
+            try {
+                setFetchIcon(false)
+                const {data, error} = await supabase
+                .from('instituicao')
+                .select('foto')
 
-        try {
-            setFetchIcon(false)
-            const {data, error} = await supabase
-            .from('instituicao')
-            .select('foto')
+                if (error) {
+                    setFetchError("Não foi possível recuperar as informações")
+                    setInstituicoes(null)
+                    console.log(error)
+                }
 
-            if (error) {
-                setFetchError("Não foi possível recuperar as informações")
-                setInstituicoes(null)
-                console.log(error)
-            }
-
-            if (data) { //coloca as urls dentro de um vetor para posteriormente pegar o link delas
-                setImgURL(data)
+                if (data) { //coloca as urls dentro de um vetor para posteriormente pegar o link delas
+                    setImgURL(data)
+                }
+            } catch (error) {
+                console.log("Erro capturando a foto de perfil:", error.message)
             }
         } catch (error) {
-            console.log("Erro capturando a foto de perfil:", error.message)
+            console.log(error.message)
+        } finally {
+            setFetchInstituicaoDone(true)
+            //console.log(imgURL)
+            //FetchFotosPerfil()
         }
     }
 
     const FetchFotosPerfil = async () => {
-        imgURL.map(async (dado, index) => {
-            if(dado.foto === null) { 
-                img[index] = null
-            } else {
-                const { data } = await supabase.storage.from('avatares').getPublicUrl(dado.foto);
-                img[index] = data.publicUrl
-            }
-        });
-    }
+        try {
+            //console.log(imgURL)
+            const imagens = [] = await Promise.all( imgURL.map(async (dado, index) => {
+                //console.log(dado.foto)
+                if(dado.foto === null) {
+                    //setImg(null)
+                    return null;
+                } else {
+                    const { data, error } = await supabase.storage.from('avatares').getPublicUrl(dado.foto);
+                    if(error) {
+                        console.log(error)
+                        return null
+                    }
 
-    FetchFotosPerfil()
+                    if(data) {
+                        //console.log(imgURL)
+                        //console.log(data)
+                        //setImg(data)
+                        return data.publicUrl
+                    }
+                }
+            }));
+            //console.log("imagens",imagens)
+            setImg(imagens)
+        } catch (error) {
+            console.log(error.message)
+        } finally{
+            setFetchFotoDone(true)
+        }   
+    }
+    //FetchFotosPerfil()
 
     useEffect(() => {
         if (!fetchInstituicaoDone) {
             fetchInstituicoes();
         }
+        
+        
+       //fetchInstituicoes()
+       //FetchFotosPerfil()
 
         //Preenche as categorias do select com base no banco de dados
         const fetchCategorias = async () => {
@@ -204,81 +236,100 @@ function Resultados() {
         }
         fetchBairros()
 
-    }, [fetchInstituicaoDone])
+    }, [])
 
-    const Pesquisar = async (e) => {
-        e.preventDefault()
-        try {
-            setFetchInstituicaoDone(false)
-            let query = supabase.from('instituicao').select('*')
-            const filtros = {
-                'codcategoria': formFiltro.values.categorias,
-                'cidade': formFiltro.values.cidade,
-                'uf': formFiltro.values.estado,
-                'bairro': formFiltro.values.bairro
-            }
-
-            Object.entries(filtros).forEach(([coluna, valor]) => {
-                // Checa se o valor do filtro não é vazio/nulo
-                if (valor !== '' && valor !== null) {
-                    query = query.eq(coluna, valor);
-                }
-            });
-
-            const { data, error } = await query;
-
-            if (error) {
-                setFetchError("Não foi possível recuperar as informações")
-                setInstituicoes(null)
-                console.log(error)
-            }
-
-            if (data) {
-                setInstituicoes(data)
-                setFetchError(null)
-            }
-        } catch(error) {
-            console.log(error);
-        } finally {
-            setFetchInstituicaoDone(true)
-        }
+    const Pesquisar = async () => {
+        //e.preventDefault()
+        //await setFetchInstituicaoDone(false)
+        //console.log(e)
 
         try {
-            let query = supabase.from('instituicao').select('*')
-            const filtros = {
-                'codcategoria': formFiltro.values.categorias,
-                'cidade': formFiltro.values.cidade,
-                'uf': formFiltro.values.estado,
-                'bairro': formFiltro.values.bairro
-            }
-
-            Object.entries(filtros).forEach(([coluna, valor]) => {
-                // Checa se o valor do filtro não é vazio/nulo
-                if (valor !== '' && valor !== null) {
-                    query = query.eq(coluna, valor);
+            try {
+                //setFetchInstituicaoDone(false)
+                let query = supabase.from('instituicao').select('*')
+                const filtros = {
+                    'codcategoria': formFiltro.values.categorias,
+                    'cidade': formFiltro.values.cidade,
+                    'uf': formFiltro.values.estado,
+                    'bairro': formFiltro.values.bairro
                 }
-            });
 
-            const { data, error } = await query;
+                Object.entries(filtros).forEach(([coluna, valor]) => {
+                    // Checa se o valor do filtro não é vazio/nulo
+                    if (valor !== '' && valor !== null) {
+                        query = query.eq(coluna, valor);
+                    }
+                });
 
-            if (error) {
-                setFetchError("Não foi possível recuperar as informações")
-                setInstituicoes(null)
-                console.log(error)
+                const { data, error } = await query;
+
+                if (error) {
+                    setFetchError("Não foi possível recuperar as informações")
+                    setInstituicoes(null)
+                    console.log(error)
+                }
+
+                if (data) {
+                    setInstituicoes(data)
+                    setFetchError(null)
+                }
+            } catch(error) {
+                console.log(error);
             }
 
-            if (data) { //coloca as urls dentro de um vetor para posteriormente pegar o link delas
-                setImgURL(data)
+            try {
+                let query = supabase.from('instituicao').select('*')
+                const filtros = {
+                    'codcategoria': formFiltro.values.categorias,
+                    'cidade': formFiltro.values.cidade,
+                    'uf': formFiltro.values.estado,
+                    'bairro': formFiltro.values.bairro
+                }
+
+                Object.entries(filtros).forEach(([coluna, valor]) => {
+                    // Checa se o valor do filtro não é vazio/nulo
+                    if (valor !== '' && valor !== null) {
+                        query = query.eq(coluna, valor);
+                    }
+                });
+
+                console.log(query)
+
+                const { data, error } = await query;
+
+                if (error) {
+                    setFetchError("Não foi possível recuperar as informações")
+                    setInstituicoes(null)
+                    console.log(error)
+                }
+
+                if (data) { //coloca as urls dentro de um vetor para posteriormente pegar o link delas
+                    setImgURL(data)
+                }
+            } catch (error) {
+                console.log("Erro capturando a foto de perfil:", error.message)
             }
         } catch (error) {
-            console.log("Erro capturando a foto de perfil:", error.message)
+            console.log(error.message)
+        } finally {
+            setPesquisaDone(true)
         }
     }
 
+    useEffect (() => {
+        /*if(!fetchInstituicaoDone) {
+           Pesquisar()
+        }*/
+        if(fetchInstituicaoDone || !pesquisaDone) {
+            FetchFotosPerfil()
+        }
+    }, [pesquisaDone, fetchInstituicaoDone])
+
   return (
     <>
-    { fetchInstituicaoDone && fetchFiltrosDone ?
+    { fetchInstituicaoDone && fetchFiltrosDone && fetchFotoDone ?
     <>
+    {console.log("img:", img)}
     <div className='barra_filtros'>
         <select name="estado" id="estados" value={ formFiltro.values.estado } onChange={(e) => {formFiltro.handleChange(e)}}>
             <option value="">Estado</option>
@@ -304,7 +355,7 @@ function Resultados() {
                 <option key={categoria.codcategoria} value={categoria.codcategoria} onChange={formFiltro.handleChange}>{categoria.nomecategoria}</option>
             ))}
         </select>
-        <button className='botao_salvar' onClick={(e) => {setImg([]); setImgURL([]); Pesquisar(e)}}>PESQUISAR</button>
+        <button className='botao_salvar' onClick={(e) => {setImg([]); setImgURL([]); setPesquisaDone(false)}}>PESQUISAR</button>
     </div>
     <div className='resultados'> 
         {instituicoes.map((instituicao, index) => (

@@ -25,10 +25,7 @@ function CreateForm (valoresDoForm) {
     };
 }
 
-
 function Solicitacoes() {
-    const [detalhes, setDetalhes] = useState(false)
-
     const [candidaturas, setCandidaturas] = useState([])
     const [cidades, setCidades] = useState([]);
     const [imgURL, setImgURL] = useState([]) //vetor que armazena a url das fotos de perfil
@@ -41,6 +38,14 @@ function Solicitacoes() {
     const [fetchCidadesDone, setFetchCidadesDone] = useState(false)
     const [fetchFotoPerfilDone, setFetchFotoPerfilDone] = useState(false)
     const [calculoIdadeDone, setCalculoIdadeDone] = useState(false)
+
+    //Vetor que vai armazenar os filtros
+    const formFiltro = CreateForm({
+        initialValues: {
+            cidades: '',
+            status: ''
+        }
+    });
 
     useEffect (() => {
         const verificaSessao = async () => { //pegando a sessão e colocando numa variável
@@ -76,7 +81,6 @@ function Solicitacoes() {
                 setFetchCidadesDone(true)
             }
         }
-        //fetchCidades()
 
         const FetchCandidaturas = async (sessao) => {
             try { //try para pegar as candidaturas               
@@ -173,6 +177,48 @@ function Solicitacoes() {
 
     }, [candidaturas, datanasc]);
 
+    const Pesquisar = async (e) => {
+        e.preventDefault()
+        try {
+            setFetchDone(false)
+            const { data: { session }} = await supabase.auth.getSession();
+            
+            const filtros = {
+                'status': formFiltro.values.status,
+                'cidade': formFiltro.values.cidades
+            }
+
+            let query = supabase.from('solicitacao')
+                .select(`*, candidato(*)`)
+                .eq('id_instituicao', session.user.id)
+
+            Object.entries(filtros).forEach(([coluna, valor]) => {
+                // Checa se o valor do filtro não é vazio/nulo
+                if (valor !== '' && valor !== null) {
+                    query = query.eq(coluna, valor);
+                }
+            });
+
+            console.log("query",query)
+
+            const { data, error } = await query;
+
+            if (error) {
+                setCandidaturas(null)
+                console.log(error)
+            }
+
+            if (data) {
+                console.log("data:", data)
+                setCandidaturas(data)
+            }
+        } catch(error) {
+            console.log(error);
+        } finally {
+            setFetchDone(true)
+        }
+    }
+
     const HandleAceitar = async () => {
         console.log("Solicitação Aceita")
     }
@@ -188,19 +234,19 @@ function Solicitacoes() {
         <div className='cabecalho__candidatura'>
             <div><p>CANDIDATOS</p></div>
             <div className='flex gap-3'>
-                <select name="cidades" id="cidades">
+                <select name="cidades" id="cidades" value={ formFiltro.values.cidades } onChange={(e) => {formFiltro.handleChange(e)}}>
                     <option value="">Cidade</option>
                     {cidades.map((cidade) => (
                         <option key={cidade.cidade} >{cidade.cidade}</option>
                     ))}
                 </select>
-                <select>
+                <select name="status" id="status" value={ formFiltro.values.status } onChange={(e) => {formFiltro.handleChange(e)}}>
                     <option>Status</option>
-                    <option>Aprovado</option>
-                    <option>Em análise</option>
-                    <option>Não aprovado</option>
+                    <option>APROVADO</option>
+                    <option>EM ANÁLISE</option>
+                    <option>NÃO APROVADO</option>
                 </select>
-                <button className="botao_salvar">FILTRAR</button>
+                <button className="botao_salvar" onClick={(e) => {setImg([]); setImgURL([]); Pesquisar(e)}}>FILTRAR</button>
             </div>
         </div>
         <hr className='hr_solicitacoes' />
@@ -217,13 +263,9 @@ function Solicitacoes() {
                             <p>Gênero: {solicitacao.candidato.genero}</p>
                             <p>Idade: {idade}</p>
                             <p>Cidade: {solicitacao.candidato.cidade}</p>
-                            {detalhes ? (
-                                <>
-                                <p>E-mail: {solicitacao.candidato.emailcandidato}</p>
-                                <p>Telefone: {solicitacao.candidato.telefone}</p>
-                                {solicitacao.candidato.escolaridade && <p>Escolaridade: {solicitacao.candidato.escolaridade}</p>}
-                                </>
-                            ) : null}
+                            <p>E-mail: {solicitacao.candidato.emailcandidato}</p>
+                            <p>Telefone: {solicitacao.candidato.telefone}</p>
+                            {solicitacao.candidato.escolaridade && <p>Escolaridade: {solicitacao.candidato.escolaridade}</p>}
                         </span>
                     </div>     
                 </div>
@@ -235,7 +277,6 @@ function Solicitacoes() {
                         <div className='flex gap-2'>
                             <button onClick={HandleAceitar} style={{backgroundColor:"#4CCD82"}}>ACEITAR</button>
                             <button onClick={HandleRecusar} style={{backgroundColor:"#E84645"}}>RECUSAR</button>
-                            <button onClick={() => {setDetalhes(!detalhes)}}>MAIS DETALHES</button>
                         </div>
                 </div>
             </div>

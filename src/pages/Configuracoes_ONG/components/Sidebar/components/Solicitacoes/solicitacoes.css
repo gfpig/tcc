@@ -38,7 +38,7 @@
 }
 
 .info_candidatura img {
-    @apply w-32 rounded-full;
+    @apply w-32 h-32 rounded-full self-center;
 }
 
 .container__dadosCandidato {

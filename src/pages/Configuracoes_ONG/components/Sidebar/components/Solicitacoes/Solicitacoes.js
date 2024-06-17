@@ -14,10 +14,12 @@ function Solicitacoes() {
     const [candidaturas, setCandidaturas] = useState([])
     const [categorias, setCategorias] = useState([]);
     const [imgURL, setImgURL] = useState([]) //vetor que armazena a url das fotos de perfil
+    const [img, setImg] = useState([]) //vetor que armazena as fotos de perfil
     const [idade, setIdade] = useState([])
     const [datanasc, setDatanasc] = useState([])
 
     const [fetchDone, setFetchDone] = useState(false)
+    const [fetchURLDone, setFetchURLDone] = useState(false)
     const [fetchCategoriasDone, setFetchCategoriasDone] = useState(false)
     const [fetchFotoPerfilDone, setFetchFotoPerfilDone] = useState(false)
     const [calculoIdadeDone, setCalculoIdadeDone] = useState(false)
@@ -44,15 +46,14 @@ function Solicitacoes() {
             }
 
             if (data) {
-                console.log("categoria:", data)
                 setCategorias(data)
                 setFetchCategoriasDone(true)
             }
         }
         fetchCategorias()
-    
+
         const FetchCandidaturas = async (sessao) => {
-            try {                
+            try { //try para pegar as candidaturas               
                 const { data, error } = await supabase
                 .from('solicitacao')
                 .select(`*, candidato(*)`)
@@ -64,7 +65,6 @@ function Solicitacoes() {
                 }
           
                 if (data) {
-                  //console.log(data)
                   setCandidaturas(data)
                 }
 
@@ -73,46 +73,118 @@ function Solicitacoes() {
                 console.log(erro)
             } finally {
                 //CalculaIdade()
+                //FetchUrl()
                 setFetchDone(true)
             }
+        }
+        if (fetchDone) {
+            FetchUrl()
+        }
 
-            try {
-                const promises = await Promise.all(candidaturas.map(async (solicitacao) =>{
+        if(fetchURLDone) {
+            FetchFotoPerfil()
+        }
+
+        /*const FetchUrl = async () => {
+            try { //try para pegar a URL das fotos de perfil     
+                {console.log("candidaturas", candidaturas)}
+                const imgURL = await Promise.all(candidaturas.map(async (solicitacao) =>{
                     const { data, error } = await supabase
                     .from('candidato')
                     .select('foto')
                     .eq('id', solicitacao.id_candidato)
-                    .then(({data, error}) => {
-                        if (error) {
-                            console.log(error)
-                        }
-            
-                        if (data) { //coloca as urls dentro de um vetor para posteriormente pegar o link delas
-                            //console.log(data)
-                            //setImgURL(data)
-                            let url_foto
-                            data.map((user) => (url_foto = user.foto))
-                            return url_foto
-                        }
-                    })                  
+
+                    if (error) {
+                        console.log(error)
+                        return null;
+                    }
+        
+                    if (data) { //coloca as urls dentro de um vetor para posteriormente pegar o link delas
+                        console.log(data[0].foto)
+                        console.log("oi")
+                        //data.map((user) => (url_foto = user.foto))
+                        return data && data[0] && data[0].foto;
+                    }                    
                 }));
 
-                const newURL = await Promise.all(promises);
-                setImgURL(newURL)
-                console.log(imgURL)
+                setImgURL(imgURL)
             } catch (error) {
                 console.log("Erro capturando a foto de perfil:", error.message)
             } finally {
-                setFetchFotoPerfilDone(true)
+                FetchFotoPerfil()
             }
-        }
-    }, [])
+        }*/
 
-    /*useEffect(() => {
-        if (fetchDone && candidaturas.length > 0) {
-            CalculaIdade();
+        /*const FetchFotoPerfil = async () => {
+            {console.log(imgURL)}
+            const imagens = await Promise.all( imgURL.map(async (dado, index) => {
+                if(dado.foto === null) { 
+                    return null
+                } else {
+                    const { data } = await supabase.storage.from('avatares').getPublicUrl(dado.foto);
+                    return data.publicUrl
+                }
+            }));
+            setImg(imagens)
+            setFetchFotoPerfilDone(true)
+        }*/
+
+        /*if (!setFetchDone) {
+            FetchCandidaturas();
+        }*/
+    }, [fetchDone, fetchURLDone])
+
+    const FetchUrl = async () => {
+        try { //try para pegar a URL das fotos de perfil     
+            {console.log("candidaturas", candidaturas)}
+            //const imgURL = await Promise.all(candidaturas.map(async (solicitacao) => {
+            //candidaturas.map(async (solicitacao) => {
+            const imgURLData = await Promise.all(candidaturas.map(async (solicitacao) => {
+                const { data, error } = await supabase
+                .from('candidato')
+                .select('foto')
+                .eq('id', solicitacao.id_candidato)
+
+                if (error) {
+                    console.log(error)
+                    return null
+                }
+    
+                if (data) { //coloca as urls dentro de um vetor para posteriormente pegar o link delas
+                    //console.log(data[0].foto)
+                    //data.map((user) => setImgURL(user.foto))
+                    setImgURL(data)
+                    //data.map((user) => (url_foto = user.foto)
+                    //return data && data[0] && data[0].foto;
+                    //return data && data[0] && data[0].foto;
+                }
+            //})  
+            }));      
+            //}));
+
+            //setImgURL(imgURL)
+        } catch (error) {
+            console.log("Erro capturando a foto de perfil:", error.message)
+        } finally {
+            setFetchURLDone(true)
         }
-    }, [fetchDone, candidaturas]);*/
+    }
+
+    const FetchFotoPerfil = async () => {
+        console.log(imgURL)
+        console.log(fetchURLDone)
+        //console.log("5", Array.isArray(imgURL)
+        const imagens = await Promise.all( imgURL.map(async (dado, index) => {
+            if(dado.foto === null) { 
+                return null
+            } else {
+                const { data } = await supabase.storage.from('avatares').getPublicUrl(dado.foto);
+                return data.publicUrl
+            }
+        }));
+        setImg(imagens)
+        setFetchFotoPerfilDone(true)
+    }
 
     useEffect(() => {
         const CalculaIdade = () => {
@@ -130,32 +202,14 @@ function Solicitacoes() {
         }
 
         if (candidaturas.length > 0) {
-            setDatanasc(candidaturas[0].candidato.datanascimento);
+            for (let i = 0; i < candidaturas.length; i++) {
+                setDatanasc(candidaturas[i].candidato.datanascimento);
+            }
         }
 
         CalculaIdade();
 
     }, [candidaturas, datanasc]);
-
-    /*const CalculaIdade = () => {
-        //console.log(candidaturas)
-        const hoje = new Date();
-        candidaturas.map((solicitacao) => (setDatanasc(solicitacao.candidato.datanascimento)))
-        
-        console.log(datanasc)
-        const birthdateDate = new Date(datanasc);
-        console.log(birthdateDate.toLocaleString)
-
-        let age = hoje.getFullYear() - birthdateDate.getFullYear();
-        const monthDiff = hoje.getMonth() - birthdateDate.getMonth();
-        if (monthDiff < 0 || (monthDiff === 0 && hoje.getDate() < birthdateDate.getDate())) {
-            age--;
-        }
-
-        setIdade(age);
-        console.log("idade:", idade)
-        setCalculoIdadeDone(true)
-    }*/
 
     const HandleAceitar = async () => {
         console.log("Solicitação Aceita")
@@ -169,7 +223,8 @@ function Solicitacoes() {
     <>
     {fetchDone && calculoIdadeDone && fetchFotoPerfilDone && fetchCategoriasDone ?
     <>
-    {console.log(imgURL)}
+    {/*console.log(fetchFotoPerfilDone)*/}
+    {console.log(img)}
         <div className='cabecalho__candidatura'>
             <div><p>CANDIDATOS</p></div>
             <div className='flex gap-3'>
@@ -185,16 +240,17 @@ function Solicitacoes() {
                     <option>Em análise</option>
                     <option>Não aprovado</option>
                 </select>
-                <button class="botao_salvar">FILTRAR</button>
+                <button className="botao_salvar">FILTRAR</button>
             </div>
         </div>
         <hr className='hr_solicitacoes' />
 
         {candidaturas.map((solicitacao, index) => (
             <>
-            <div className='container__candidato'>
+            <div className='container__candidato' key={solicitacao.codsolicitacao}>
                 <div className='info_candidatura'>
-                    <FontAwesomeIcon icon={ faUserCircle } size='8x' color='#e87f45' />
+                    {img[index] !== null && <img id="img_perfilONG" src={img[index]} alt="foto de perfil"  />}
+                    {img[index] === null && <FontAwesomeIcon icon={ faUserCircle } size='8x' color='#e87f45' />}
                     <div className='container__dadosCandidato'>
                         <span>
                             <p className='nome_candidato'>{solicitacao.candidato.nomecandidato}</p>

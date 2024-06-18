@@ -94,7 +94,7 @@ const Menu = () => {
         <nav className='navegacao_menu'>
             <ul className="menu_">
                 <div className='logo'>
-                    <a href="/"><img src={logotipo_transparente} alt="logotipo" /></a>
+                    <a href="/"><img src={logotipo_gelo} alt="logotipo" /></a>
                 </div>
                 <div className='search_bar'>
                     <input id="search-input" type="text" maxLength="800" placeholder="Digite o nome da ONG" />

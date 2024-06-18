@@ -54,7 +54,7 @@ function Timeline() {
   const [isInstituicao, setIsInstituicao] = useState(null) //variável para saber se o usuário é a instituição do perfil
   const [file, setFile] = useState(null); //armazena a foto do post (para colocar no banco)
 
-  const onImageChange = (e) => {
+  const onImageChange = (e) => { //Para mostrar a imagem selecionada na tela
     const novaFoto = e.target.files[0];
     setFile(novaFoto);
     setImgFront(URL.createObjectURL(novaFoto));
@@ -210,6 +210,10 @@ function Timeline() {
           <form className='form_post' onSubmit={HandleSubmit}>
             <div className='funcoes_postar'>
               <textarea className='digitar_post' name="descricao" value={ formPost.values.descricao } placeholder="Digite seu post" onChange={ formPost.handleChange } />
+              {imgFront && <div className='flex justify-center h-1/3 w-1/3 self-center'>
+                <button>x</button>
+                <img src={imgFront} alt="foto selecionada" className='self-center mt-4' />
+              </div>}
               <div className='acoes_postar'>
                   <label className='mr-2'>
                     <FontAwesomeIcon icon={ faCamera } size="2xl" />

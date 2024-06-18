@@ -97,7 +97,7 @@ function Cadastro_ong_form() {
                         .required("É necessário informar o nome da instituição"),
         emailinstituicao: yup.string()
                         .email()
-                        .matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.+-]+\.gov$/, "O e-mail deve terminar com '.gov'")
+                        //.matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.+-]+\.gov$/, "O e-mail deve terminar com '.gov'")
                         .required("É necessário informar o e-mail"),
         senhainstituicao: yup.string()
                     .min(8, "")

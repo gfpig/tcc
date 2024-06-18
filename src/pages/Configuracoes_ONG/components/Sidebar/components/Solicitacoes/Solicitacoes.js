@@ -281,10 +281,36 @@ function Solicitacoes() {
         .eq('codsolicitacao', codigo)
 
         if(!error) {
-            Swal.fire({
+            try { //enviar notificação de recusa para o candidato
+                const { error } = await supabase
+                .from('notificao')
+                .insert({
+                  id_instituicao: instituicao.id,
+                  id_candidato: sessao.user.id,
+                  status: "EM ANÁLISE"
+                })
+        
+                if(!error) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Solicitação recusada."
+                    })
+                }
+              } catch (erro) {
+                let mensagem;
+                if (sessao === null) {mensagem = "Faça login antes de continuar"} else {
+                  mensagem = "Um erro ocorreu"
+                }
+                  console.log("Ocorreu um erro: ", erro.message);
+                  Swal.fire({
+                    icon: "error",
+                    title: mensagem
+                  })
+              }
+            /*Swal.fire({
                 icon: "success",
                 title: "Solicitação recusada."
-            })
+            })*/
         } else {
             let mensagem = "Um erro ocorreu";
             console.log(error)
@@ -326,7 +352,7 @@ function Solicitacoes() {
                 <div className='container__candidato' key={solicitacao.codsolicitacao}>
                     <div className='info_candidatura'>
                         {img[index] !== null && <img id="img_perfilONG" src={img[index]} alt="foto de perfil"  />}
-                        {img[index] === null && <FontAwesomeIcon icon={ faUserCircle } size='8x' color='#e87f45' />}
+                        {img[index] === null && <FontAwesomeIcon icon={ faUserCircle } size='8x' color='#e87f45' style={{alignSelf:"center"}} />}
                         <div className='container__dadosCandidato'>
                             <span>
                                 <p className='nome_candidato'>{solicitacao.candidato.nomecandidato}</p>

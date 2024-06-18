@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome' ;
 import { faCamera } from '@fortawesome/free-solid-svg-icons';
 import { createClient } from "@supabase/supabase-js";
 import Posts from './Posts/Posts';
+import {useRef} from 'react';
 
 const PROJECT_URL = "https://xljeosvrbsygpekwclan.supabase.co";
 const PUBLIC_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhsamVvc3ZyYnN5Z3Bla3djbGFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTQ1MTY1NzAsImV4cCI6MjAzMDA5MjU3MH0.InFDrSOcPxRe4LXMBJ4dT59bBb3LSpKw063S90E3uPo"
@@ -54,11 +55,18 @@ function Timeline() {
   const [isInstituicao, setIsInstituicao] = useState(null) //variável para saber se o usuário é a instituição do perfil
   const [file, setFile] = useState(null); //armazena a foto do post (para colocar no banco)
 
+  const inputRef = useRef(null); //referência para o file input da imagem
+
   const onImageChange = (e) => { //Para mostrar a imagem selecionada na tela
     const novaFoto = e.target.files[0];
     setFile(novaFoto);
     setImgFront(URL.createObjectURL(novaFoto));
   };
+
+  const limpaImgFront = () => {
+    setImgFront(undefined)
+    inputRef.current.value = null;
+  }
 
   useEffect(() => {
     const verificaSessao = async () => { //pegando a sessão e colocando numa variável
@@ -158,8 +166,6 @@ function Timeline() {
       const filePath = `${fileName}`
 
       setImgPost(fileName);
-      //console.log(imgPost)
-      //console.log(fileName)
 
       const { error: uploadError } = await supabase.storage.from('imagens_post').upload(filePath, file)
 
@@ -210,14 +216,14 @@ function Timeline() {
           <form className='form_post' onSubmit={HandleSubmit}>
             <div className='funcoes_postar'>
               <textarea className='digitar_post' name="descricao" value={ formPost.values.descricao } placeholder="Digite seu post" onChange={ formPost.handleChange } />
-              {imgFront && <div className='flex justify-center h-1/3 w-1/3 self-center'>
-                <button>x</button>
+              {imgFront && <div className='flex justify-center h-1/3 w-1/3 self-center flex-row-reverse'>
+                <button className='self-start' onClick={limpaImgFront}>x</button>
                 <img src={imgFront} alt="foto selecionada" className='self-center mt-4' />
               </div>}
               <div className='acoes_postar'>
                   <label className='mr-2'>
                     <FontAwesomeIcon icon={ faCamera } size="2xl" />
-                    <input type="file" style={{display:"none"}} className='selecionar_imagem' onChange={(e) => {onImageChange(e); formPost.handleChange(e)}} />
+                    <input type="file" ref={inputRef} style={{display:"none"}} className='selecionar_imagem' onChange={(e) => {onImageChange(e); formPost.handleChange(e)}} />
                   </label>
                   <button className='publicar'>PUBLICAR</button>
               </div>

@@ -21,12 +21,13 @@ function CreateForm (valoresDoForm) {
                 ...values,
                 [name]: value,
             });
-            console.log("name:", name, "\nvalue:", value);
         }
     };
 }
 
 function Solicitacoes() {
+    document.title = "Solicitações"
+
     const [candidaturas, setCandidaturas] = useState([])
     const [cidades, setCidades] = useState([]);
     const [imgURL, setImgURL] = useState([]) //vetor que armazena a url das fotos de perfil
@@ -219,9 +220,6 @@ function Solicitacoes() {
                 }
             });
 
-            console.log("query",query)
-            //console.log("oi")
-
             const { data, error } = await query;
 
             if (error) {
@@ -230,13 +228,10 @@ function Solicitacoes() {
             }
 
             if (data) {
-                console.log("data", data)
                 data.map((dado) => {
                     if(data.length === 0 || dado.candidato === null) {
-                        console.log("data candidato null")
                         setCandidaturas([])
                     }else {
-                        console.log("data2:", data)
                         setCandidaturas(data)
                     }
                 })
@@ -271,7 +266,9 @@ function Solicitacoes() {
         }
     }
 
-    const HandleRecusar = async (codigo) => {
+    const HandleRecusar = async (solicitacao) => {
+        console.log(solicitacao)
+        console.log(solicitacao.codsolicitacao)
         const { data: { session }} = await supabase.auth.getSession();
         //console.log("Solicitação Recusada")
         const { error } = await supabase
@@ -279,15 +276,15 @@ function Solicitacoes() {
         .update({
             status: "NÃO APROVADO"
         })
-        .eq('codsolicitacao', codigo)
+        .eq('codsolicitacao', solicitacao.codsolicitacao)
 
         if(!error) {
-            /*try { //enviar notificação de recusa para o candidato
+            try { //enviar notificação de recusa para o candidato
                 const { error } = await supabase
-                .from('notificao')
+                .from('notificacao')
                 .insert({
                   id_instituicao: session.user.id,
-                  id_candidato: session.user.id,
+                  fk_candidato_id: session.user.id,
                   status: "EM ANÁLISE"
                 })
         
@@ -299,20 +296,18 @@ function Solicitacoes() {
                 }
               } catch (erro) {
                 let mensagem;
-                if (sessao === null) {mensagem = "Faça login antes de continuar"} else {
-                  mensagem = "Um erro ocorreu"
-                }
-                  console.log("Ocorreu um erro: ", erro.message);
-                  Swal.fire({
-                    icon: "error",
-                    title: mensagem
-                  })
+
+                console.log("Ocorreu um erro: ", erro.message);
+                Swal.fire({
+                icon: "error",
+                title: mensagem
+                })
               }
-            /*Swal.fire({
+            Swal.fire({
                 icon: "success",
                 title: "Solicitação recusada."
             })
-        } else {*/
+        } else {
             let mensagem = "Um erro ocorreu";
             console.log(error)
             Swal.fire({
@@ -382,8 +377,8 @@ function Solicitacoes() {
                             {solicitacao.status === "APROVADO" ? null : solicitacao.status === "NÃO APROVADO" ? null :
                                 solicitacao.status === "EM ANÁLISE" ?
                                 <>
-                                <button onClick={() => {HandleAceitar(solicitacao.codsolicitacao)}} style={{backgroundColor:"#4CCD82"}}>ACEITAR</button>
-                                <button onClick={() => {HandleRecusar(solicitacao.codsolicitacao)}} style={{backgroundColor:"#E84645"}}>RECUSAR</button>
+                                <button onClick={() => {HandleAceitar(solicitacao)}} style={{backgroundColor:"#4CCD82"}}>ACEITAR</button>
+                                <button onClick={() => {HandleRecusar(solicitacao)}} style={{backgroundColor:"#E84645"}}>RECUSAR</button>
                                 </>
                             : {}}
                         </div>

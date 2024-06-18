@@ -4,6 +4,8 @@ import Resultados from './components/Resultados/Resultados'
 //import Filtro from './components/Filtro/Filtro'
 
 function Busca() {
+  document.title = "Resultados"
+
   return (
     <>
     <Menu_ />

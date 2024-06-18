@@ -2,6 +2,7 @@ import React, {useState} from 'react'
 import './notificacoes.css';
 
 function Notificacoes() {
+    document.title = "Notificações"
     const [filtroAtual, setFiltroAtual] = useState(0);
   return (
     <>

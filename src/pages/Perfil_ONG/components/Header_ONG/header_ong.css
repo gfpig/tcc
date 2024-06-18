@@ -1,8 +1,8 @@
 .header_instituicao {
-    @apply flex w-full z-0 items-center justify-center h-64 md:h-80;
-    background-image: url('./icons/header.jpg');
+    @apply flex w-full z-0 items-center justify-center h-64 md:h-80 bg-slate-200;
+    /*background-image: url('./icons/header.jpg');
     background-repeat: no-repeat;
-    background-size: 100% 100%;
+    background-size: 100% 100%;*/
 }
 
 .container_fotoONG {

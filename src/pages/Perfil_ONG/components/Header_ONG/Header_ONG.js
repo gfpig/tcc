@@ -1,8 +1,5 @@
 import React, { useState }from 'react'
 import { useLocation } from 'react-router-dom';
-import './header_ong.css';
-import foto from './icons/cats.png'
-import header from './icons/paisagem.jpg'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHandHoldingHeart } from '@fortawesome/free-solid-svg-icons';
 import { createClient } from "@supabase/supabase-js";

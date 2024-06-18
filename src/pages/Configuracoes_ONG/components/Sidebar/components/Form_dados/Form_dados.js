@@ -28,6 +28,8 @@ function CreateInstituicao (valoresDoForm) {
 }
 
 function Form_dados() {
+    document.title = "Editar Dados"
+
     const [fetchDone, setFetchDone] = useState(false); //varíavel pra saber se já puxou os dados
     const [img, setImg] = useState(null); //armazena a foto de perfil (para mostrar na tela)
     const [file, setFile] = useState(null); //armazena a foto de perfil (para colocar no banco)

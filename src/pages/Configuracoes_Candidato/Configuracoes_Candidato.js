@@ -6,8 +6,7 @@ import Solicitacoes from './components/Sidebar/components/Solicitacoes/Solicitac
 
 
 function Configuracoes_Candidato() {
-  //const opcoes = [<Form_dados />, <Solicitacoes />];
-
+  document.title = "Configurações"
   return (
     <>
         <Menu_ />

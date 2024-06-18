@@ -7,21 +7,25 @@ import Faixa_detalhes_ONG from './components/Faixa_detalhes_ONG/Faixa_detalhes_O
 import Timeline_Sobre from './components/Timeline_Sobre/Timeline_Sobre'
 
 function Perfil_ONG () {
-    const instituicao = useLocation();
+  const location = useLocation();
+  console.log(location)
+  const instituicao = location.state
+  console.log(instituicao)
+  document.title = instituicao.nomeinstituicao
 
-    return (
-      <>
-        <LocationProvider>
-          <Menu_ />
-          <div className="relative top-12 flex flex-col ml-0 mr-0 md:ml-24 md:mr-24 lg:ml-40 lg:mr-40"> 
-            <Header_ONG />
-            <Faixa_detalhes_ONG />
-            <hr style={{borderColor: "gray", marginTop:"1rem", marginBottom:"1rem"}} />
-            <Timeline_Sobre />
-          </div>
-        </LocationProvider>
-      </>
-    )
+  return (
+    <>
+      <LocationProvider>
+        <Menu_ />
+        <div className="relative top-12 flex flex-col ml-0 mr-0 md:ml-24 md:mr-24 lg:ml-40 lg:mr-40"> 
+          <Header_ONG />
+          <Faixa_detalhes_ONG />
+          <hr style={{borderColor: "gray", marginTop:"1rem", marginBottom:"1rem"}} />
+          <Timeline_Sobre />
+        </div>
+      </LocationProvider>
+    </>
+  )
 }
 
 export default Perfil_ONG

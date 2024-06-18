@@ -25,8 +25,17 @@ function CreateUser (valoresDoLogin) {
               ...values,
               [name]: value,
           });
-          console.log("value: ", value);
+          console.log("name:", name, "\nvalue: ", value);
       },
+
+      clearForm: () => {
+        setValues({
+          id_instituicao: "",
+          descricao: "",
+          data: "",
+          imagem: ""
+      });
+      }
   };
 }
 
@@ -61,11 +70,14 @@ function Timeline() {
     const novaFoto = e.target.files[0];
     setFile(novaFoto);
     setImgFront(URL.createObjectURL(novaFoto));
+    console.log("file",file)
   };
 
   const limpaImgFront = () => {
     setImgFront(undefined)
+    setFile(null)
     inputRef.current.value = null;
+    console.log("file",file)
   }
 
   useEffect(() => {
@@ -161,6 +173,8 @@ function Timeline() {
 
   const uploadImagemPost = async () => {
     try {
+      if(file === null) { insertPost() } //se não tiver imagem, já chama a função de fazer o post
+
       const fileExt = file.name.split('.').pop()
       const fileName = `${Math.random()}.${fileExt}`
       const filePath = `${fileName}`
@@ -169,28 +183,18 @@ function Timeline() {
 
       const { error: uploadError } = await supabase.storage.from('imagens_post').upload(filePath, file)
 
-      try{
-          if (uploadError) {
-            throw uploadError
-          } else {
-            const { error } = await supabase
-                .from('postagem_instituicao')
-                .update({
-                    imagem: fileName })
-                .eq('id', instituicao.id)
-          }
-      } catch (error) {
-        console.log("Erro no upload da foto:",error.message)
+      if(uploadError) {
+        console.log(uploadError)
       }
     } catch (error) {
       console.log("Erro no upload da foto:",error.message)
     }
   }
 
-  const HandleSubmit = async (e) => {
-    e.preventDefault()
-
+  const insertPost = async () => {
     try { //coloca o post na tabela
+      console.log(imgPost)
+      
       const { error } = await supabase
       .from('postagem_instituicao')
       .insert({
@@ -199,10 +203,23 @@ function Timeline() {
         data: formPost.values.data,
         imagem: imgPost
       })
+      console.log(formPost.values)
+      if(!error) { formPost.clearForm(); limpaImgFront() }
 
     } catch (erro) { //se não estão, cria um novo erro para ser exibido ao usuário
         console.log("Ocorreu um erro: ", erro.message);
     }
+  }
+
+  useEffect(() => {
+    // Só faz o post depois que imgPost ter um valor
+    if (imgPost !== undefined) {
+      insertPost();
+    }
+  }, [imgPost]);
+
+  const HandleSubmit = async (e) => {
+    e.preventDefault()
 
     uploadImagemPost()
   }
@@ -211,6 +228,7 @@ function Timeline() {
     <>  
     {fetchDone && fetchImgDone && isInstituicao !== null ? 
     <>
+    {console.log("file",file)}
     <div className="flex flex-col ml-3 mr-3 md:ml-0 md:mr-0 items-center self-center w-full xl:w-2/3 md:w-2/3">
       {isInstituicao ? (
           <form className='form_post' onSubmit={HandleSubmit}>

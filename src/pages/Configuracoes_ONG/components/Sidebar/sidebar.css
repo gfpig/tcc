@@ -1,10 +1,11 @@
 .sidebar {
-    @apply relative top-2 left-0 bottom-0;
+    @apply mt-6 flex md:ml-0 sm:ml-44 ml-24 w-full justify-center top-2 left-0 bottom-0;
     padding: 12px;
     width: 300px;
 }
 
 .sidebar_navigation {
+    @apply flex w-full justify-center;
     border-radius: 8px;
     padding: 16px 0 0 16px;
 }

@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&display=swap");
 
 .cabecalho__candidatura {
-    @apply flex justify-between;
+    @apply flex justify-between flex-col xl:flex-row ml-2 md:ml-0;
 }
 
 .cabecalho__candidatura p {
@@ -29,7 +29,7 @@
 }
 
 .container__candidato {
-    @apply flex items-center justify-between w-full h-1/4 mb-5;
+    @apply flex flex-col xl:flex-row xl:items-center xl:justify-between xl:w-full xl:h-44 mb-5;
     background-color: #7d387c;
 }
 
@@ -50,11 +50,11 @@
 }
 
 .status_candaditura {
-    @apply flex flex-col justify-between h-full p-2;
+    @apply flex xl:flex-col flex-row justify-between w-full xl:w-auto h-full p-2;
 }
 
 .status_candaditura .status {
-    @apply self-end font-bold;
+    @apply xl:self-end self-center font-bold;
 }
 
 .status_candaditura .status span {
@@ -62,14 +62,6 @@
 }
 
 .status_candaditura button{
-    @apply text-white font-bold text-center p-2 rounded-lg;
+    @apply text-white font-bold text-center p-2 rounded-lg w-32;
     background-color: #6c419a;
-}
-
-.status_candaditura .aprovado {
-    color: #8fcd82;
-}
-
-.status_candaditura .analise {
-    color: #e87f45;
 }

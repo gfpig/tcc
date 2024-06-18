@@ -166,7 +166,7 @@ function Sidebar() {
 
   return (
         <>
-        <div className='flex justify-center flex-row h-full overflow-clip'>
+        <div className='flex justify-center md:flex-row flex-col'>
             {/* SIDEBAR */}
             <div className="sidebar">
                 <nav className="sidebar_navigation">

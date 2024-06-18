@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {useForm} from 'react-hook-form';
-import './sidebar.css';
+//import './sidebar.css';
 //import './alterar_senha.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencil, faLock, faBell, faMessage, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
@@ -166,7 +166,7 @@ function Sidebar() {
 
   return (
         <>
-        <div className='flex justify-center flex-row'>
+        <div className='flex justify-center md:flex-row flex-col'>
             {/* SIDEBAR */}
             <div className="sidebar">
                 <nav className="sidebar_navigation">

@@ -1,5 +1,5 @@
 .container_opcao_selecionada {
-    @apply relative top-16 w-6/12;
+    @apply md:w-6/12 w-full relative md:top-16 md:p-0 p-8;
 }
 
 .inputs_editar_dados input {

@@ -220,6 +220,7 @@ function Solicitacoes() {
             });
 
             console.log("query",query)
+            //console.log("oi")
 
             const { data, error } = await query;
 
@@ -229,8 +230,10 @@ function Solicitacoes() {
             }
 
             if (data) {
+                console.log("data", data)
                 data.map((dado) => {
-                    if(dado.candidato === null) {
+                    if(data.length === 0 || dado.candidato === null) {
+                        console.log("data candidato null")
                         setCandidaturas([])
                     }else {
                         console.log("data2:", data)

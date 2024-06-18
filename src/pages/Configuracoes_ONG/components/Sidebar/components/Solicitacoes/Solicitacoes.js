@@ -3,6 +3,7 @@ import './solicitacoes.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome' ;
 import { faUserCircle, faCircle } from '@fortawesome/free-solid-svg-icons';
 import { createClient } from "@supabase/supabase-js";
+import Swal from 'sweetalert2';
 
 const PROJECT_URL = "https://xljeosvrbsygpekwclan.supabase.co";
 const PUBLIC_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhsamVvc3ZyYnN5Z3Bla3djbGFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTQ1MTY1NzAsImV4cCI6MjAzMDA5MjU3MH0.InFDrSOcPxRe4LXMBJ4dT59bBb3LSpKw063S90E3uPo"
@@ -49,17 +50,6 @@ function Solicitacoes() {
     });
 
     useEffect (() => {
-        /*const verificaSessao = async () => { //pegando a sessão e colocando numa variável
-            console.log(":D")
-            try {
-                const { data: { session }} = await supabase.auth.getSession();
-                FetchCandidaturas(session)
-            } catch (error) {
-                console.log(error)
-            }
-        }
-        verificaSessao()*/
-
         const fetchCidades = async () => { //pega as cidades dos candidatos
             try { //try para pegar a URL das fotos de perfil     
                 const cidade = await Promise.all(candidaturas.map(async (solicitacao) => {
@@ -84,7 +74,7 @@ function Solicitacoes() {
             }
         }
 
-        const FetchCandidaturas = async (sessao) => {
+        const FetchCandidaturas = async () => {
             const { data: { session }} = await supabase.auth.getSession();
 
             try { //try para pegar as candidaturas               
@@ -99,10 +89,9 @@ function Solicitacoes() {
                 }
           
                 if (data) {
+                    console.log(data)
                   setCandidaturas(data)
                 }
-
-                //CalculaIdade()
             } catch (erro) {
                 console.log(erro)
             } finally {
@@ -128,13 +117,11 @@ function Solicitacoes() {
          }
 
          if(pesquisaDone) {
-            console.log("pesquisa done")
             FetchUrl()
          }
     }, [fetchDone, fetchURLDone, pesquisaDone])
 
     const FetchUrl = async () => {
-        console.log("Oi")
         try { //try para pegar a URL das fotos de perfil     
             const imgURLData = [] = await Promise.all(candidaturas.map(async (solicitacao) => {
                 const { data, error } = await supabase
@@ -184,7 +171,7 @@ function Solicitacoes() {
         }
     }
 
-    useEffect(() => {
+    useEffect(() => { //useEffect para calcular a idade do candidato
         const CalculaIdade = () => {
             const hoje = new Date();
             const birthdateDate = new Date(datanasc);
@@ -208,8 +195,7 @@ function Solicitacoes() {
         CalculaIdade();
     }, [candidaturas, datanasc]);
 
-    const Pesquisar = async (e) => {
-        //e.preventDefault()
+    const Pesquisar = async () => {
         try {
             const { data: { session }} = await supabase.auth.getSession();
             
@@ -225,7 +211,11 @@ function Solicitacoes() {
             Object.entries(filtros).forEach(([coluna, valor]) => {
                 // Checa se o valor do filtro não é vazio/nulo
                 if (valor !== '' && valor !== null) {
-                    query = query.eq(coluna, valor);
+                    if(coluna === "cidade") {
+                        query = query.eq("candidato."+coluna, valor);
+                    } else {
+                        query = query.eq(coluna, valor);
+                    }
                 }
             });
 
@@ -239,9 +229,15 @@ function Solicitacoes() {
             }
 
             if (data) {
-                console.log("data:", data)
-                setCandidaturas(data)
-            }
+                data.map((dado) => {
+                    if(dado.candidato === null) {
+                        setCandidaturas([])
+                    }else {
+                        console.log("data2:", data)
+                        setCandidaturas(data)
+                    }
+                })
+            } 
         } catch(error) {
             console.log(error);
         } finally {
@@ -249,21 +245,57 @@ function Solicitacoes() {
         }
     }
 
-    const HandleAceitar = async () => {
-        console.log("Solicitação Aceita")
+    const HandleAceitar = async (codigo) => {
+        const { error } = await supabase
+        .from('solicitacao')
+        .update({
+            status: "APROVADO"
+        })
+        .eq('codsolicitacao', codigo)
+
+        if(!error) {
+            Swal.fire({
+                icon: "success",
+                title: "Solicitação aceita!"
+            })
+        } else {
+            let mensagem = "Um erro ocorreu";
+            console.log(error)
+            Swal.fire({
+                icon: "error",
+                title: mensagem
+            })
+        }
     }
 
-    const HandleRecusar = async () => {
+    const HandleRecusar = async (codigo) => {
         console.log("Solicitação Recusada")
+        const { error } = await supabase
+        .from('solicitacao')
+        .update({
+            status: "NÃO APROVADO"
+        })
+        .eq('codsolicitacao', codigo)
+
+        if(!error) {
+            Swal.fire({
+                icon: "success",
+                title: "Solicitação recusada."
+            })
+        } else {
+            let mensagem = "Um erro ocorreu";
+            console.log(error)
+            Swal.fire({
+                icon: "error",
+                title: mensagem
+            })
+        }
     }
 
   return (
     <>
     {fetchDone && calculoIdadeDone && fetchFotoPerfilDone && fetchCidadesDone && pesquisaDone ?
     <>
-    {console.log("candidaturas", candidaturas)}
-    {console.log("imgURL", imgURL)}
-    {console.log("img", img)}
         <div className='cabecalho__candidatura'>
             <div><p>CANDIDATOS</p></div>
             <div className='flex gap-3'>
@@ -272,6 +304,7 @@ function Solicitacoes() {
                     {cidades.map((cidade) => (
                         <option key={cidade.cidade} >{cidade.cidade}</option>
                     ))}
+                    <option value="São Caetano do Sul">São Caetano do Sul</option>
                 </select>
                 <select name="status" id="status" value={ formFiltro.values.status } onChange={(e) => {formFiltro.handleChange(e)}}>
                     <option value="">Status</option>
@@ -279,13 +312,13 @@ function Solicitacoes() {
                     <option value="EM ANÁLISE">EM ANÁLISE</option>
                     <option value="NÃO APROVADO">NÃO APROVADO</option>
                 </select>
-                <button className="botao_salvar" onClick={(e) => {setFetchFotoPerfilDone(false); setPesquisaDone(false)}}>FILTRAR</button>
+                <button className="botao_salvar" onClick={() => {setFetchFotoPerfilDone(false); setPesquisaDone(false)}}>FILTRAR</button>
             </div>
         </div>
         <hr className='hr_solicitacoes' />
         {candidaturas.length === 0 ? <center>Nenhum candidato safistaz essa pesquisa</center>:
              <>
-            {candidaturas.map((solicitacao, index) => (
+            {candidaturas.map((solicitacao, index) => ( 
                 <>
                 <div className='container__candidato' key={solicitacao.codsolicitacao}>
                     <div className='info_candidatura'>
@@ -304,14 +337,26 @@ function Solicitacoes() {
                         </div>     
                     </div>
                     <div className='status_candaditura'>
-                            <div className='status analise'>
-                                <FontAwesomeIcon icon={ faCircle } />
-                                <span>{solicitacao.status}</span>
-                            </div>
-                            <div className='flex gap-2'>
-                                <button onClick={HandleAceitar} style={{backgroundColor:"#4CCD82"}}>ACEITAR</button>
-                                <button onClick={HandleRecusar} style={{backgroundColor:"#E84645"}}>RECUSAR</button>
-                            </div>
+                        <div className='status'
+                            style={
+                                solicitacao.status === "EM ANÁLISE" ? {color:"#e87f45"} :
+                                solicitacao.status === "APROVADO" ? {color:"#8fcd82"} :
+                                solicitacao.status === "NÃO APROVADO" ? {color:"#E84645"} : {}
+                            }>
+
+                        <FontAwesomeIcon icon={ faCircle } />
+                        <span>{solicitacao.status}</span>
+
+                        </div>
+                        <div className='flex gap-2'>
+                            {solicitacao.status === "APROVADO" ? null : solicitacao.status === "NÃO APROVADO" ? null :
+                                solicitacao.status === "EM ANÁLISE" ?
+                                <>
+                                <button onClick={() => {HandleAceitar(solicitacao.codsolicitacao)}} style={{backgroundColor:"#4CCD82"}}>ACEITAR</button>
+                                <button onClick={() => {HandleRecusar(solicitacao.codsolicitacao)}} style={{backgroundColor:"#E84645"}}>RECUSAR</button>
+                                </>
+                            : {}}
+                        </div>
                     </div>
                 </div>
                 </>

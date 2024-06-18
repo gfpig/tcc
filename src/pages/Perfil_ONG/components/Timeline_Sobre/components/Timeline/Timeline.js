@@ -93,6 +93,7 @@ function Timeline() {
         .from('postagem_instituicao')
         .select('*')
         .eq('id_instituicao', instituicao.id)
+        .order('codpostagem', { ascending: false })
         
         if (error) {
             console.log(error)
@@ -100,6 +101,7 @@ function Timeline() {
         }
   
         if (data) {
+          console.log(data)
           setPosts(data)
           for (let i = 0; i < data.length; i++) {
             codigo_post = data[i].codpostagem
@@ -116,6 +118,7 @@ function Timeline() {
         const {data, error} = await supabase
         .from('postagem_instituicao')
         .select('imagem')
+        .order('codpostagem', { ascending: false })
 
         if (error) {
             console.log(error)

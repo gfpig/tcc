@@ -272,7 +272,8 @@ function Solicitacoes() {
     }
 
     const HandleRecusar = async (codigo) => {
-        console.log("Solicitação Recusada")
+        const { data: { session }} = await supabase.auth.getSession();
+        //console.log("Solicitação Recusada")
         const { error } = await supabase
         .from('solicitacao')
         .update({
@@ -281,12 +282,12 @@ function Solicitacoes() {
         .eq('codsolicitacao', codigo)
 
         if(!error) {
-            try { //enviar notificação de recusa para o candidato
+            /*try { //enviar notificação de recusa para o candidato
                 const { error } = await supabase
                 .from('notificao')
                 .insert({
-                  id_instituicao: instituicao.id,
-                  id_candidato: sessao.user.id,
+                  id_instituicao: session.user.id,
+                  id_candidato: session.user.id,
                   status: "EM ANÁLISE"
                 })
         
@@ -310,8 +311,8 @@ function Solicitacoes() {
             /*Swal.fire({
                 icon: "success",
                 title: "Solicitação recusada."
-            })*/
-        } else {
+            })
+        } else {*/
             let mensagem = "Um erro ocorreu";
             console.log(error)
             Swal.fire({

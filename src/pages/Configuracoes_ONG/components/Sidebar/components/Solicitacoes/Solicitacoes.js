@@ -37,8 +37,8 @@ function Solicitacoes() {
 
     const [fetchDone, setFetchDone] = useState(false)
     const [pesquisaDone, setPesquisaDone] = useState(null)
-    const [fetchURLDone, setFetchURLDone] = useState(false)
-    const [fetchCidadesDone, setFetchCidadesDone] = useState(false)
+    const [fetchURLDone, setFetchURLDone] = useState(null)
+    //const [fetchCidadesDone, setFetchCidadesDone] = useState(false)
     const [fetchFotoPerfilDone, setFetchFotoPerfilDone] = useState(false)
     const [calculoIdadeDone, setCalculoIdadeDone] = useState(false)
 
@@ -51,7 +51,7 @@ function Solicitacoes() {
     });
 
     useEffect (() => {
-        const fetchCidades = async () => { //pega as cidades dos candidatos
+        /*const fetchCidades = async () => { //pega as cidades dos candidatos
             try { //try para pegar a URL das fotos de perfil     
                 const cidade = await Promise.all(candidaturas.map(async (solicitacao) => {
                     const { data, error } = await supabase
@@ -65,17 +65,19 @@ function Solicitacoes() {
                     }
         
                     if (data) { //coloca as urls dentro de um vetor para posteriormente pegar o link delas
-                        setCidades(data)
+                        return data[0].cidade
                     }
-                }));      
+                }));
+                setCidades(cidade)
             } catch (error) {
                 console.log("Erro capturando a foto de perfil:", error.message)
             } finally {
                 setFetchCidadesDone(true)
             }
-        }
+        }*/
 
         const FetchCandidaturas = async () => {
+            console.log("começa fetch candidaturas")
             const { data: { session }} = await supabase.auth.getSession();
 
             try { //try para pegar as candidaturas               
@@ -91,7 +93,7 @@ function Solicitacoes() {
           
                 if (data) {
                     console.log(data)
-                  setCandidaturas(data)
+                    setCandidaturas(data)
                 }
             } catch (erro) {
                 console.log(erro)
@@ -105,55 +107,73 @@ function Solicitacoes() {
         }
 
         if (fetchDone) {
+            console.log("if fetch done")
             FetchUrl()
-            fetchCidades()
         }
 
         if(fetchURLDone) {
+            //console.log("url done")
             FetchFotoPerfil()
         }
 
-        if(!pesquisaDone) {
+        if(pesquisaDone === false) {
             Pesquisar()
+            //fetchCidades()
          }
 
-         if(pesquisaDone) {
+         //if(pesquisaDone) {
+        /*if (pesquisaDone === true) {
+            FetchUrl()
+            console.log("pesquisa done")
+            //setFetchURLDone(false)
+        }*/
+
+         if(fetchURLDone === false) {
+            console.log("url done")
             FetchUrl()
          }
     }, [fetchDone, fetchURLDone, pesquisaDone])
 
     const FetchUrl = async () => {
-        try { //try para pegar a URL das fotos de perfil     
-            const imgURLData = [] = await Promise.all(candidaturas.map(async (solicitacao) => {
+        console.log("começa fetch url")
+        try { //try para pegar a URL das fotos de perfil
+            const imgURLData = await Promise.all(candidaturas.map(async (solicitacao) => {
                 const { data, error } = await supabase
                 .from('candidato')
                 .select('foto')
                 .eq('id', solicitacao.id_candidato)
 
                 if (error) {
-                    console.log(error)
+                    console.log("erro:", error)
                     return null
                 }
     
                 if (data) { //coloca as urls dentro de um vetor para posteriormente pegar o link delas
-                    setImgURL(data)
-                    return data
+                    //console.log("data foto",data[0].foto)
+                    //setImgURL(data)
+                    return data[0].foto
                 }
-            }));          
+            }));
+            console.log(imgURLData)
+            setImgURL(imgURLData)
         } catch (error) {
             console.log("Erro capturando a foto de perfil:", error.message)
         } finally {
+            console.log("termina fetch url")
             setFetchURLDone(true)
         }
     }
 
     const FetchFotoPerfil = async () => {
+        console.log("começa fetch foto perfil")
+        console.log(imgURL)
         try {
             const imagens = [] = await Promise.all( imgURL.map(async (dado) => { 
+                console.log("dado.foto", dado)
                 if(dado === null) {
                     return null;
                 } else {
-                    const { data, error } = await supabase.storage.from('avatares').getPublicUrl(dado.foto);
+                    const { data, error } = await supabase.storage.from('avatares').getPublicUrl(dado);
                     if(error) {
                         console.log(error)
                         return null
@@ -164,10 +184,12 @@ function Solicitacoes() {
                     }
                 }
             }));
+            console.log("imagens:", imagens)
             setImg(imagens)
         } catch (error) {
             console.log(error.message)
         } finally {
+            console.log("termina fetch foto perfil")
             setFetchFotoPerfilDone(true)
         }
     }
@@ -198,27 +220,12 @@ function Solicitacoes() {
 
     const Pesquisar = async () => {
         try {
-            const { data: { session }} = await supabase.auth.getSession();
-            
-            const filtros = {
-                'status': formFiltro.values.status,
-                'cidade': formFiltro.values.cidades
-            }
-
+            console.log("começa pesquisar")
             let query = supabase.from('solicitacao')
-                .select(`*, candidato(*)`)
-                .eq('id_instituicao', session.user.id)
+            .select('*, candidato(*)')
+            .eq('status', formFiltro.values.status)
 
-            Object.entries(filtros).forEach(([coluna, valor]) => {
-                // Checa se o valor do filtro não é vazio/nulo
-                if (valor !== '' && valor !== null) {
-                    if(coluna === "cidade") {
-                        query = query.eq("candidato."+coluna, valor);
-                    } else {
-                        query = query.eq(coluna, valor);
-                    }
-                }
-            });
+            console.log("query pesquisa:", query)
 
             const { data, error } = await query;
 
@@ -228,10 +235,15 @@ function Solicitacoes() {
             }
 
             if (data) {
+                console.log("data1", data)
                 data.map((dado) => {
+                    console.log("data", data)
+                    console.log("dado", dado)
                     if(data.length === 0 || dado.candidato === null) {
+                        console.log("Oi")
                         setCandidaturas([])
                     }else {
+                        console.log(data)
                         setCandidaturas(data)
                     }
                 })
@@ -239,6 +251,7 @@ function Solicitacoes() {
         } catch(error) {
             console.log(error);
         } finally {
+            console.log("pesquisa done true")
             setPesquisaDone(true)
         }
     }
@@ -284,13 +297,13 @@ function Solicitacoes() {
                 .from('notificacao')
                 .insert({
                   id_instituicao: session.user.id,
-                  fk_candidato_id: session.user.id,
+                  fk_candidato_id: solicitacao.candidato.id,
                   status: "EM ANÁLISE"
                 })
         
                 if(!error) {
                     Swal.fire({
-                        icon: "success",
+                        icon: "info",
                         title: "Solicitação recusada."
                     })
                 }
@@ -304,7 +317,7 @@ function Solicitacoes() {
                 })
               }
             Swal.fire({
-                icon: "success",
+                icon: "info",
                 title: "Solicitação recusada."
             })
         } else {
@@ -319,18 +332,17 @@ function Solicitacoes() {
 
   return (
     <>
-    {fetchDone && calculoIdadeDone && fetchFotoPerfilDone && fetchCidadesDone && pesquisaDone ?
+    {fetchDone && calculoIdadeDone && fetchFotoPerfilDone && (pesquisaDone === null || pesquisaDone === true) ?
     <>
         <div className='cabecalho__candidatura'>
             <div><p>CANDIDATOS</p></div>
             <div className='flex gap-3'>
-                <select name="cidades" id="cidades" value={ formFiltro.values.cidades } onChange={(e) => {formFiltro.handleChange(e)}}>
+                {/*<select name="cidades" id="cidades" value={ formFiltro.values.cidades } onChange={(e) => {formFiltro.handleChange(e)}}>
                     <option value="">Cidade</option>
                     {cidades.map((cidade) => (
-                        <option key={cidade.cidade} >{cidade.cidade}</option>
+                        <option key={cidade} >{cidade}</option>
                     ))}
-                    <option value="São Caetano do Sul">São Caetano do Sul</option>
-                </select>
+                </select>*/}
                 <select name="status" id="status" value={ formFiltro.values.status } onChange={(e) => {formFiltro.handleChange(e)}}>
                     <option value="">Status</option>
                     <option value="APROVADO">APROVADO</option>
@@ -345,6 +357,7 @@ function Solicitacoes() {
              <>
             {candidaturas.map((solicitacao, index) => ( 
                 <>
+                {/*console.log("solicitacao", solicitacao)*/}
                 <div className='container__candidato' key={solicitacao.codsolicitacao}>
                     <div className='info_candidatura'>
                         {img[index] !== null && <img id="img_perfilONG" src={img[index]} alt="foto de perfil"  />}

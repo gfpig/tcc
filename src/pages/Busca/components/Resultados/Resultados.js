@@ -114,8 +114,11 @@ function Resultados() {
     }
 
     const FetchFotosPerfil = async () => {
+        console.log("começa fetch foto perfil")
+        console.log(imgURL)
         try {
             const imagens = [] = await Promise.all( imgURL.map(async (dado) => {
+                console.log(dado)
                 if(dado.foto === null) {
                     return null;
                 } else {
@@ -224,7 +227,9 @@ function Resultados() {
 
     const Pesquisar = async () => {
         try {
+            console.log("começa pesquisar")
             try {
+                console.log("começa pesquisar instituicao")
                 let query = supabase.from('instituicao').select('*')
                 const filtros = {
                     'codcategoria': formFiltro.values.categorias,
@@ -257,6 +262,7 @@ function Resultados() {
             }
 
             try {
+                console.log("começa pesquisar URL")
                 let query = supabase.from('instituicao').select('*')
                 const filtros = {
                     'codcategoria': formFiltro.values.categorias,
@@ -271,6 +277,8 @@ function Resultados() {
                         query = query.eq(coluna, valor);
                     }
                 });
+
+                console.log("query", query)
 
                 const { data, error } = await query;
 

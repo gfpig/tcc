@@ -16,6 +16,7 @@ function Faixa_detalhes_ONG() {
   const instituicao = location.state
 
   const [isInstituicao, setIsInstituicao] = useState(null) //variável para saber se o usuário é a instituição do perfil
+  const [isCandidato, setIsCandidato] = useState(null)
   const [sessao, setSessao] = useState()
 
   useEffect(() => {
@@ -36,6 +37,61 @@ function Faixa_detalhes_ONG() {
   }, [])
 
   const HandleClick_Candidatar = async () => {
+
+    const { data } = await supabase
+    .from("solicitacao")
+    .select("status")
+    .eq("id_instituicao", instituicao.id)
+    .eq("id_candidato", sessao.user.id)
+
+    if (data) { //se o usuário já tiver se candidatado
+      let status;
+      console.log(data)
+      data.map((solicitacao) => status = solicitacao.status)
+      if(status === "EM ANÁLISE" || status === "APROVADO") {
+        Swal.fire({
+          icon: "error",
+          title: "Você já se candidatou nessa instituição"
+        })
+      } else {
+        criaSolicitacao()
+      }
+    } else {
+      criaSolicitacao()
+      /*const resposta = window.confirm("Tem certeza que quer se candidatar?")
+
+      if(resposta) { //se a resposta for positiva, cria a solicitação
+        try { //coloca o post na tabela
+          const { error } = await supabase
+          .from('solicitacao')
+          .insert({
+            id_instituicao: instituicao.id,
+            id_candidato: sessao.user.id,
+            status: "EM ANÁLISE"
+          })
+
+          if(!error) {
+            Swal.fire({
+              icon: "success",
+              title: "Candidatura enviada!"
+            })
+          }
+        } catch (erro) {
+          let mensagem;
+          if (sessao === null) {mensagem = "Faça login antes de continuar"} else {
+            mensagem = "Um erro ocorreu"
+          }
+            console.log("Ocorreu um erro: ", erro.message);
+            Swal.fire({
+              icon: "error",
+              title: mensagem
+            })
+        }
+      }*/
+    }
+  }
+
+  const criaSolicitacao = async () => {
     const resposta = window.confirm("Tem certeza que quer se candidatar?")
 
     if(resposta) { //se a resposta for positiva, cria a solicitação

@@ -90,50 +90,13 @@ function Solicitacoes() {
 
         if (fetchDone || pesquisaDone) {
             console.log("if fetch done ou pesquisaDone")
-            //FetchUrl()
             FetchFotoPerfil()
         }
 
         if(pesquisaDone === false) {
             Pesquisar()
-            //fetchCidades()
          }
-
-         /*if(fetchURLDone === false) {
-            console.log("url done")
-            FetchUrl()
-         }*/
-    }, [fetchDone, /*fetchURLDone*/, pesquisaDone])
-
-    /*const FetchUrl = async () => {
-        console.log("começa fetch url")
-        try { //try para pegar a URL das fotos de perfil
-            const imgURLData = await Promise.all(candidaturas.map(async (solicitacao) => {
-                const { data, error } = await supabase
-                .from('candidato')
-                .select('foto')
-                .eq('id', solicitacao.id_candidato)
-
-                if (error) {
-                    console.log("erro:", error)
-                    return null
-                }
-    
-                if (data) { //coloca as urls dentro de um vetor para posteriormente pegar o link delas
-                    //console.log("data foto",data[0].foto)
-                    //setImgURL(data)
-                    return data[0].foto
-                }
-            }));
-            console.log(imgURLData)
-            setImgURL(imgURLData)
-        } catch (error) {
-            console.log("Erro capturando a foto de perfil:", error.message)
-        } finally {
-            console.log("termina fetch url")
-            setFetchURLDone(true)
-        }
-    }*/
+    }, [fetchDone, pesquisaDone])
 
     const FetchFotoPerfil = async () => {
         console.log("começa fetch foto perfil")
@@ -192,9 +155,20 @@ function Solicitacoes() {
     const Pesquisar = async () => {
         try {
             console.log("começa pesquisar")
+            const filtro = {
+                'status': formFiltro.values.status
+            }
+
             let query = supabase.from('solicitacao')
             .select('*, candidato(*)')
-            .eq('status', formFiltro.values.status)
+            //.eq('status', formFiltro.values.status)
+
+            Object.entries(filtro).forEach(([coluna, valor]) => {
+                // Checa se o valor do filtro não é vazio/nulo
+                if (valor !== '' && valor !== null) {
+                    query = query.eq(coluna, valor);
+                }
+            });
 
             console.log("query pesquisa:", query)
 
@@ -207,17 +181,22 @@ function Solicitacoes() {
 
             if (data) {
                 console.log("data1", data)
-                data.map((dado) => {
+                //data.map((dado) => {
                     console.log("data", data)
-                    console.log("dado", dado)
-                    if(data.length === 0 || dado.candidato === null) {
-                        console.log("Oi")
-                        setCandidaturas([])
-                    }else {
-                        console.log(data)
-                        setCandidaturas(data)
-                    }
-                })
+                    //console.log("dado", dado)
+                    //if(data.length === 0 || dado.candidato === null) {
+                        //console.log("Oi")
+                        //setCandidaturas([])
+                    //}else {
+                setCandidaturas(data)
+                const imgURLData = await Promise.all(data.map(async (solicitacao) => {
+                    console.log("data[0].candidato.foto", solicitacao.candidato.foto)
+                    return solicitacao.candidato.foto
+                }));
+                console.log("img url candidaturas:", imgURLData)
+                setImgURL(imgURLData)
+                    //}
+                //})
             } 
         } catch(error) {
             console.log(error);
@@ -254,18 +233,12 @@ function Solicitacoes() {
                     })
                 }
               } catch (erro) {
-                //let mensagem;
-
                 console.log("Ocorreu um erro: ", erro.message);
                 Swal.fire({
                 icon: "error",
                 title: "Ocorreu um erro"
                 })
               }
-            /*Swal.fire({
-                icon: "success",
-                title: "Solicitação aceita!"
-            })*/
         } else {
             let mensagem = "Um erro ocorreu";
             console.log(error)
@@ -277,10 +250,7 @@ function Solicitacoes() {
     }
 
     const HandleRecusar = async (solicitacao) => {
-        console.log(solicitacao)
-        console.log(solicitacao.codsolicitacao)
         const { data: { session }} = await supabase.auth.getSession();
-        //console.log("Solicitação Recusada")
         const { error } = await supabase
         .from('solicitacao')
         .update({
@@ -313,10 +283,6 @@ function Solicitacoes() {
                 title: "Ocorreu um erro"
                 })
               }
-            /*Swal.fire({
-                icon: "info",
-                title: "Solicitação recusada."
-            })*/
         } else {
             let mensagem = "Um erro ocorreu";
             console.log(error)

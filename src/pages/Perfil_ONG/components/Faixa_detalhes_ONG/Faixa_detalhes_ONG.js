@@ -48,7 +48,7 @@ function Faixa_detalhes_ONG() {
       let status;
       console.log(data)
       data.map((solicitacao) => status = solicitacao.status)
-      if(status === "EM ANÁLISE" || status === "APROVADO") {
+      if(status === "EM ANÁLISE" || status === "APROVADO" || status === "NÃO APROVADO") {
         Swal.fire({
           icon: "error",
           title: "Você já se candidatou nessa instituição"
@@ -105,9 +105,35 @@ function Faixa_detalhes_ONG() {
         })
 
         if(!error) {
+          const { data: { session }} = await supabase.auth.getSession();
+          try { //enviar notificação de aceitação para o candidato
+            const { error } = await supabase
+            .from('notificacao')
+            .insert({
+              id_instituicao: instituicao.id,
+              fk_candidato_id: session.user.id,
+              tipo_mensagem: "Solicitação"
+            })
+    
+            if(!error) {
+                Swal.fire({
+                    icon: "success",
+                    title: "Candidatura enviada!"
+                })
+            }
+          } catch (erro) {
+            console.log("Ocorreu um erro: ", erro.message);
+            Swal.fire({
+            icon: "error",
+            title: "Ocorreu um erro"
+            })
+          }
+        } else {
+          let mensagem = "Um erro ocorreu";
+          console.log(error)
           Swal.fire({
-            icon: "success",
-            title: "Candidatura enviada!"
+              icon: "error",
+              title: mensagem
           })
         }
       } catch (erro) {
@@ -115,11 +141,11 @@ function Faixa_detalhes_ONG() {
         if (sessao === null) {mensagem = "Faça login antes de continuar"} else {
           mensagem = "Um erro ocorreu"
         }
-          console.log("Ocorreu um erro: ", erro.message);
-          Swal.fire({
-            icon: "error",
-            title: mensagem
-          })
+        console.log("Ocorreu um erro: ", erro.message);
+        Swal.fire({
+          icon: "error",
+          title: mensagem
+        })
       }
     }
   }

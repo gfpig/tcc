@@ -306,7 +306,8 @@ function Resultados() {
            Pesquisar()
         }
 
-        if(fetchInstituicaoDone || !pesquisaDone) {
+        if(fetchInstituicaoDone || pesquisaDone) {
+            console.log(pesquisaDone)
             FetchFotosPerfil()
         }
     }, [pesquisaDone, fetchInstituicaoDone])

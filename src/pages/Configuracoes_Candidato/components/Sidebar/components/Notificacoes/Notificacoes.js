@@ -35,8 +35,7 @@ function Notificacoes() {
 
             let query = supabase.from('notificacao')
             .select('*, instituicao(nomeinstituicao)')
-            .eq('tipo_mensagem', ["Aceito", "Recusa"])
-            //.eq('tipo_mensagem', "Recusa")
+            .or('tipo_mensagem.eq.Aceito, tipo_mensagem.eq.Recusa')
             .eq('fk_candidato_id', session.user.id)
             .order('codnotificacao', { ascending: false })
 
@@ -72,8 +71,7 @@ function Notificacoes() {
             visualizado: true
         })
         .eq('fk_candidato_id', session.user.id)
-        .eq('tipo_mensagem', "Aceito")
-        .eq('tipo_mensagem', "Recusa")
+        .or('tipo_mensagem.eq.Aceito, tipo_mensagem.eq.Recusa')
 
         if(error) {
             console.log("Ocorreu um erro", error.message)
@@ -84,63 +82,26 @@ function Notificacoes() {
     <>
     <div className='filtros_notificacoes'>
         <button className={`${filtroAtual === 1 && "selecionado"}`} onClick={() => {
-            setFiltroAtual(1);
+            setFiltroAtual(1); setFetchDone(false)
         }}>LIDAS</button>
         <button className={`${filtroAtual === 2 && "selecionado"}`} onClick={() => {
-            setFiltroAtual(2);
+            setFiltroAtual(2); setFetchDone(false)
         }}>PENDENTES</button>
         <button className={`${filtroAtual === 0 && "selecionado"}`} onClick={() => {
-            setFiltroAtual(0);
+            setFiltroAtual(0); setFetchDone(false)
         }}>TODAS</button>
     </div>
-    <div className='container__notificacoes'>
-        {notificacoes.map((notificacao) => (
-            <div className='solicitacao'>
-                <p className='nome_candidato'>{notificacao.instituicao.nomeinstituicao}</p>
-                <p>Aceitou sua candidatura. Por favor, entre em contato com a instituição através do e-mail ou telefone informados na página de perfil</p>
-            </div>
-        ))}
-        <div className='solicitacao'>
-            <p className='nome_candidato'>Greenpeace</p>
-            <p>Aceitou sua candidatura, cheque seu e-mail para mais informações</p>
+    {notificacoes.length === 0 ? <center>Não há notificações</center> :
+        <div className='container__notificacoes'>
+            {notificacoes.map((notificacao) => (
+                <div className='solicitacao' key={notificacao.codnotificacao}>
+                    <p className='nome_candidato'>{notificacao.instituicao.nomeinstituicao}</p>
+                    {notificacao.tipo_mensagem === "Aceito" && <p>Aceitou sua candidatura. Por favor, entre em contato com a instituição através do e-mail ou telefone informados na página de perfil</p>}
+                    {notificacao.tipo_mensagem === "Recusa" && <p>Não aceitou sua candidatura</p>}
+                </div>
+            ))}
         </div>
-        <div className='solicitacao'>
-            <p className='nome_candidato'>ABC Aprendiz</p>
-            <p>Não aprovou sua candidatura.</p>
-        </div>
-        <div className='solicitacao'>
-            <p className='nome_candidato'>Greenpeace</p>
-            <p>Aceitou sua candidatura, cheque seu e-mail para mais informações</p>
-        </div>
-        <div className='solicitacao'>
-            <p className='nome_candidato'>ABC Aprendiz</p>
-            <p>Não aprovou sua candidatura.</p>
-        </div>
-        <div className='solicitacao'>
-            <p className='nome_candidato'>Greenpeace</p>
-            <p>Aceitou sua candidatura, cheque seu e-mail para mais informações</p>
-        </div>
-        <div className='solicitacao'>
-            <p className='nome_candidato'>ABC Aprendiz</p>
-            <p>Não aprovou sua candidatura.</p>
-        </div>
-        <div className='solicitacao'>
-            <p className='nome_candidato'>Greenpeace</p>
-            <p>Aceitou sua candidatura, cheque seu e-mail para mais informações</p>
-        </div>
-        <div className='solicitacao'>
-            <p className='nome_candidato'>ABC Aprendiz</p>
-            <p>Não aprovou sua candidatura.</p>
-        </div>
-        <div className='solicitacao'>
-            <p className='nome_candidato'>Greenpeace</p>
-            <p>Aceitou sua candidatura, cheque seu e-mail para mais informações</p>
-        </div>
-        <div className='solicitacao'>
-            <p className='nome_candidato'>ABC Aprendiz</p>
-            <p>Não aprovou sua candidatura.</p>
-        </div>
-    </div>
+    }
     </>
   )
 }

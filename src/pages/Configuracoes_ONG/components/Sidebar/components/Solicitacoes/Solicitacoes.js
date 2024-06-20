@@ -42,7 +42,6 @@ function Solicitacoes() {
     //Vetor que vai armazenar os filtros
     const formFiltro = CreateForm({
         initialValues: {
-            cidades: '',
             status: ''
         }
     });
@@ -140,6 +139,8 @@ function Solicitacoes() {
     }, [candidaturas, datanasc]);
 
     const Pesquisar = async () => {
+        const { data: { session }} = await supabase.auth.getSession();
+
         try {
             const filtro = {
                 'status': formFiltro.values.status
@@ -147,6 +148,7 @@ function Solicitacoes() {
 
             let query = supabase.from('solicitacao')
             .select('*, candidato(*)')
+            .eq('id_instituicao', session.user.id);
 
             Object.entries(filtro).forEach(([coluna, valor]) => {
                 // Checa se o valor do filtro não é vazio/nulo

@@ -48,12 +48,9 @@ function Notificacoes() {
 
             const { data } = await query
 
-            console.log(query)
 
             if (data) {
-                console.log("data", data)
                 setNotificacoes(data)
-
                 Visualizado()
             }
         } catch (erro) {

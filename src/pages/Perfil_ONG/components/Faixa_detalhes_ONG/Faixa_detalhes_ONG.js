@@ -58,36 +58,6 @@ function Faixa_detalhes_ONG() {
       }
     } else {
       criaSolicitacao()
-      /*const resposta = window.confirm("Tem certeza que quer se candidatar?")
-
-      if(resposta) { //se a resposta for positiva, cria a solicitação
-        try { //coloca o post na tabela
-          const { error } = await supabase
-          .from('solicitacao')
-          .insert({
-            id_instituicao: instituicao.id,
-            id_candidato: sessao.user.id,
-            status: "EM ANÁLISE"
-          })
-
-          if(!error) {
-            Swal.fire({
-              icon: "success",
-              title: "Candidatura enviada!"
-            })
-          }
-        } catch (erro) {
-          let mensagem;
-          if (sessao === null) {mensagem = "Faça login antes de continuar"} else {
-            mensagem = "Um erro ocorreu"
-          }
-            console.log("Ocorreu um erro: ", erro.message);
-            Swal.fire({
-              icon: "error",
-              title: mensagem
-            })
-        }
-      }*/
     }
   }
 

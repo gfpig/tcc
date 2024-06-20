@@ -19,12 +19,14 @@ function CreateUser (valoresDoLogin) {
   return {
       values, 
       handleChange: (evento) => {
-          const value = evento.target.value;
-          const name = evento.target.name;
-          setValues ({
-              ...values,
-              [name]: value,
-          });
+        clearErrors('PostVazio');
+        document.getElementById("alerta_post").style.display = "none";
+        const value = evento.target.value;
+        const name = evento.target.name;
+        setValues ({
+            ...values,
+            [name]: value,
+        });
       },
 
       clearForm: () => {
@@ -62,6 +64,9 @@ function Timeline() {
   const [fetchImgDone, setFetchImgDone] = useState(false)
   const [isInstituicao, setIsInstituicao] = useState(null) //variável para saber se o usuário é a instituição do perfil
   const [file, setFile] = useState(null); //armazena a foto do post (para colocar no banco)
+  //const {clearErrors} = useForm();
+  const {setError, formState} = useForm();
+  const { errors } = formState;
 
   const inputRef = useRef(null); //referência para o file input da imagem
 
@@ -137,6 +142,7 @@ function Timeline() {
         const {data, error} = await supabase
         .from('postagem_instituicao')
         .select('imagem')
+        .eq('id_instituicao', instituicao.id)
         .order('codpostagem', { ascending: false })
 
         if (error) {
@@ -191,6 +197,12 @@ function Timeline() {
   }
 
   const insertPost = async () => {
+    if (formPost.values.descricao === "") {
+      setError('PostVazio', { message: "É necessário escrever algo para postar" });
+      document.getElementById("alerta_post").style.display = "block";
+      return;
+    }
+
     try { //coloca o post na tabela
       console.log(imgPost)
       
@@ -233,6 +245,7 @@ function Timeline() {
           <form className='form_post' onSubmit={HandleSubmit}>
             <div className='funcoes_postar'>
               <textarea className='digitar_post' name="descricao" value={ formPost.values.descricao } placeholder="Digite seu post" onChange={ formPost.handleChange } />
+              {errors && <div className="text-red-600 mt-0 mb-2" id="alerta_post" style={{display: "none"}}>{errors.PostVazio?.message}</div>}{}
               {imgFront && <div className='flex justify-center h-1/3 w-1/3 self-center flex-row-reverse'>
                 <button className='self-start' onClick={limpaImgFront}>x</button>
                 <img src={imgFront} alt="foto selecionada" className='self-center mt-4' />

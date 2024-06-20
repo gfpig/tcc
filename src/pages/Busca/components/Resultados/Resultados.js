@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import './resultados.css';
 import './filtros.css'
+import { useLocation } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHandHoldingHeart } from '@fortawesome/free-solid-svg-icons';
 import { createClient } from "@supabase/supabase-js";
@@ -27,6 +28,10 @@ function CreateForm (valoresDoForm) {
 }
 
 function Resultados() {
+    //recebe os valores da busca por texto
+    const location = useLocation();
+    const busca = location.state
+
     const [instituicoes, setInstituicoes] = useState(null);
     const [cidades, setCidades] = useState(null);
     const [estados, setEstados] = useState(null);
@@ -58,22 +63,29 @@ function Resultados() {
         try {
             try {
                 setFetchInstituicaoDone(false)
-                let query = supabase.from('instituicao').select('*')
+                let query = supabase.from('instituicao').select('*, categoria(nomecategoria)')
                 const filtros = {
                     'codcategoria': formFiltro.values.categorias,
                     'cidade': formFiltro.values.cidade,
                     'uf': formFiltro.values.estado,
-                    'bairro': formFiltro.values.bairro
+                    'bairro': formFiltro.values.bairro,
+                    'nomeinstituicao': busca
                 }
 
                 Object.entries(filtros).forEach(([coluna, valor]) => {
                     // Checa se o valor do filtro não é vazio/nulo
                     if (valor !== '' && valor !== null) {
-                        query = query.eq(coluna, valor);
+                        if (coluna === "nomeinstituicao") {
+                            query = query.textSearch(coluna, valor)
+                        } else {
+                            query = query.eq(coluna, valor);
+                        }
                     }
                 });
 
                 const { data, error } = await query;
+
+                console.log(data)
 
                 if (error) {
                     setFetchError("Não foi possível recuperar as informações")
@@ -90,9 +102,27 @@ function Resultados() {
             }
 
             try {
-                const {data, error} = await supabase
-                .from('instituicao')
-                .select('foto')
+                let query = supabase.from('instituicao').select('*')
+                const filtros = {
+                    'codcategoria': formFiltro.values.categorias,
+                    'cidade': formFiltro.values.cidade,
+                    'uf': formFiltro.values.estado,
+                    'bairro': formFiltro.values.bairro,
+                    'nomeinstituicao': busca
+                }
+
+                Object.entries(filtros).forEach(([coluna, valor]) => {
+                    // Checa se o valor do filtro não é vazio/nulo
+                    if (valor !== '' && valor !== null) {
+                        if (coluna === "nomeinstituicao") {
+                            query = query.textSearch(coluna, valor)
+                        } else {
+                            query = query.eq(coluna, valor);
+                        }
+                    }
+                });
+
+                const { data, error } = await query;
 
                 if (error) {
                     setFetchError("Não foi possível recuperar as informações")
@@ -114,11 +144,8 @@ function Resultados() {
     }
 
     const FetchFotosPerfil = async () => {
-        console.log("começa fetch foto perfil")
-        console.log(imgURL)
         try {
             const imagens = [] = await Promise.all( imgURL.map(async (dado) => {
-                console.log(dado)
                 if(dado.foto === null) {
                     return null;
                 } else {
@@ -223,14 +250,12 @@ function Resultados() {
         }
         fetchBairros()
 
-    }, [])
+    }, [fetchInstituicaoDone])
 
     const Pesquisar = async () => {
         try {
-            console.log("começa pesquisar")
             try {
-                console.log("começa pesquisar instituicao")
-                let query = supabase.from('instituicao').select('*')
+                let query = supabase.from('instituicao').select('*, categoria(nomecategoria)')
                 const filtros = {
                     'codcategoria': formFiltro.values.categorias,
                     'cidade': formFiltro.values.cidade,
@@ -262,7 +287,6 @@ function Resultados() {
             }
 
             try {
-                console.log("começa pesquisar URL")
                 let query = supabase.from('instituicao').select('*')
                 const filtros = {
                     'codcategoria': formFiltro.values.categorias,
@@ -301,13 +325,17 @@ function Resultados() {
         }
     }
 
+    useEffect(() => {
+        console.log("oi")
+        setFetchInstituicaoDone(false)
+    }, [busca])
+
     useEffect (() => {
         if(!pesquisaDone) {
            Pesquisar()
         }
 
         if(fetchInstituicaoDone || pesquisaDone) {
-            console.log(pesquisaDone)
             FetchFotosPerfil()
         }
     }, [pesquisaDone, fetchInstituicaoDone])
@@ -316,7 +344,6 @@ function Resultados() {
     <>
     { fetchInstituicaoDone && fetchFiltrosDone && fetchFotoDone ?
     <>
-    {console.log(instituicoes)}
     <div className='barra_filtros'>
         <select name="estado" id="estados" value={ formFiltro.values.estado } onChange={(e) => {formFiltro.handleChange(e)}}>
             <option value="">Estado</option>
@@ -354,7 +381,7 @@ function Resultados() {
                     <div className='container__dadosResultado'>
                         <span>
                             <p className='nome_ong'>{instituicao.nomeinstituicao}</p>
-                            <p>{instituicao.descricao}</p>
+                            <p title={instituicao.descricao}>{instituicao.descricao.length <= 400 ? instituicao.descricao : instituicao.descricao.slice(0, 400)+'...'}</p>
                         </span>
 
                         <div className='opcoes_resultado'>

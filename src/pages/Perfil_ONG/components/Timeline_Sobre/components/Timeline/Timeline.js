@@ -25,7 +25,6 @@ function CreateUser (valoresDoLogin) {
               ...values,
               [name]: value,
           });
-          console.log("name:", name, "\nvalue: ", value);
       },
 
       clearForm: () => {

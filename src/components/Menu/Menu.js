@@ -12,7 +12,39 @@ const PROJECT_URL = "https://xljeosvrbsygpekwclan.supabase.co";
 const PUBLIC_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhsamVvc3ZyYnN5Z3Bla3djbGFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTQ1MTY1NzAsImV4cCI6MjAzMDA5MjU3MH0.InFDrSOcPxRe4LXMBJ4dT59bBb3LSpKw063S90E3uPo"
 const supabase = createClient(PROJECT_URL, PUBLIC_KEY);
 
+function CreateUser (valoresDoLogin) {
+    const [values, setValues] = React.useState(valoresDoLogin.initialValues);
+  
+    return {
+        values, 
+        handleChange: (evento) => {
+            const value = evento.target.value;
+            const name = evento.target.name;
+            setValues ({
+                ...values,
+                [name]: value,
+            });
+            console.log("name:", name, "\nvalue: ", value);
+        },
+  
+        clearForm: () => {
+          setValues({
+            id_instituicao: "",
+            descricao: "",
+            data: "",
+            imagem: ""
+        });
+        }
+    };
+}
+
 const Menu = () => {
+    const formBusca = CreateUser({
+        initialValues: {
+          busca: "",
+        }
+    });
+
     const [imgPerfil, setImgPerfil] = useState(null);
     const [fetchError, setFetchError] = useState(null);
     const [instituicao, setInstituicao] = useState(null)
@@ -110,8 +142,8 @@ const Menu = () => {
                     <a href="/"><img src={logotipo_roxo} alt="logotipo" /></a>
                 </div>
                 <div className='search_bar'>   
-                    <input id="search-input" type="text" maxLength="800" placeholder="Digite o nome da ONG" />
-                    <a className='busca' href="resultado"><FontAwesomeIcon icon={ faMagnifyingGlass } size="lg" color='white' /></a>
+                    <input id="search-input" type="text" name="busca" value={ formBusca.values.busca } maxLength="800" placeholder="Digite o nome da ONG" onChange={ formBusca.handleChange }  />
+                    <a className='busca' onClick={() => navigate('/resultado', { state: formBusca.values.busca })}><FontAwesomeIcon icon={ faMagnifyingGlass } size="lg" color='white' /></a>
                 </div>
                 <div className='container__login'>
                     {session ? ( //existe sessão? Se sim:

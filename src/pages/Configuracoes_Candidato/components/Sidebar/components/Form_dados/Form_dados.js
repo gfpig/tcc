@@ -22,7 +22,6 @@ function CreateCandidato (valoresDoForm) {
                 ...values,
                 [name]: value,
             });
-            console.log("name", name, "\nvalue", value)
         }
     };
 }

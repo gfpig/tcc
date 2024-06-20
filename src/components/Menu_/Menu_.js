@@ -3,7 +3,7 @@ import './menu_.css';
 import { createClient } from "@supabase/supabase-js";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome' ;
 import { faHandHoldingHeart, faUserCircle, faUser, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
-//import logotipo from '../../assets/other/logotipo_temporario.png';
+import { useNavigate } from 'react-router-dom';
 import logotipo_roxo from '../../assets/other/logotipo_roxo.png';
 import logotipo_gelo from '../../assets/other/logotipo_gelo.png';
 import logotipo_transparente from '../../assets/other/logotipo_transparente.png';
@@ -15,7 +15,10 @@ const supabase = createClient(PROJECT_URL, PUBLIC_KEY);
 const Menu = () => {
     const [imgPerfil, setImgPerfil] = useState(null);
     const [fetchError, setFetchError] = useState(null);
+    const [instituicao, setInstituicao] = useState(null)
     const [session, setSession] = useState(null);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         let imgURL;
@@ -84,6 +87,16 @@ const Menu = () => {
         const verificaSessao = async () => { //pegando a sessão e colocando numa variável
             const { data: { session }} = await supabase.auth.getSession();
             setSession(session);
+
+            if (session && session.user.user_metadata.cpf === undefined) {
+                const { data } = await supabase
+                .from('instituicao')
+                .select('*')
+                .eq('id', session.user.id)
+
+                data.map((instituicao) => setInstituicao(instituicao))
+            }
+
             fetchFotoPerfil();
         }
         verificaSessao()
@@ -104,9 +117,9 @@ const Menu = () => {
                     {session ? ( //existe sessão? Se sim:
                             session.user.user_metadata.cpf === undefined ? (
                                 imgPerfil ? ( //existe imgPerfil? Se sim:
-                                    <button id="botao-user" className="botaoUser"><a href="/Configuracoes_ONG"><img src={imgPerfil} className='h-9 w-9 rounded-full' /></a></button>
+                                    <button id="botao-user" className="botaoUser" onClick={() => navigate('/perfil_instituicao', { state:  instituicao })}><img src={imgPerfil} className='h-9 w-9 rounded-full' /></button>
                                 ) : ( //se não existir imgPerfil:
-                                    <button id="botao-user" className="botaoUser"><a href="/Configuracoes_ONG"><div className="overflow-clip bg-white h-9 w-9 rounded-full"><FontAwesomeIcon icon={ faHandHoldingHeart } size='2x' color='#e87f45' id='img_none' /></div></a></button>
+                                    <button id="botao-user" className="botaoUser" onClick={() => navigate('/perfil_instituicao', { state:  instituicao })}><div className="overflow-clip bg-white h-9 w-9 rounded-full"><FontAwesomeIcon icon={ faHandHoldingHeart } size='2x' color='#e87f45' id='img_none' /></div></button>
                                 )
                             ) : 
                                 imgPerfil ? ( //existe imgPerfil? Se sim:

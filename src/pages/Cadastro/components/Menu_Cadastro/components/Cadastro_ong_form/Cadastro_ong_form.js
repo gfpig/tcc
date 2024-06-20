@@ -24,7 +24,6 @@ function CreateInstituicao (valoresDoForm) {
                 ...values,
                 [name]: value,
             });
-            //console.log("name:", name, "\nvalue:", value);
         },
 
         clearForm () {
@@ -110,7 +109,6 @@ function Cadastro_ong_form() {
         logradouro: yup.string().required("É necessário preencher este campo"),
         cidade: yup.string().required("É necessário preencher este campo"),
         uf: yup.string().required("É necessário preencher este campo"),
-        //complemento: yup.string(),
         numero: yup.string().required("É necessário informar o número do logradouro"),
         telefone: yup.string().required("É necessário informar seu telefone")
     })
@@ -151,7 +149,7 @@ function Cadastro_ong_form() {
     //Procura os dados do CEP de acordo com o que foi informado no input
     const pesquisaCEP = (e) => {
         const cep = e.target.value.replace(/\D/g, ''); //substitui todos os caracteres que não são números por nulo
-        //console.log(cep);
+        console.log(cep);
         fetch(`https://viacep.com.br/ws/${cep}/json/`)
         .then(res => {
             return res.json();

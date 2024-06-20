@@ -10,7 +10,7 @@ function Perfil_ONG () {
   const location = useLocation();
   console.log(location)
   const instituicao = location.state
-  console.log(instituicao)
+  console.log(Object(instituicao))
   document.title = instituicao.nomeinstituicao
 
   return (

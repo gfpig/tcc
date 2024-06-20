@@ -37,8 +37,6 @@ function Solicitacoes() {
 
     const [fetchDone, setFetchDone] = useState(false)
     const [pesquisaDone, setPesquisaDone] = useState(null)
-    //const [fetchURLDone, setFetchURLDone] = useState(null)
-    //const [fetchCidadesDone, setFetchCidadesDone] = useState(false)
     const [fetchFotoPerfilDone, setFetchFotoPerfilDone] = useState(false)
     const [calculoIdadeDone, setCalculoIdadeDone] = useState(false)
 
@@ -52,7 +50,6 @@ function Solicitacoes() {
 
     useEffect (() => {
         const FetchCandidaturas = async () => {
-            console.log("começa fetch candidaturas")
             const { data: { session }} = await supabase.auth.getSession();
 
             try { //try para pegar as candidaturas               
@@ -66,15 +63,11 @@ function Solicitacoes() {
                     setCandidaturas([])
                 }
           
-                if (data) {
-                    console.log("data fetch candidaturas", Object.keys(data))
-                    
+                if (data) {                    
                     setCandidaturas(data)
                     const imgURLData = await Promise.all(data.map(async (solicitacao) => {
-                        console.log("data[0].candidato.foto", solicitacao.candidato.foto)
                         return solicitacao.candidato.foto
                     }));
-                    console.log("img url candidaturas:", imgURLData)
                     setImgURL(imgURLData)
                 }
             } catch (erro) {
@@ -89,7 +82,6 @@ function Solicitacoes() {
         }
 
         if (fetchDone || pesquisaDone) {
-            console.log("if fetch done ou pesquisaDone")
             FetchFotoPerfil()
         }
 
@@ -99,11 +91,8 @@ function Solicitacoes() {
     }, [fetchDone, pesquisaDone])
 
     const FetchFotoPerfil = async () => {
-        console.log("começa fetch foto perfil")
-        console.log(imgURL)
         try {
             const imagens = [] = await Promise.all( imgURL.map(async (dado) => { 
-                console.log("dado.foto", dado)
                 if(dado === null) {
                     return null;
                 } else {
@@ -118,20 +107,20 @@ function Solicitacoes() {
                     }
                 }
             }));
-            console.log("imagens:", imagens)
             setImg(imagens)
         } catch (error) {
             console.log(error.message)
         } finally {
-            console.log("termina fetch foto perfil")
             setFetchFotoPerfilDone(true)
         }
     }
 
     useEffect(() => { //useEffect para calcular a idade do candidato
-        const CalculaIdade = () => {
+        const CalculaIdade = (index) => {
+            //console.log(new Date("1988-10-13"))
             const hoje = new Date();
-            const birthdateDate = new Date(datanasc);
+            const birthdateDate = new Date(datanasc[index]);
+            //console.log(birthdateDate)
             let age = hoje.getFullYear() - birthdateDate.getFullYear();
             const monthDiff = hoje.getMonth() - birthdateDate.getMonth();
 
@@ -139,29 +128,35 @@ function Solicitacoes() {
             age--;
             }
 
-            setIdade(age);
-            setCalculoIdadeDone(true);
+            idade[index] = age;
+            console.log(index)
+            console.log(candidaturas.length)
+            if (index === candidaturas.length - 1) {
+                setCalculoIdadeDone(true);
+            }
         }
 
         if (candidaturas.length > 0) { //coloca as idades no vetor de data de nascimento
             for (let i = 0; i < candidaturas.length; i++) {
-                setDatanasc(candidaturas[i].candidato.datanascimento);
+                //console.log(candidaturas[i].candidato.datanascimento)
+                datanasc[i] = candidaturas[i].candidato.datanascimento
+                CalculaIdade(i);
             }
+            //console.log(datanasc)
+            //CalculaIdade();
         }
 
-        CalculaIdade();
+        //CalculaIdade();
     }, [candidaturas, datanasc]);
 
     const Pesquisar = async () => {
         try {
-            console.log("começa pesquisar")
             const filtro = {
                 'status': formFiltro.values.status
             }
 
             let query = supabase.from('solicitacao')
             .select('*, candidato(*)')
-            //.eq('status', formFiltro.values.status)
 
             Object.entries(filtro).forEach(([coluna, valor]) => {
                 // Checa se o valor do filtro não é vazio/nulo
@@ -169,8 +164,6 @@ function Solicitacoes() {
                     query = query.eq(coluna, valor);
                 }
             });
-
-            console.log("query pesquisa:", query)
 
             const { data, error } = await query;
 
@@ -180,28 +173,15 @@ function Solicitacoes() {
             }
 
             if (data) {
-                console.log("data1", data)
-                //data.map((dado) => {
-                    console.log("data", data)
-                    //console.log("dado", dado)
-                    //if(data.length === 0 || dado.candidato === null) {
-                        //console.log("Oi")
-                        //setCandidaturas([])
-                    //}else {
                 setCandidaturas(data)
                 const imgURLData = await Promise.all(data.map(async (solicitacao) => {
-                    console.log("data[0].candidato.foto", solicitacao.candidato.foto)
                     return solicitacao.candidato.foto
                 }));
-                console.log("img url candidaturas:", imgURLData)
                 setImgURL(imgURLData)
-                    //}
-                //})
             } 
         } catch(error) {
             console.log(error);
         } finally {
-            console.log("pesquisa done true")
             setPesquisaDone(true)
         }
     }
@@ -275,12 +255,10 @@ function Solicitacoes() {
                     })
                 }
               } catch (erro) {
-                ;;let mensagem;
-
-                console.log("Ocorreu um erro: ", erro.message);
-                Swal.fire({
-                icon: "error",
-                title: "Ocorreu um erro"
+                    console.log("Ocorreu um erro: ", erro.message);
+                    Swal.fire({
+                    icon: "error",
+                    title: "Ocorreu um erro"
                 })
               }
         } else {
@@ -297,6 +275,7 @@ function Solicitacoes() {
     <>
     {fetchDone && calculoIdadeDone && fetchFotoPerfilDone && (pesquisaDone === null || pesquisaDone === true) ?
     <>
+    {console.log(idade)}
         <div className='cabecalho__candidatura'>
             <div><p>CANDIDATOS</p></div>
             <div className='flex gap-3'>
@@ -322,7 +301,7 @@ function Solicitacoes() {
                             <span>
                                 <p className='nome_candidato'>{solicitacao.candidato.nomecandidato}</p>
                                 <p>Gênero: {solicitacao.candidato.genero}</p>
-                                <p>Idade: {idade}</p>
+                                <p>Idade: {idade[index]}</p>
                                 <p>Cidade: {solicitacao.candidato.cidade}</p>
                                 <p>E-mail: {solicitacao.candidato.emailcandidato}</p>
                                 <p>Telefone: {solicitacao.candidato.telefone}</p>

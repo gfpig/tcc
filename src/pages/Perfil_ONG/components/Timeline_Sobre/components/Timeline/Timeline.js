@@ -74,14 +74,12 @@ function Timeline() {
     const novaFoto = e.target.files[0];
     setFile(novaFoto);
     setImgFront(URL.createObjectURL(novaFoto));
-    console.log("file",file)
   };
 
   const limpaImgFront = () => {
     setImgFront(undefined)
     setFile(null)
     inputRef.current.value = null;
-    console.log("file",file)
   }
 
   useEffect(() => {
@@ -125,7 +123,6 @@ function Timeline() {
         }
   
         if (data) {
-          console.log(data)
           setPosts(data)
           for (let i = 0; i < data.length; i++) {
             codigo_post = data[i].codpostagem
@@ -203,9 +200,7 @@ function Timeline() {
       return;
     }
 
-    try { //coloca o post na tabela
-      console.log(imgPost)
-      
+    try { //coloca o post na tabela     
       const { error } = await supabase
       .from('postagem_instituicao')
       .insert({
@@ -214,7 +209,6 @@ function Timeline() {
         data: formPost.values.data,
         imagem: imgPost
       })
-      console.log(formPost.values)
       if(!error) { formPost.clearForm(); limpaImgFront() }
 
     } catch (erro) { //se não estão, cria um novo erro para ser exibido ao usuário
@@ -239,7 +233,6 @@ function Timeline() {
     <>  
     {fetchDone && fetchImgDone && isInstituicao !== null ? 
     <>
-    {console.log("file",file)}
     <div className="flex flex-col ml-3 mr-3 md:ml-0 md:mr-0 items-center self-center w-full xl:w-2/3 md:w-2/3">
       {isInstituicao ? (
           <form className='form_post' onSubmit={HandleSubmit}>
@@ -264,7 +257,7 @@ function Timeline() {
       {/*<Posts/>*/}
       {posts.length !== 0 ? 
         posts.map((post, index) => (
-          <div className='post'>
+          <div className='post' key={post.codpostagem}>
             <div className='cabecalho_post'>
                 <div className='foto_cabecalho'>
                     <img src={fotoPerfil} alt="foto de perfil da instituição" />

@@ -16,13 +16,9 @@
 }
 
 .foto img {
-    @apply max-h-24 max-w-24 rounded-full self-center;
+    @apply h-24 w-24 rounded-full self-center;
 }
 
 .foto h3 {
     @apply text-zinc-100;
-}
-
-.container_devs img {
-    @apply max-h-24 max-w-24 rounded-full self-center;
 }

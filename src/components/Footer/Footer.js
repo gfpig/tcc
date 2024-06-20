@@ -3,7 +3,7 @@ import './footer.css';
 import ana from '../../assets/devs/ana_giulia.jpg';
 import antonio from '../../assets/devs/antonio.jpg';
 import flavia from '../../assets/devs/flavia.jpg';
-import gabrielle from '../../assets/devs/gabi.jpg';
+import gabrielle from '../../assets/devs/gabrielle.jpg';
 
 const Footer = () => {
     return (

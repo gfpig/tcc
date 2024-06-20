@@ -8,9 +8,8 @@ import Timeline_Sobre from './components/Timeline_Sobre/Timeline_Sobre'
 
 function Perfil_ONG () {
   const location = useLocation();
-  console.log(location)
   const instituicao = location.state
-  console.log(Object(instituicao))
+
   document.title = instituicao.nomeinstituicao
 
   return (

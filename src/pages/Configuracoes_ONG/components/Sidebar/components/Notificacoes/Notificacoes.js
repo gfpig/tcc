@@ -33,7 +33,7 @@ function Notificacoes() {
 
             let query = supabase.from('notificacao')
             .select('*, candidato(nomecandidato)')
-            .eq('tipo_mensagem', "Solicitação")
+            .or('tipo_mensagem.eq.Solicitação, tipo_mensagem.eq.Cancelado')
             .eq('id_instituicao', session.user.id)
             .order('codnotificacao', { ascending: false })
 
@@ -65,7 +65,7 @@ function Notificacoes() {
             visualizado: true
         })
         .eq('id_instituicao', session.user.id)
-        .eq('tipo_mensagem', 'Solicitação')
+        .or('tipo_mensagem.eq.Solicitação, tipo_mensagem.eq.Cancelado')
 
         if(error) {
             console.log("Ocorreu um erro", error.message)
@@ -93,7 +93,8 @@ function Notificacoes() {
                 <>
                 <div className='solicitacao'>
                     <p className='nome_candidato'>{notificacao.candidato.nomecandidato}</p>
-                    <p>Candidatou-se a uma vaga na sua organização, acesse a tela de solicitações para ver mais informações e DECIDIR SE O CANDIDATO ATENDE OS REQUISITOS.</p>
+                    {notificacao.tipo_mensagem === "Solicitação" && <p>Candidatou-se a uma vaga na sua organização, acesse a tela de solicitações para ver mais informações sobre o candidato.</p>}
+                    {notificacao.tipo_mensagem === "Cancelado" && <p>Cancelou sua candidatura</p>}
                 </div>
                 </>
             ))}

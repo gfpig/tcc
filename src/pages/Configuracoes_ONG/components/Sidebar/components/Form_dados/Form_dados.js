@@ -405,7 +405,6 @@ function Form_dados() {
                             <div>
                             <p>Categoria:</p>
                                 <select name="categorias" id="categorias" value={ formUpdateInstituicao.values.categorias }>
-                                    <option value="">Categoria</option>
                                     {categorias.map((categoria) => (
                                         <option key={categoria.codcategoria} value={categoria.codcategoria} onChange={formUpdateInstituicao.handleChange}>{categoria.nomecategoria}</option>
                                     ))}

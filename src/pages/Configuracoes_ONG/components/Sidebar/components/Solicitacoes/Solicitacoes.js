@@ -61,7 +61,8 @@ function Solicitacoes() {
                     setCandidaturas([])
                 }
           
-                if (data) {                    
+                if (data) {   
+                    console.log(data)                 
                     setCandidaturas(data)
                     const imgURLData = await Promise.all(data.map(async (solicitacao) => {
                         return solicitacao.candidato.foto
@@ -89,6 +90,7 @@ function Solicitacoes() {
     }, [fetchDone, pesquisaDone])
 
     const FetchFotoPerfil = async () => {
+
         try {
             const imagens = [] = await Promise.all( imgURL.map(async (dado) => { 
                 if(dado === null) {
@@ -115,6 +117,7 @@ function Solicitacoes() {
 
     useEffect(() => { //useEffect para calcular a idade do candidato
         const CalculaIdade = (index) => {
+            //console.log("oi")
             const hoje = new Date();
             const birthdateDate = new Date(datanasc[index]);
             let age = hoje.getFullYear() - birthdateDate.getFullYear();
@@ -131,10 +134,13 @@ function Solicitacoes() {
         }
 
         if (candidaturas.length > 0) { //coloca as idades no vetor de data de nascimento
+            //console.log("oi")
             for (let i = 0; i < candidaturas.length; i++) {
                 datanasc[i] = candidaturas[i].candidato.datanascimento
                 CalculaIdade(i);
             }
+        } else {
+            setCalculoIdadeDone(true)
         }
     }, [candidaturas, datanasc]);
 

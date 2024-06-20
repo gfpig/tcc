@@ -50,13 +50,15 @@ function Solicitacoes() {
             try { //try para pegar as candidaturas               
                 const { data, error } = await supabase
                 .from('solicitacao')
-                .select(`*, instituicao(*)`)
+                .select(`*, instituicao(*, categoria(nomecategoria))`)
                 .eq('id_candidato', session.user.id);
 
                 if (error) {
                     console.log(error)
                     setCandidaturas([])
                 }
+
+                console.log(data)
           
                 if (data) {                    
                     setCandidaturas(data)
@@ -119,7 +121,7 @@ function Solicitacoes() {
             }
 
             let query = supabase.from('solicitacao')
-            .select('*, instituicao(*)')
+            .select('*, instituicao(*, categoria(nomecategoria))')
             .eq('id_candidato', session.user.id);
 
             Object.entries(filtro).forEach(([coluna, valor]) => {
@@ -150,6 +152,40 @@ function Solicitacoes() {
         }
     }
 
+    const HandleCancelar = async (solicitacao) => {
+        const { data: { session }} = await supabase.auth.getSession();
+        
+        const { error } = await supabase
+        .from('solicitacao')
+        .delete()
+        .eq('codsolicitacao', solicitacao.codsolicitacao)
+
+        if (!error) {
+            try { //enviar notificação de cancelamento para a instituição
+                const { error } = await supabase
+                .from('notificacao')
+                .insert({
+                    id_instituicao: solicitacao.instituicao.id,
+                    fk_candidato_id: session.user.id,
+                    tipo_mensagem: "Cancelado"
+                })
+        
+                if(!error) {
+                    Swal.fire({
+                        icon: "info",
+                        title: "Solicitação cancelada"
+                    })
+                }
+            } catch (erro) {
+                console.log("Ocorreu um erro: ", erro.message);
+                Swal.fire({
+                icon: "error",
+                title: "Ocorreu um erro"
+            })
+            }
+        }
+    }
+
   return (
     <>
     {fetchDone && fetchFotoPerfilDone && (pesquisaDone === null || pesquisaDone === true) ?
@@ -177,7 +213,7 @@ function Solicitacoes() {
                     <div className='container__dadosCandidato'>
                         <span>
                             <p className='nome_candidato'>{solicitacao.instituicao.nomeinstituicao}</p>
-                            <p>Categoria: Profissionalizante</p>
+                            <p>Categoria: {solicitacao.instituicao.categoria.nomecategoria}</p>
                             <p>E-mail: {solicitacao.instituicao.emailinstituicao}</p>
                             <p>Telefone: {solicitacao.instituicao.telefone}</p>
                             <p>Cidade: {solicitacao.instituicao.cidade}, {solicitacao.instituicao.uf}</p>
@@ -185,7 +221,7 @@ function Solicitacoes() {
                         </span>
                     </div>     
                 </div>
-                <div className='status_candaditura'>
+                {/*<div className='status_candaditura'>
                     <div className='status'
                         style={
                             solicitacao.status === "EM ANÁLISE" ? {color:"#e87f45"} :
@@ -194,8 +230,32 @@ function Solicitacoes() {
                         }>
                         <FontAwesomeIcon icon={ faCircle } />
                         <span>{solicitacao.status}</span>
+                        <div>
+                            <button onClick={() => {HandleCancelar(solicitacao)}} style={{backgroundColor:"#E84645"}}>CANCELAR</button>
+                        </div>
                     </div>
-                </div>
+                </div>*/}
+                <div className='status_candaditura'>
+                        <div className='status'
+                            style={
+                                solicitacao.status === "EM ANÁLISE" ? {color:"#e87f45"} :
+                                solicitacao.status === "APROVADO" ? {color:"#8fcd82"} :
+                                solicitacao.status === "NÃO APROVADO" ? {color:"#E84645"} : {}
+                            }>
+
+                        <FontAwesomeIcon icon={ faCircle } />
+                        <span>{solicitacao.status}</span>
+
+                        </div>
+                        <div className='flex gap-2'>
+                            {solicitacao.status === "APROVADO" ? null : solicitacao.status === "NÃO APROVADO" ? null :
+                                solicitacao.status === "EM ANÁLISE" ?
+                                <>
+                                <button onClick={() => {HandleCancelar(solicitacao)}} style={{backgroundColor:"#E84645"}}>CANCELAR</button>
+                                </>
+                            : {}}
+                        </div>
+                    </div>
             </div>
         ))}
         </>

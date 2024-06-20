@@ -3,7 +3,6 @@ import {useForm} from 'react-hook-form';
 import * as yup from "yup";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome' ;
 import { faUserCircle, faCamera } from '@fortawesome/free-solid-svg-icons';
-//import "./form_dados.css";
 import { createClient } from "@supabase/supabase-js";
 import Swal from 'sweetalert2';
 
@@ -23,7 +22,7 @@ function CreateCandidato (valoresDoForm) {
                 ...values,
                 [name]: value,
             });
-            console.log("name:", name, "\nvalue:", value);    
+            console.log("name", name, "\nvalue", value)
         }
     };
 }
@@ -35,7 +34,6 @@ function Form_dados() {
     const {register, setError, clearErrors, formState} = useForm();
     const { errors } = formState; //erros na validação do CEP
     const [erros, setErros] = useState({}); //erros na validação do preenchimento dos campos
-    //const [session, setSession] = useState(null); //pegando a sessão para poder atualizar na tabela certa
 
     //Vetor que vai armazenar os dados do formulário
     const formUpdateCandidato = CreateCandidato({
@@ -64,8 +62,8 @@ function Form_dados() {
         const novaFoto = e.target.files[0];
         setFile(novaFoto);
         setImg(URL.createObjectURL(novaFoto));
-        console.log("nova foto:", novaFoto)
     };
+
     //Procura os dados do CEP de acordo com o que foi informado no input
     const pesquisaCEP = (e) => {
         const cep = e.target.value.replace(/\D/g, ''); //substitui todos os caracteres que não são números por nulo
@@ -93,8 +91,6 @@ function Form_dados() {
             formUpdateCandidato.values.bairro = data.bairro;
             formUpdateCandidato.values.cidade = data.localidade;
             formUpdateCandidato.values.uf = data.uf;
-
-            console.log("nome: ",formUpdateCandidato.values)
         })
         .catch(() => { //caso o CEP informado não exista, cria um erro e apaga os valores dos outros campos
             setError('apiError', { message: "Não foi possível encontrar o CEP informado" });
@@ -129,8 +125,6 @@ function Form_dados() {
         
                     if (data) {
                         data.map((user) => imgURL = user.foto)
-                        console.log("url 1:", imgURL)
-
                         setFetchError(null)
                     }
 
@@ -190,12 +184,8 @@ function Form_dados() {
                             formUpdateCandidato.values.nomepai = user.nomepai
                         ))
                         setFetchDone(true);
-                        console.log("uf:", formUpdateCandidato.values.foto)
-                        console.log("data:", data)
-                        console.log("imagem pós public:",img);
                     }
                 }
-                console.log("img",img)
             } catch(error) {
                 console.log(fetchError)
             }
@@ -256,7 +246,6 @@ function Form_dados() {
                 nomemae: formUpdateCandidato.values.nomeMae,
                 datanascimento: formUpdateCandidato.values.dataNasc,
                 genero: formUpdateCandidato.values.generos,
-                //escolaridade: formUpdateCandidato.values.escolaridade,
                 cep: formUpdateCandidato.values.cep,
                 bairro: formUpdateCandidato.values.bairro,
                 logradouro: formUpdateCandidato.values.logradouro,
@@ -299,7 +288,8 @@ function Form_dados() {
                     nomepai: formUpdateCandidato.values.nomepai
                 })
                 .eq('id', session.user.id)
-                console.log("foto form:",formUpdateCandidato.values.foto)
+
+                console.log(formUpdateCandidato.values)
                 if(error == null) {
                     Swal.fire({
                         icon: "success",
@@ -403,24 +393,24 @@ function Form_dados() {
                     <div className='flex_gapEditar'>
                         <div>
                             <p>Gênero:</p>
-                            <select name="generos">
+                            <select name="generos" id="generos" value={ formUpdateCandidato.values.generos } onChange={ formUpdateCandidato.handleChange }>
                                 <option value="">Gênero</option>
-                                <option>Masculino</option>
-                                <option>Feminino</option>
-                                <option>Não-binário</option>
-                                <option>Outro</option>
+                                <option value="Masculino" onChange={formUpdateCandidato.handleChange}>Masculino</option>
+                                <option value="Feminino" onChange={formUpdateCandidato.handleChange}>Feminino</option>
+                                <option value="Não-binário" onChange={formUpdateCandidato.handleChange}>Não-binário</option>
+                                <option value="Outro" onChange={formUpdateCandidato.handleChange}>Outro</option>
                             </select>
                         </div>
                         <div>
                             <p>Escolaridade:</p>
-                            <select name="escolaridade">
+                            <select name="escolaridade" id="escolaridade" value={ formUpdateCandidato.values.escolaridade } onChange={ formUpdateCandidato.handleChange }>
                                 <option value="">Escolaridade</option>
-                                <option>Ensino fundamental incompleto</option>
-                                <option>Ensino fundamental completo</option>
-                                <option>Ensino médio incompleto</option>
-                                <option>Ensino médio completo</option>
-                                <option>Ensino superior incompleto</option>
-                                <option>Ensino superior completo</option>
+                                <option value="Ensino fundamental incompleto" onChange={formUpdateCandidato.handleChange}>Ensino fundamental incompleto</option>
+                                <option value="Ensino fundamental completo" onChange={formUpdateCandidato.handleChange}>Ensino fundamental completo</option>
+                                <option value="Ensino médio incompleto" onChange={formUpdateCandidato.handleChange}>Ensino médio incompleto</option>
+                                <option value="Ensino médio completo" onChange={formUpdateCandidato.handleChange}>Ensino médio completo</option>
+                                <option value="Ensino superior incompleto" onChange={formUpdateCandidato.handleChange}>Ensino superior incompleto</option>
+                                <option value="Ensino superior completo" onChange={formUpdateCandidato.handleChange}>Ensino superior completo</option>
                             </select>
                         </div> 
                     </div>
@@ -437,7 +427,7 @@ function Form_dados() {
                         </div>
                         <div>
                             <p>Nome completo do pai (opcional)</p>
-                            <input type="text" placeholder="Nome completo do pai (opcional)" value={ formUpdateCandidato.values.nomepai } onChange={formUpdateCandidato.handleChange}  />
+                            <input type="text" name="nomepai" placeholder="Nome completo do pai (opcional)" value={ formUpdateCandidato.values.nomepai } onChange={formUpdateCandidato.handleChange}  />
                         </div>
                     </div>
                     {erros.nomeMae && <div className='text-red-600 mt-0 mb-2'>{erros.nomeMae}</div>}

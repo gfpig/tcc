@@ -29,11 +29,10 @@ function Solicitacoes() {
     document.title = "Solicitações"
 
     const [candidaturas, setCandidaturas] = useState([])
-    const [cidades, setCidades] = useState([]);
     const [imgURL, setImgURL] = useState([]) //vetor que armazena a url das fotos de perfil
     const [img, setImg] = useState([]) //vetor que armazena as fotos de perfil
-    const [idade, setIdade] = useState([])
-    const [datanasc, setDatanasc] = useState([])
+    const [idade] = useState([])
+    const [datanasc] = useState([])
 
     const [fetchDone, setFetchDone] = useState(false)
     const [pesquisaDone, setPesquisaDone] = useState(null)
@@ -117,10 +116,8 @@ function Solicitacoes() {
 
     useEffect(() => { //useEffect para calcular a idade do candidato
         const CalculaIdade = (index) => {
-            //console.log(new Date("1988-10-13"))
             const hoje = new Date();
             const birthdateDate = new Date(datanasc[index]);
-            //console.log(birthdateDate)
             let age = hoje.getFullYear() - birthdateDate.getFullYear();
             const monthDiff = hoje.getMonth() - birthdateDate.getMonth();
 
@@ -129,8 +126,6 @@ function Solicitacoes() {
             }
 
             idade[index] = age;
-            console.log(index)
-            console.log(candidaturas.length)
             if (index === candidaturas.length - 1) {
                 setCalculoIdadeDone(true);
             }
@@ -138,15 +133,10 @@ function Solicitacoes() {
 
         if (candidaturas.length > 0) { //coloca as idades no vetor de data de nascimento
             for (let i = 0; i < candidaturas.length; i++) {
-                //console.log(candidaturas[i].candidato.datanascimento)
                 datanasc[i] = candidaturas[i].candidato.datanascimento
                 CalculaIdade(i);
             }
-            //console.log(datanasc)
-            //CalculaIdade();
         }
-
-        //CalculaIdade();
     }, [candidaturas, datanasc]);
 
     const Pesquisar = async () => {
@@ -275,7 +265,6 @@ function Solicitacoes() {
     <>
     {fetchDone && calculoIdadeDone && fetchFotoPerfilDone && (pesquisaDone === null || pesquisaDone === true) ?
     <>
-    {console.log(idade)}
         <div className='cabecalho__candidatura'>
             <div><p>CANDIDATOS</p></div>
             <div className='flex gap-3'>

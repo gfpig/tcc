@@ -244,7 +244,7 @@ function Cadastro_ong_form() {
         var mensagem; //variável para possível mensagem de erro
 
         if(cnpjExists || emailExists ) { //se estiverem, mostra um erro para o usuário
-            mensagem = "CPF ou e-mail já cadastrados"
+            mensagem = "CNPJ ou e-mail já cadastrados"
             Swal.fire({
                 icon: "error",
                 title: mensagem
@@ -289,7 +289,7 @@ function Cadastro_ong_form() {
         if (error !== null) { //Se der algum problema, mostrar esse.
             console.log("erro:",error.message);
             console.log("mensagem:",error.message);
-            mensagem = "Um erro inesperado ocorreu :(";
+            mensagem = "Um erro inesperado ocorreu.", error.message;
         
             Swal.fire({
                 icon: "error",

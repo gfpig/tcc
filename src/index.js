@@ -14,9 +14,9 @@ import Redefinir_Senha from './pages/Redefinir_Senha/Redefinir_Senha';
 
 import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom";
 
-const PROJECT_URL = "https://xljeosvrbsygpekwclan.supabase.co";
+/*const PROJECT_URL = "https://xljeosvrbsygpekwclan.supabase.co";
 const PUBLIC_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhsamVvc3ZyYnN5Z3Bla3djbGFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTQ1MTY1NzAsImV4cCI6MjAzMDA5MjU3MH0.InFDrSOcPxRe4LXMBJ4dT59bBb3LSpKw063S90E3uPo"
-const supabase = createClient(PROJECT_URL, PUBLIC_KEY);
+const supabase = createClient(PROJECT_URL, PUBLIC_KEY);*/
 
 //const [tipoSessao, setTipoSessao] = useState()
 

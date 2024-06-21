@@ -5,7 +5,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome' ;
 import { faHandHoldingHeart, faCamera } from '@fortawesome/free-solid-svg-icons';
 import "./form_dados.css";
 import { createClient } from "@supabase/supabase-js";
-import { useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
 
 const PROJECT_URL = "https://xljeosvrbsygpekwclan.supabase.co";
@@ -30,7 +29,6 @@ function CreateInstituicao (valoresDoForm) {
 
 function Form_dados() {
     document.title = "Editar Dados"
-    const navigate = useNavigate();
 
     const [fetchDone, setFetchDone] = useState(false); //varíavel pra saber se já puxou os dados
     const [img, setImg] = useState(null); //armazena a foto de perfil (para mostrar na tela)

@@ -57,7 +57,8 @@ function Form_dados() {
             site: '',
             whatsapp: '',
             descricao: '',
-            foto: ''
+            foto: '',
+            form: ''
         }
     });
 
@@ -181,7 +182,8 @@ function Form_dados() {
                             formUpdateInstituicao.values.site = user.site,
                             formUpdateInstituicao.values.whatsapp = user.whatsapp,
                             formUpdateInstituicao.values.descricao = user.descricao,
-                            formUpdateInstituicao.values.foto = user.foto
+                            formUpdateInstituicao.values.foto = user.foto,
+                            formUpdateInstituicao.values.form = user.form
                         ))
                         setFetchDone(true);
                     }
@@ -270,7 +272,8 @@ function Form_dados() {
                     site: formUpdateInstituicao.values.site,
                     whatsapp: formUpdateInstituicao.values.whatsapp,
                     descricao: formUpdateInstituicao.values.descricao,
-                    foto: formUpdateInstituicao.values.foto })
+                    foto: formUpdateInstituicao.values.foto,
+                    form: formUpdateInstituicao.values.form})
                 .eq('id', session.user.id)
 
                 if(error == null) {
@@ -279,6 +282,7 @@ function Form_dados() {
                         title: "Dados atualizados com sucesso"
                     })
                 } else {
+                    console.log(error.message)
                     let mensagem = "Um erro inesperado ocorreu :(";
                 
                     Swal.fire({
@@ -287,6 +291,7 @@ function Form_dados() {
                     })
                 }
         } else {
+            console.log(error.message)
             let mensagem = "Um erro inesperado ocorreu :(";
         
             Swal.fire({
@@ -297,6 +302,8 @@ function Form_dados() {
     }
 
     async function deletaAvatar() { //deleta o avatar que foi trocado
+        if (file === null) { return }
+        
         let url;
         const { data: { session }} = await supabase.auth.getSession();
 
@@ -315,12 +322,11 @@ function Form_dados() {
             } catch (erro) {
                 console.log("Erro ao deletar a imagem de perfil:", erro);
             }
-        }
-
-        
+        }   
     }
 
     async function uploadAvatar(event) {
+        if (file === null) { return }
         try {
           //const file = event.target.files[0]
           const fileExt = file.name.split('.').pop()
@@ -393,10 +399,16 @@ function Form_dados() {
                         <p>E-mail:</p>
                         <input type="email" placeholder="E-mail" name="emailinstituicao" value={ formUpdateInstituicao.values.emailinstituicao } onChange={formUpdateInstituicao.handleChange} />
                         {erros.emailinstituicao && <div className='text-red-600 mt-0 mb-2'>{erros.emailinstituicao}</div>}
-
-                        <p>Site:</p>
-                        <input type='text' placeholder='Site da instituição' name="site" value={ formUpdateInstituicao.values.site } onChange={formUpdateInstituicao.handleChange} />
-                        
+                        <div className='flex_gapEditar'>
+                            <div>
+                                <p>Site:</p>
+                                <input type='text' placeholder='Site da instituição' name="site" value={ formUpdateInstituicao.values.site } onChange={formUpdateInstituicao.handleChange} />
+                            </div>
+                            <div>
+                                <p>Link formulário:</p>
+                                <input type='text' placeholder='Formulário da instituição' name="form" value={ formUpdateInstituicao.values.form } onChange={formUpdateInstituicao.handleChange} />
+                            </div>
+                        </div>
                         <div className='flex_gapEditar'>
                             <div>
                                 <p>Área:</p>

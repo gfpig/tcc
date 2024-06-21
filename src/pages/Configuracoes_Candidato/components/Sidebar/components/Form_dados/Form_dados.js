@@ -212,6 +212,7 @@ function Form_dados() {
     })
 
     async function deletaAvatar() { //deleta o avatar que foi trocado
+        if (file === null) { return }
         let url;
         const { data: { session }} = await supabase.auth.getSession();
 
@@ -313,6 +314,8 @@ function Form_dados() {
     }
 
     async function uploadAvatar(event) {
+        if (file === null) { return }
+
         try {
           const fileExt = file.name.split('.').pop()
           const fileName = `${Math.random()}.${fileExt}`

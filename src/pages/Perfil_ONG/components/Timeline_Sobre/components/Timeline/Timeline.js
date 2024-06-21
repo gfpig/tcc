@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import {useForm} from 'react-hook-form';
 import './timeline.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome' ;
-import { faCamera } from '@fortawesome/free-solid-svg-icons';
+import { faCamera, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import { createClient } from "@supabase/supabase-js";
 import Posts from './Posts/Posts';
 import {useRef} from 'react';
@@ -216,6 +216,32 @@ function Timeline() {
     }
   }
 
+  const ExcluirPost = async (post) => {
+    if(post.imagem !== null) {
+      deletaFotoPublicacao(post)
+    }
+
+    const { data, error } = await supabase
+    .from('postagem_instituicao')
+    .delete()
+    .eq('codpostagem', post.codpostagem)
+
+    if(!error) {
+      alert("Publicação excluída com sucesso")
+    }
+  }
+
+  async function deletaFotoPublicacao(post) { //deleta o avatar que foi trocado
+    try {
+        const { data, error } = await supabase
+        .storage
+        .from('imagens_post')
+        .remove([post.imagem])
+    } catch (erro) {
+        console.log("Erro ao deletar a imagem de perfil:", erro);
+    }
+  }
+
   useEffect(() => {
     // Só faz o post depois que imgPost ter um valor
     if (imgPost !== undefined) {
@@ -258,14 +284,21 @@ function Timeline() {
       {posts.length !== 0 ? 
         posts.map((post, index) => (
           <div className='post' key={post.codpostagem}>
-            <div className='cabecalho_post'>
-                <div className='foto_cabecalho'>
-                    <img src={fotoPerfil} alt="foto de perfil da instituição" />
+            <div className='flex justify-between'>
+              <div className='cabecalho_post'>
+                  <div className='foto_cabecalho'>
+                      <img src={fotoPerfil} alt="foto de perfil da instituição" />
+                  </div>
+                  <div className='detalhes_cabecalho'>
+                      <p className='nome_instituicao'>{instituicao.nomeinstituicao}</p>
+                      <p>{post.data}</p>
+                  </div>
+              </div>
+              {isInstituicao ?
+                <div>
+                  <FontAwesomeIcon icon={ faTrashCan } size="lg" title='Excluir publicação' onClick={() => ExcluirPost(post)} />
                 </div>
-                <div className='detalhes_cabecalho'>
-                    <p className='nome_instituicao'>{instituicao.nomeinstituicao}</p>
-                    <p>{post.data}</p>
-                </div>
+              : null}
             </div>
             <div className='corpo_post'>
                 <p>{post.descricao}</p>

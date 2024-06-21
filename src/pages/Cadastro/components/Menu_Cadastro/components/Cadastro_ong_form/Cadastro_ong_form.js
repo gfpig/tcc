@@ -277,7 +277,7 @@ function Cadastro_ong_form() {
             },
         })
 
-        if (error == null) { //Se o cadastro for feito com sucesso
+        if (error === null) { //Se o cadastro for feito com sucesso
             //Mostra um pop-up na tela
             Swal.fire({
                 icon: "success",
@@ -286,7 +286,7 @@ function Cadastro_ong_form() {
             formCadastroInstituicao.clearForm(); //limpa o formulário
         }
 
-        if (error != null) { //Se der algum problema, mostrar esse.
+        if (error !== null) { //Se der algum problema, mostrar esse.
             console.log("erro:",error.message);
             console.log("mensagem:",error.message);
             mensagem = "Um erro inesperado ocorreu :(";

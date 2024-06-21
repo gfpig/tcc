@@ -128,7 +128,7 @@ function Faixa_detalhes_ONG() {
             <h2>{instituicao.nomeinstituicao}</h2>
         </div>
         <div className='container_acoesONG'>
-            <button className='acessar_form' title="Formulário de cadastro"><FontAwesomeIcon icon={ faClipboardList } size='2x' /></button>
+            {instituicao.form !== null ? <button className='acessar_form' title="Formulário de cadastro"><a href={instituicao.form}><FontAwesomeIcon icon={ faClipboardList } size='2x' /></a></button> : null}
             {isInstituicao ? <button className='editar_perfil'><a href='/configuracoes_ong'><FontAwesomeIcon icon={ faPencil } /> Editar Perfil</a></button>
             : <button className='editar_perfil' onClick={HandleClick_Candidatar}><FontAwesomeIcon icon={ faPlus } /> Candidatar-se</button>}
         </div>

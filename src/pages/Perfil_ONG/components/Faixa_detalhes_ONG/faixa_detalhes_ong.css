@@ -7,7 +7,7 @@
 }
 
 .container_acoesONG {
-    @apply flex justify-between w-56;
+    @apply flex justify-end gap-4 w-56;
 }
 
 .container_acoesONG button {

@@ -93,7 +93,7 @@ const Form_login = () => {
                             const {error} = await supabase
                             .auth
                             .resetPasswordForEmail(formRecuperacaoSenha.values.email, {
-                                redirectTo: `${window.location.href}redefinir_senha`
+                                redirectTo: `${window.location.href}/redefinir_senha`
                             })
 
                             if (!error) {

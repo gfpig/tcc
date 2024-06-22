@@ -268,7 +268,7 @@ function Cadastro_beneficiario_form() {
         if (error == null || data?.user?.identities?.length !== 0) { //Se o cadastro for feito com sucesso
             if(data?.user == null) {
                 console.log("data:", data)
-                mensagem = "Um erro inesperado ocorreu", error.message;
+                mensagem = "Um erro inesperado ocorreu" + error.message;
                 Swal.fire({
                     icon: "error",
                     title: mensagem
@@ -285,7 +285,7 @@ function Cadastro_beneficiario_form() {
 
         } else { //Se der algum problema, mostrar esse.
             console.log(error.message);
-            mensagem = "Um erro inesperado ocorreu", error.message;
+            mensagem = "Um erro inesperado ocorreu" + error.message;
 
             Swal.fire({
               icon: "error",

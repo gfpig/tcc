@@ -289,7 +289,7 @@ function Cadastro_ong_form() {
         if (error !== null) { //Se der algum problema, mostrar esse.
             console.log("erro:",error.message);
             console.log("mensagem:",error.message);
-            mensagem = "Um erro inesperado ocorreu.", error.message;
+            mensagem = "Um erro inesperado ocorreu." + error.message;
         
             Swal.fire({
                 icon: "error",
